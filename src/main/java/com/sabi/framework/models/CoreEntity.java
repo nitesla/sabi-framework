@@ -23,8 +23,7 @@ public abstract class CoreEntity implements Serializable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
+    private Long id;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -37,6 +36,9 @@ public abstract class CoreEntity implements Serializable {
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     @Column(columnDefinition = "timestamp default CURRENT_TIMESTAMP")
     private Date updatedDate;
+
+    private Long createdBy;
+    private Long updatedBy;
 
     private Boolean Isactive;
     private String responseCode;

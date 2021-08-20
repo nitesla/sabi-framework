@@ -15,7 +15,7 @@ import java.nio.file.AccessDeniedException;
 
 @SuppressWarnings("ALL")
 @Slf4j
-@ControllerAdvice(annotations = RestController.class, basePackages = "com.sabi.agent.controller")
+@ControllerAdvice(annotations = RestController.class, basePackages = "com.sabi.api.controller")
 @ResponseBody
 public class ServiceApiAdvice {
 

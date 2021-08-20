@@ -39,7 +39,7 @@ public abstract class CoreEntity implements Serializable {
 
     private Long createdBy;
     private Long updatedBy;
-
     private Boolean Isactive;
-    private String responseCode;
+
+
 }

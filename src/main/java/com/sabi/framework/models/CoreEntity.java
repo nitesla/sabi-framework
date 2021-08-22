@@ -1,16 +1,15 @@
 package com.sabi.framework.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -25,21 +24,16 @@ public abstract class CoreEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
-    @Column(columnDefinition = "timestamp default CURRENT_TIMESTAMP")
-    private Date createdDate;
+    @ApiModelProperty(hidden = true)
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
-    @Column(columnDefinition = "timestamp default CURRENT_TIMESTAMP")
-    private Date updatedDate;
+    @ApiModelProperty(hidden = true)
+    private LocalDateTime updatedDate = LocalDateTime.now();
 
     private Long createdBy;
     private Long updatedBy;
-    private Boolean Isactive;
+    private Boolean isActive;
 
 
 }

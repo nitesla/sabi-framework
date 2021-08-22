@@ -13,7 +13,7 @@ public class CustomResponseCode {
     public static final String DEFAULT = "0";
     public static final String FAILED ="101";
     public static final String BAD_REQUEST = "400";
-    public static final String CONFLICT_EXCEPTION = "299";
+    public static final String CONFLICT_EXCEPTION = "409";
     public static final String LOCKED_EXCEPTION = "423";
     public static final String NOT_FOUND_EXCEPTION = "404";
     public static final String SUCCESS = "200";

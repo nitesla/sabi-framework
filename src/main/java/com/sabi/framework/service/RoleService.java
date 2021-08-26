@@ -6,6 +6,7 @@ import com.sabi.framework.models.ResponseModel;
 import com.sabi.framework.models.Role;
 import static com.sabi.framework.utils.Constants.*;
 import com.sabi.framework.repositories.RoleRepository;
+import com.sabi.framework.utils.CustomResponseCode;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +65,13 @@ public class RoleService {
     public ResponseEntity<ResponseModel> fetchRole(Long roleId) {
 
         try{
-            Role role = roleRepository.findById(roleId).orElseThrow(NotFoundException(RESOURCE_NOT_FOUND,));
+            Role role = roleRepository.findById(roleId).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                    "Requested State Id does not exist!"));
             return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
 
         }catch (Exception ex){
             return new ResponseEntity<>(new ResponseModel(RESOURCE_NOT_FOUND, RESOURCE_NOT_FOUND_MESSAGE), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        } catch (Exception ex){
-            logger.info("Fetch Role Exception {}", ex);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -7,16 +7,12 @@ public class RoleDto {
 
     private Long id;
     private String name;
-    private String status;
-    private String scope;
-    private Boolean isActive;
+    private String description;
 
-    public RoleDto(Long id, String name, String status, String scope, Boolean isActive) {
+    public RoleDto(Long id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.status = status;
-        this.scope = scope;
-        this.isActive = isActive;
+        this.description = description;
     }
 
     public Long getId() {
@@ -35,28 +31,12 @@ public class RoleDto {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDescription() {
+        return description;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -64,9 +44,7 @@ public class RoleDto {
         return "RoleDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", status='" + status + '\'' +
-                ", scope='" + scope + '\'' +
-                ", isActive=" + isActive +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

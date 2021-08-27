@@ -1,5 +1,5 @@
 package com.sabi.framework.service;
 
-public class UserRoleFunction {
+public class UserRoleFunctionService {
 
 }

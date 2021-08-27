@@ -26,6 +26,7 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+
     @Autowired
     public RoleService(RoleRepository roleRepository, ModelMapper modelMapper) {
         this.roleRepository = roleRepository;
@@ -35,10 +36,12 @@ public class RoleService {
     public ResponseEntity<ResponseModel> createRole(RoleDto roleDto){
         try{
             Role role = modelMapper.map(roleDto, Role.class);
-            roleRepository.findByName(roleDto.getName());
-            roleRepository.save(role);
+            Role rolecheck = roleRepository.findByName(roleDto.getName());
+            if(rolecheck == null){
+                roleRepository.save(role);
 
-            return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
+                return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
+            }
 
         }catch (Exception ex){
             logger.info("createRole error{ }", ex);

@@ -42,7 +42,7 @@ public class RoleService {
 
                 return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
             }
-
+        return null;
         }catch (Exception ex){
             logger.info("createRole error{ }", ex);
             return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);

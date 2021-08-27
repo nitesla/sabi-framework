@@ -54,7 +54,7 @@ public class RoleService {
             Role role = modelMapper.map(roleDto, Role.class);
             Optional<Role> roleCheck = roleRepository.findById(roleDto.getId());
             if(!roleCheck.isPresent())
-                throw new NotFoundException(RESOURCE_NOT_FOUND, "Invalid cadre provided!");
+                throw new NotFoundException(RESOURCE_NOT_FOUND, "Invalid role provided!");
 
             roleRepository.save(role);
             return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
@@ -69,7 +69,7 @@ public class RoleService {
 
         try{
             Role role = roleRepository.findById(roleId).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                    "Requested State Id does not exist!"));
+                    "Requested role Id does not exist!"));
             return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
 
         }catch (Exception ex){

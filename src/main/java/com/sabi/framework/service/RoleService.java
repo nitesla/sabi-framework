@@ -55,7 +55,6 @@ public class RoleService {
             Optional<Role> roleCheck = roleRepository.findById(roleDto.getId());
             if(!roleCheck.isPresent())
                 throw new NotFoundException(RESOURCE_NOT_FOUND, "Invalid role provided!");
-
             roleRepository.save(role);
             return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
         }

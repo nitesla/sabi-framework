@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+
+
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Data
@@ -45,8 +47,6 @@ public class User extends CoreEntity{
 
     private Date resetTokenExpirationDate;
 
-    private String registrationToken;
 
-    private String registrationTokenExpiration;
 
 }

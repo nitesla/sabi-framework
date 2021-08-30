@@ -47,6 +47,6 @@ public class User extends CoreEntity{
 
     private String registrationToken;
 
-    private Date registrationTokenExpiration;
+    private String registrationTokenExpiration;
 
 }

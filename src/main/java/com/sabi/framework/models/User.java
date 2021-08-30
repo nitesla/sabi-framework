@@ -13,16 +13,14 @@ import java.util.Set;
 @Data
 public class User extends CoreEntity{
 
-    @Column(nullable = false)
+
     private int failedPasswordAttemptCount;
 
-    @Column(nullable = false)
     private String isLocked;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     private Date lastLoginDate;
 
     @Column(nullable = false)
@@ -31,7 +29,6 @@ public class User extends CoreEntity{
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
     private String middleName;
 
     @JsonManagedReference
@@ -44,9 +41,12 @@ public class User extends CoreEntity{
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
     private String resetToken;
 
-    @Column(nullable = false)
     private Date resetTokenExpirationDate;
+
+    private String registrationToken;
+
+    private Date registrationTokenExpiration;
+
 }

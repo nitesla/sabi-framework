@@ -1,12 +1,9 @@
 package com.sabi.framework.models;
 
-import javax.persistence.*;
-
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -34,6 +31,9 @@ public class Function{
 
     @Column(nullable = false)
     private String code;
+
+
+
 
     public Function(Long id, String name, LocalDateTime createdDate, LocalDateTime updatedDate, Long createdBy, Long updatedBy, Boolean isActive, String code) {
         this.name = name;

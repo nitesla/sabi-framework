@@ -1,79 +1,110 @@
 package com.sabi.framework.service;
 
+
+import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.FunctionDto;
+import com.sabi.framework.dto.responseDto.FunctionResponseDto;
+import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
+import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Function;
-import com.sabi.framework.models.ResponseModel;
 import com.sabi.framework.repositories.FunctionRepository;
 import com.sabi.framework.utils.CustomResponseCode;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
-import static com.sabi.framework.utils.Constants.*;
-import static com.sabi.framework.utils.Constants.OPERATION_ERROR_MESSAGE;
-
+@Slf4j
 @Service
 public class FunctionService {
 
     private final FunctionRepository functionRepository;
-    private final ModelMapper modelMapper;
+    private final ModelMapper mapper;
+    private final CoreValidations coreValidations;
 
-    private static final Logger logger = LoggerFactory.getLogger(FunctionService.class);
 
-    @Autowired
-    public FunctionService(FunctionRepository functionRepository, ModelMapper modelMapper) {
+
+    public FunctionService(FunctionRepository functionRepository, ModelMapper mapper,CoreValidations coreValidations) {
         this.functionRepository = functionRepository;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
+        this.coreValidations = coreValidations;
     }
 
-    public ResponseEntity<ResponseModel> createFunction(FunctionDto functionDto){
-        try{
-            Function function = modelMapper.map(functionDto, Function.class);
-            Function functioncheck = functionRepository.findByName(functionDto.getName());
-            if(functioncheck == null){
-                functionRepository.save(function);
-                return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, function), HttpStatus.OK);
-            }
-            return null;
-        }catch (Exception ex){
-            logger.info("createfunction error{ }", ex);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
+
+    /** <summary>
+     * Function creation
+     * </summary>
+     * <remarks>this method is responsible for creation of new function</remarks>
+     */
+
+    public FunctionResponseDto createFunction(FunctionDto request) {
+        coreValidations.validateFunction(request);
+        Function function = mapper.map(request,Function.class);
+        Function functionExist = functionRepository.findByName(request.getName());
+        if(functionExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Function already exist");
         }
+        function.setCreatedBy(0l);
+        function.setIsActive(true);
+        function = functionRepository.save(function);
+        log.debug("Create new function - {}"+ new Gson().toJson(function));
+        return mapper.map(function, FunctionResponseDto.class);
     }
 
-    public ResponseEntity<ResponseModel> updateFunction(FunctionDto functionDto){
-        try{
-            Function function = modelMapper.map(functionDto, Function.class);
-            Optional<Function> functionCheck = functionRepository.findById(functionDto.getId());
-            if(!functionCheck.isPresent())
-                throw new NotFoundException(RESOURCE_NOT_FOUND, "Invalid function provided!");
 
-            functionRepository.save(function);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, function), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            logger.info("updatefunction error{ }", ex);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
-        }
+
+
+    /** <summary>
+     * Function update
+     * </summary>
+     * <remarks>this method is responsible for updating already existing function</remarks>
+     */
+
+    public FunctionResponseDto updateFunction(FunctionDto request) {
+        coreValidations.validateFunction(request);
+        Function function = functionRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested function id does not exist!"));
+        mapper.map(request, function);
+        function.setUpdatedBy(0l);
+        functionRepository.save(function);
+        log.debug("function record updated - {}"+ new Gson().toJson(function));
+        return mapper.map(function, FunctionResponseDto.class);
     }
 
-    public ResponseEntity<ResponseModel> fetchFunction(Long functionId) {
 
-        try{
-            Function function = functionRepository.findById(functionId).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                    "Requested function Id does not exist!"));
-            return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, function), HttpStatus.OK);
 
-        }catch (Exception ex){
-            return new ResponseEntity<>(new ResponseModel(RESOURCE_NOT_FOUND, RESOURCE_NOT_FOUND_MESSAGE), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        }
+    /** <summary>
+     * Find function
+     * </summary>
+     * <remarks>this method is responsible for getting a single record</remarks>
+     */
+    public FunctionResponseDto findFunction(Long id){
+        Function function  = functionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested function id does not exist!"));
+        return mapper.map(function,FunctionResponseDto.class);
     }
+
+
+
+
+    /** <summary>
+     * Find all functions
+     * </summary>
+     * <remarks>this method is responsible for getting all records in pagination</remarks>
+     */
+    public Page<Function> findAll(String name, PageRequest pageRequest ){
+        Page<Function> functions = functionRepository.findFunctions(name,pageRequest);
+        if(functions == null){
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
+        }
+        return functions;
+
+    }
+
 }

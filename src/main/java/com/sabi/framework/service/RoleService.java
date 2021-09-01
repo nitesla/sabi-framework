@@ -1,79 +1,114 @@
 package com.sabi.framework.service;
 
+
+import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.RoleDto;
+import com.sabi.framework.dto.responseDto.RoleResponseDto;
+import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
-import com.sabi.framework.models.ResponseModel;
+import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Role;
-import static com.sabi.framework.utils.Constants.*;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.utils.CustomResponseCode;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleService {
 
     private final RoleRepository roleRepository;
-    private final ModelMapper modelMapper;
-    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+    private final ModelMapper mapper;
+    private final CoreValidations coreValidations;
 
-    @Autowired
-    public RoleService(RoleRepository roleRepository, ModelMapper modelMapper) {
+
+    public RoleService(RoleRepository roleRepository, ModelMapper mapper, CoreValidations coreValidations) {
         this.roleRepository = roleRepository;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
+        this.coreValidations = coreValidations;
     }
 
-    public ResponseEntity<ResponseModel> createRole(RoleDto roleDto){
-        try{
-            Role role = modelMapper.map(roleDto, Role.class);
-            Role rolecheck = roleRepository.findByName(roleDto.getName());
-            if(rolecheck == null){
-                roleRepository.save(role);
 
-                return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
-            }
-        return null;
-        }catch (Exception ex){
-            logger.info("createRole error{ }", ex);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
+
+    /** <summary>
+     * Role creation
+     * </summary>
+     * <remarks>this method is responsible for creation of new role</remarks>
+     */
+
+    public RoleResponseDto createRole(RoleDto request) {
+        coreValidations.validateRole(request);
+        Role role = mapper.map(request,Role.class);
+        Role roleExist = roleRepository.findByName(request.getName());
+        if(roleExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Role already exist");
         }
+        role.setCreatedBy(0l);
+        role.setIsActive(true);
+        role = roleRepository.save(role);
+        log.debug("Create new role - {}"+ new Gson().toJson(role));
+        return mapper.map(role, RoleResponseDto.class);
     }
 
-    public ResponseEntity<ResponseModel> updateRole(RoleDto roleDto){
-        try{
-            Role role = modelMapper.map(roleDto, Role.class);
-            Optional<Role> roleCheck = roleRepository.findById(roleDto.getId());
-            if(!roleCheck.isPresent())
-                throw new NotFoundException(RESOURCE_NOT_FOUND, "Invalid role provided!");
-            roleRepository.save(role);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
-        }
-        catch (Exception ex){
-            logger.info("createRole error{ }", ex);
-            return new ResponseEntity<>(new ResponseModel(REQUEST_FAILED, OPERATION_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
-        }
+
+
+
+    /** <summary>
+     * Role update
+     * </summary>
+     * <remarks>this method is responsible for updating already existing role</remarks>
+     */
+
+    public RoleResponseDto updateRole(RoleDto request) {
+        coreValidations.validateRole(request);
+        Role role = roleRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role id does not exist!"));
+        mapper.map(request, role);
+        role.setUpdatedBy(0l);
+        roleRepository.save(role);
+        log.debug("role record updated - {}"+ new Gson().toJson(role));
+        return mapper.map(role, RoleResponseDto.class);
     }
 
-    public ResponseEntity<ResponseModel> fetchRole(Long roleId) {
 
-        try{
-            Role role = roleRepository.findById(roleId).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                    "Requested role Id does not exist!"));
-            return new ResponseEntity<>(new ResponseModel(REQUEST_SUCCESSFUL, OPERATION_SUCCESSFUL_MESSAGE, role), HttpStatus.OK);
 
-        }catch (Exception ex){
-            return new ResponseEntity<>(new ResponseModel(RESOURCE_NOT_FOUND, RESOURCE_NOT_FOUND_MESSAGE), HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
+    /** <summary>
+     * Find role
+     * </summary>
+     * <remarks>this method is responsible for getting a single record</remarks>
+     */
+    public RoleResponseDto findRole(Long id){
+        Role role  = roleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role id does not exist!"));
+        return mapper.map(role,RoleResponseDto.class);
     }
+
+
+
+    /** <summary>
+     * Find all roles
+     * </summary>
+     * <remarks>this method is responsible for getting all records in pagination</remarks>
+     */
+    public Page<Role> findAll(String name, PageRequest pageRequest ){
+        Page<Role> roles = roleRepository.findRoles(name,pageRequest);
+        if(roles == null){
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
+        }
+        return roles;
+
+    }
+
+
+
+
+
+
+
 }

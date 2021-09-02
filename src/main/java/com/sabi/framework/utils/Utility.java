@@ -187,6 +187,14 @@ public class Utility {
     }
 
 
+    public static String tokenExpiration() {
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.add(Calendar.HOUR, 1);
+        return String.valueOf(new Timestamp(cal.getTime().getTime()));
+    }
 
 
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.UserDto;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.ConflictException;
+import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.UserRepository;
@@ -34,6 +35,12 @@ public class UserService {
 
 
 
+    /** <summary>
+     * User creation
+     * </summary>
+     * <remarks>this method is responsible for creation of new user</remarks>
+     */
+
     public UserResponse createUser(UserDto request) {
 //        coreValidations.validateFunction(request);
         User user = mapper.map(request,User.class);
@@ -51,4 +58,39 @@ public class UserService {
         log.debug("Create new user - {}"+ new Gson().toJson(user));
         return mapper.map(user, UserResponse.class);
     }
+
+
+
+    /** <summary>
+     * User update
+     * </summary>
+     * <remarks>this method is responsible for updating already existing user</remarks>
+     */
+
+    public UserResponse updateUser(UserDto request) {
+//        coreValidations.validateFunction(request);
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        mapper.map(request, user);
+        user.setUpdatedBy(0l);
+        userRepository.save(user);
+        log.debug("function record updated - {}"+ new Gson().toJson(user));
+        return mapper.map(user, UserResponse.class);
+    }
+
+
+
+    /** <summary>
+     * Find user
+     * </summary>
+     * <remarks>this method is responsible for getting a single record</remarks>
+     */
+    public UserResponse findUser(Long id){
+        User user  = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        return mapper.map(user,UserResponse.class);
+    }
+
 }

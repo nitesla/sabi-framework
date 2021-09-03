@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper=false)
 @Data
 @Entity
-public class Function extends CoreEntity{
+public class Permission extends CoreEntity{
 
     private String name;
 

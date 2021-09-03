@@ -1,7 +1,7 @@
 package com.sabi.framework.helpers;
 
 
-import com.sabi.framework.dto.requestDto.FunctionDto;
+import com.sabi.framework.dto.requestDto.PermissionDto;
 import com.sabi.framework.dto.requestDto.RoleDto;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.utils.CustomResponseCode;
@@ -22,11 +22,11 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
     }
 
-    public void validateFunction(FunctionDto functionDto) {
-        if (functionDto.getName() == null || functionDto.getName().isEmpty())
+    public void validateFunction(PermissionDto permissionDto) {
+        if (permissionDto.getName() == null || permissionDto.getName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Name cannot be empty");
 
-        if (functionDto.getCode() == null || functionDto.getCode().isEmpty())
+        if (permissionDto.getCode() == null || permissionDto.getCode().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
     }
 }

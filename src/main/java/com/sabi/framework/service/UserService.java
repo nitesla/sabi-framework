@@ -13,8 +13,6 @@ import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -22,8 +20,8 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+//    @Autowired
+//    BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
@@ -50,7 +48,8 @@ public class UserService {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
         String password = Utility.getSaltString();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+//        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(password);
         user.setCreatedBy(0l);
         user.setIsActive(false);
         user.setResetToken(Utility.guidID());
@@ -76,7 +75,7 @@ public class UserService {
         mapper.map(request, user);
         user.setUpdatedBy(0l);
         userRepository.save(user);
-        log.debug("function record updated - {}"+ new Gson().toJson(user));
+        log.debug("permission record updated - {}"+ new Gson().toJson(user));
         return mapper.map(user, UserResponse.class);
     }
 
@@ -123,7 +122,7 @@ public class UserService {
 //        mapper.map(request, user);
 //        user.setUpdatedBy(0l);
 //        userRepository.save(user);
-//        log.debug("function record updated - {}"+ new Gson().toJson(user));
+//        log.debug("permission record updated - {}"+ new Gson().toJson(user));
 //        return mapper.map(user, UserResponse.class);
 //    }
 

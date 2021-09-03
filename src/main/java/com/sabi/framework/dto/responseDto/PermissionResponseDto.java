@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FunctionResponseDto {
+public class PermissionResponseDto {
 
     private Long id;
     private String name;

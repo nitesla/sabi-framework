@@ -1,6 +1,7 @@
 package com.sabi.framework.service;
 
 import com.google.gson.Gson;
+import com.sabi.framework.dto.requestDto.EnableDisEnableDto;
 import com.sabi.framework.dto.requestDto.UserDto;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.ConflictException;
@@ -92,5 +93,38 @@ public class UserService {
                         "Requested user id does not exist!"));
         return mapper.map(user,UserResponse.class);
     }
+
+
+
+
+    /** <summary>
+     * Enable disenable
+     * </summary>
+     * <remarks>this method is responsible for enabling and dis enabling a market</remarks>
+     */
+    public void enableDisEnableState (EnableDisEnableDto request){
+        User user  = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        user.setIsActive(request.getIsActive());
+        user.setUpdatedBy(0l);
+        userRepository.save(user);
+
+    }
+
+
+
+
+//    public void changeUserPassword(UserDto request) {
+////        coreValidations.validateFunction(request);
+//        User user = userRepository.findById(request.getId())
+//                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+//                        "Requested user id does not exist!"));
+//        mapper.map(request, user);
+//        user.setUpdatedBy(0l);
+//        userRepository.save(user);
+//        log.debug("function record updated - {}"+ new Gson().toJson(user));
+//        return mapper.map(user, UserResponse.class);
+//    }
 
 }

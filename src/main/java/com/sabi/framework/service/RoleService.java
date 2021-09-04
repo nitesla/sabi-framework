@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleService {
 
-    private final RoleRepository roleRepository;
+    private  RoleRepository roleRepository;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
 

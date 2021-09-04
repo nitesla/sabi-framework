@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PermissionService {
 
-    private final PermissionRepository permissionRepository;
+    private  PermissionRepository permissionRepository;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
 

@@ -3,6 +3,7 @@ package com.sabi.framework.helpers;
 
 import com.sabi.framework.dto.requestDto.PermissionDto;
 import com.sabi.framework.dto.requestDto.RoleDto;
+import com.sabi.framework.dto.requestDto.UserDto;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,39 @@ public class CoreValidations {
         if (permissionDto.getCode() == null || permissionDto.getCode().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
     }
+
+
+
+    public void validateUser(UserDto userDto) {
+        if (userDto.getFirstName() == null || userDto.getFirstName().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
+
+        if (userDto.getLastName() == null || userDto.getLastName().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");
+
+        if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
+
+        if (userDto.getPhone() == null || userDto.getPhone().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Phone number cannot be empty");
+
+        if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
+    }
+
+    public void updateUser(UserDto userDto) {
+        if (userDto.getFirstName() == null || userDto.getFirstName().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
+
+        if (userDto.getLastName() == null || userDto.getLastName().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");
+
+        if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
+
+        if (userDto.getPhone() == null || userDto.getPhone().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Phone number cannot be empty");
+
+    }
+
 }

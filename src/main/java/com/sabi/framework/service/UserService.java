@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+
+@SuppressWarnings("ALL")
 @Slf4j
 @Service
 public class UserService {
@@ -55,7 +57,7 @@ public class UserService {
      */
 
     public UserResponse createUser(UserDto request) {
-//        coreValidations.validateFunction(request);
+        coreValidations.validateUser(request);
         User user = mapper.map(request,User.class);
         User userExist = userRepository.findByEmail(request.getEmail());
         if(userExist !=null){
@@ -65,7 +67,6 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(password));
         user.setCreatedBy(0l);
         user.setIsActive(false);
-//        user.setResetToken(Utility.guidID());
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
@@ -87,14 +88,14 @@ public class UserService {
      */
 
     public UserResponse updateUser(UserDto request) {
-//        coreValidations.validateFunction(request);
+        coreValidations.updateUser(request);
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
         mapper.map(request, user);
         user.setUpdatedBy(0l);
         userRepository.save(user);
-        log.debug("permission record updated - {}"+ new Gson().toJson(user));
+        log.debug("user record updated - {}"+ new Gson().toJson(user));
         return mapper.map(user, UserResponse.class);
     }
 
@@ -119,8 +120,8 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for getting all records in pagination</remarks>
      */
-    public Page<User> findAll(String firstName,String lastName,String phone,String email, PageRequest pageRequest ){
-        Page<User> users = userRepository.findUsers(firstName,lastName,phone,email,pageRequest);
+    public Page<User> findAll(String firstName,String lastName,String phone,Boolean isActive,String email, PageRequest pageRequest ){
+        Page<User> users = userRepository.findUsers(firstName,lastName,phone,isActive,email,pageRequest);
         if(users == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
@@ -149,6 +150,11 @@ public class UserService {
 
 
 
+    /** <summary>
+     * Change password
+     * </summary>
+     * <remarks>this method is responsible for changing password</remarks>
+     */
 
     public void changeUserPassword(ChangePasswordDto request) {
 
@@ -178,10 +184,14 @@ public class UserService {
     }
 
 
+    /** <summary>
+     * Previous password
+     * </summary>
+     * <remarks>this method is responsible for fetching the last 4 passwords</remarks>
+     */
 
     public Boolean getPrevPasswords(Long userId,String password){
         List<PreviousPasswords> prev = previousPasswordRepository.previousPasswords(userId);
-        System.out.println("::::: PASSWORDS :::"+prev);
         for (PreviousPasswords pass : prev
                 ) {
             if (bCryptPasswordEncoder.matches(password, pass.getPassword())) {
@@ -195,7 +205,12 @@ public class UserService {
 
 
 
-    public  void unlockAccounts (ChangePasswordDto request) {
+    /** <summary>
+     * Unlock account
+     * </summary>
+     * <remarks>this method is responsible for unlocking a user account</remarks>
+     */
+    public void unlockAccounts (UnlockAccountRequestDto request) {
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
@@ -206,6 +221,13 @@ public class UserService {
 
     }
 
+
+
+    /** <summary>
+     * Forget password
+     * </summary>
+     * <remarks>this method is responsible for a user that forgets his password</remarks>
+     */
 
     public  void forgetPassword (ForgetPasswordDto request) {
         User user = userRepository.findByEmail(request.getEmail());
@@ -223,6 +245,11 @@ public class UserService {
 
     }
 
+    /** <summary>
+     * Activate user
+     * </summary>
+     * <remarks>this method is responsible for activating users</remarks>
+     */
 
     public  void activateUser (ActivateUserAccountDto request) {
         User user = userRepository.findByResetToken(request.getResetToken());

@@ -22,10 +22,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))"+
             " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))"+
             " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))")
     Page<User> findUsers(@Param("firstName")String firstName,
                                 @Param("lastName")String lastName,
                                 @Param("phone")String phone,
+                                @Param("isActive")Boolean isActive,
                                 @Param("email")String email,
                                 Pageable pageable);
 

@@ -98,8 +98,8 @@ public class PermissionService {
      * </summary>
      * <remarks>this method is responsible for getting all records in pagination</remarks>
      */
-    public Page<Permission> findAll(String name, PageRequest pageRequest ){
-        Page<Permission> functions = permissionRepository.findFunctions(name,pageRequest);
+    public Page<Permission> findAll(String name,Boolean isActive, PageRequest pageRequest ){
+        Page<Permission> functions = permissionRepository.findFunctions(name,isActive,pageRequest);
         if(functions == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }

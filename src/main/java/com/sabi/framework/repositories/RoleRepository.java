@@ -13,6 +13,9 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(String name);
 
 
-    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name = :name))")
-    Page<Role> findRoles(@Param("name")String name, Pageable pageable);
+    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name = :name))" +
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND r.isActive = :isActive))")
+    Page<Role> findRoles(@Param("name")String name,
+                         @Param("isActive")Boolean isActive,
+                         Pageable pageable);
 }

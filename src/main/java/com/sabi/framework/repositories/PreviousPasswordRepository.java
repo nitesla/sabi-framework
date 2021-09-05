@@ -11,9 +11,10 @@ import java.util.List;
 public interface PreviousPasswordRepository extends JpaRepository<PreviousPasswords, Long> {
 
 
-    @Query(value = "SELECT TOP 4 FROM previouspasswords p WHERE p.userId=? order by p.createdDate desc",
-            nativeQuery = true)
-    List<PreviousPasswords> previousPassword(Long useerId);
+
+     @Query(value ="SELECT id,createdDate, password,userId FROM previouspasswords  WHERE userId=?1 ORDER BY createdDate DESC LIMIT 4", nativeQuery=true)
+    List<PreviousPasswords> previousPasswords(Long userId);
+
 
 
 }

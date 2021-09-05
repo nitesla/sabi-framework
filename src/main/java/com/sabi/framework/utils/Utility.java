@@ -192,7 +192,7 @@ public class Utility {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timestamp.getTime());
         cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.HOUR, 1);
+        cal.add(Calendar.MINUTE, 15);
         return String.valueOf(new Timestamp(cal.getTime().getTime()));
     }
 

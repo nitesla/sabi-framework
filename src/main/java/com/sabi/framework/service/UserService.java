@@ -61,7 +61,7 @@ public class UserService {
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
-        String password = user.getPassword();
+        String password = request.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
         user.setCreatedBy(0l);
         user.setIsActive(false);
@@ -162,19 +162,26 @@ public class UserService {
         if (!getPrevPasswords(user.getId(), request.getPreviousPassword())) {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid previous password");
         }
-        String password = user.getPassword();
+        String password = request.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
         user.setIsActive(true);
         user.setIsLocked("NULL");
         user.setUpdatedBy(0l);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        PreviousPasswords previousPasswords = PreviousPasswords.builder()
+                .userId(user.getId())
+                .password(user.getPassword())
+                .build();
+        previousPasswordRepository.save(previousPasswords);
 
     }
 
 
 
     public Boolean getPrevPasswords(Long userId,String password){
-        List<PreviousPasswords> prev = previousPasswordRepository.previousPassword(userId);
+        List<PreviousPasswords> prev = previousPasswordRepository.previousPasswords(userId);
+        System.out.println("::::: PASSWORDS :::"+prev);
         for (PreviousPasswords pass : prev
                 ) {
             if (bCryptPasswordEncoder.matches(password, pass.getPassword())) {
@@ -183,6 +190,8 @@ public class UserService {
         }
         return Boolean.FALSE;
     }
+
+
 
 
 

@@ -3,8 +3,11 @@ package com.sabi.framework.helpers;
 
 import com.sabi.framework.dto.requestDto.PermissionDto;
 import com.sabi.framework.dto.requestDto.RoleDto;
+import com.sabi.framework.dto.requestDto.RolePermissionDto;
 import com.sabi.framework.dto.requestDto.UserDto;
 import com.sabi.framework.exceptions.BadRequestException;
+import com.sabi.framework.exceptions.NotFoundException;
+import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,14 @@ public class CoreValidations {
 
         if (permissionDto.getCode() == null || permissionDto.getCode().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
+    }
+
+    public void validateRolePermission(RolePermissionDto rolePermissionDto){
+        if ((Long)rolePermissionDto.getRole_id() == null )
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role Id cannot be empty");
+        if (rolePermissionDto.getPermission_id() == null || rolePermissionDto.getPermission_id().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role permission(s) cannot be empty");
+
     }
 
 

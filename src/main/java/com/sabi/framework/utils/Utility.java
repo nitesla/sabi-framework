@@ -14,6 +14,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+@SuppressWarnings("ALL")
 @Slf4j
 public class Utility {
 
@@ -182,7 +184,7 @@ public class Utility {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timestamp.getTime());
         cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.MINUTE, 10);
+        cal.add(Calendar.HOUR, 24);
         return String.valueOf(new Timestamp(cal.getTime().getTime()));
     }
 
@@ -192,7 +194,7 @@ public class Utility {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timestamp.getTime());
         cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.MINUTE, 15);
+        cal.add(Calendar.HOUR, 24);
         return String.valueOf(new Timestamp(cal.getTime().getTime()));
     }
 

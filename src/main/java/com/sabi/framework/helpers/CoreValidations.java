@@ -7,7 +7,9 @@ import com.sabi.framework.dto.requestDto.RolePermissionDto;
 import com.sabi.framework.dto.requestDto.UserDto;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.NotFoundException;
+import com.sabi.framework.models.Permission;
 import com.sabi.framework.repositories.PermissionRepository;
+import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class CoreValidations {
+    private RoleRepository roleRepository;
+    private PermissionRepository permissionRepository;
 
+    public CoreValidations(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+        this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
+    }
 
     public void validateRole(RoleDto roleDto) {
         if (roleDto.getName() == null || roleDto.getName().isEmpty())
@@ -34,14 +42,21 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
     }
 
-    public void validateRolePermission(RolePermissionDto rolePermissionDto){
-        if ((Long)rolePermissionDto.getRole_id() == null )
+    public void validateRolePermission(RolePermissionDto rolePermissionDto) {
+        if ((Long) rolePermissionDto.getRoleId() == null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role Id cannot be empty");
-        if (rolePermissionDto.getPermission_id() == null || rolePermissionDto.getPermission_id().isEmpty())
+        if (rolePermissionDto.getPermissions() == null || rolePermissionDto.getPermissions().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role permission(s) cannot be empty");
-
+        roleRepository.findById(rolePermissionDto.getRoleId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Enter a valid Role"));
+        rolePermissionDto.getPermissions().forEach((p) -> {
+            Permission permission = permissionRepository.findByName(p.getName());
+            if (permission == null)
+                new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Permission " + permission.getName() + " Does not exist");
+        });
     }
-
 
 
     public void validateUser(UserDto userDto) {

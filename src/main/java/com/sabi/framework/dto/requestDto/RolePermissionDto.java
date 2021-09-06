@@ -1,5 +1,6 @@
 package com.sabi.framework.dto.requestDto;
 
+import com.sabi.framework.models.Permission;
 import lombok.Data;
 
 import java.util.List;
@@ -7,6 +8,6 @@ import java.util.List;
 @Data
 public class RolePermissionDto {
 
-    private long role_id;
-    private List<Integer> permission_id;
+    private Long roleId;
+    private List<Permission> permissions;
 }

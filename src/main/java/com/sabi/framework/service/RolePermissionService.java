@@ -16,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 @Slf4j
 @Service
 public class RolePermissionService {
@@ -42,7 +45,7 @@ public class RolePermissionService {
         coreValidations.validateRolePermission(request);
         RolePermission rolePermission = mapper.map(request,RolePermission.class);
         RolePermission rolePermissionExist = rolePermissionRepository
-                .findByRoleId(request.getRole_id());
+                .findByRoleId(request.getRoleId());
         if(rolePermissionExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION,
                     " RolePermission already exist");
@@ -63,9 +66,9 @@ public class RolePermissionService {
 
     public RolePermissionResponseDto updateRolePermission(RolePermissionDto request) {
         coreValidations.validateRolePermission(request);
-        RolePermission rolePermission = mapper.map(request,RolePermission.class);
+        RolePermission rolePermission = mapper.map(request, RolePermission.class);
         RolePermission rolePermissionExist = rolePermissionRepository
-                .findByRoleId(request.getRole_id());
+                .findByRoleId(request.getRoleId());
         if(rolePermissionExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION,
                     " RolePermission already exist");
@@ -87,6 +90,7 @@ public class RolePermissionService {
         RolePermission rolePermission = rolePermissionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested RolePermission id does not exist!"));
+        log.info(String.valueOf(Arrays.asList(rolePermission.getPermissions())));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
@@ -96,7 +100,7 @@ public class RolePermissionService {
      * </summary>
      * <remarks>this method is responsible for getting all records in pagination</remarks>
      */
-    public Page<RolePermission> findAll(long roleId, Boolean isActive, PageRequest pageRequest ){
+    public Page<RolePermission> findAll(Long roleId, Boolean isActive, PageRequest pageRequest ){
         Page<RolePermission> functions = rolePermissionRepository.findRolePermission(roleId, isActive, pageRequest);
         if(functions == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");

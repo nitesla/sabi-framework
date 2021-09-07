@@ -11,6 +11,7 @@
         <datasource-mapping>
           <factory-entry name="entityManagerFactory" />
         </datasource-mapping>
+        <naming-strategy-map />
       </configuration>
     </facet>
     <facet type="web" name="Web">
@@ -166,7 +167,7 @@
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-freemarker:2.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.28" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.6" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.16" level="project" />
     <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:2.3.2" level="project" />
   </component>
 </module>

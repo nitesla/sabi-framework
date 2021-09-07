@@ -12,7 +12,7 @@ public interface PreviousPasswordRepository extends JpaRepository<PreviousPasswo
 
 
 
-     @Query(value ="SELECT id,createdDate, password,userId FROM previouspasswords  WHERE userId=?1 ORDER BY createdDate DESC LIMIT 4", nativeQuery=true)
+     @Query(value ="SELECT id,createdDate, password,userId FROM previouspasswords  WHERE userId=?1 ORDER BY createdDate DESC LIMIT 3", nativeQuery=true)
     List<PreviousPasswords> previousPasswords(Long userId);
 
 

@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Slf4j
 @Service
@@ -90,7 +89,7 @@ public class RolePermissionService {
         RolePermission rolePermission = rolePermissionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested RolePermission id does not exist!"));
-        log.info(String.valueOf(Arrays.asList(rolePermission.getPermissions())));
+        log.info(String.valueOf(Arrays.asList(rolePermission.getPermissionIds())));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 

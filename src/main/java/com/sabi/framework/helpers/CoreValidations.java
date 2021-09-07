@@ -14,6 +14,8 @@ import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @SuppressWarnings("All")
 @Slf4j
 @Service
@@ -45,16 +47,14 @@ public class CoreValidations {
     public void validateRolePermission(RolePermissionDto rolePermissionDto) {
         if ((Long) rolePermissionDto.getRoleId() == null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role Id cannot be empty");
-        if (rolePermissionDto.getPermissions() == null || rolePermissionDto.getPermissions().isEmpty())
+        if (rolePermissionDto.getPermissionIds() == null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role permission(s) cannot be empty");
         roleRepository.findById(rolePermissionDto.getRoleId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         " Enter a valid Role"));
-        rolePermissionDto.getPermissions().forEach((p) -> {
-            Permission permission = permissionRepository.findByName(p.getName());
-            if (permission == null)
-                new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                        " Permission " + permission.getName() + " Does not exist");
+        rolePermissionDto.getPermissionIds().forEach((p) -> {
+            permissionRepository.findById(p).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                    " Permission " + p + " Does not exist"));
         });
     }
 

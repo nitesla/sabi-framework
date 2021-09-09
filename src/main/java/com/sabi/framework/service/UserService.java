@@ -7,10 +7,12 @@ import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
+import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.UserRepository;
+import com.sabi.framework.utils.Constants;
 import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -27,14 +29,17 @@ import java.util.Calendar;
 import java.util.List;
 
 
+
 @SuppressWarnings("ALL")
 @Slf4j
 @Service
 public class UserService {
 
 
+
+
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
     private PreviousPasswordRepository previousPasswordRepository;
     private UserRepository userRepository;
     private final ModelMapper mapper;
@@ -64,8 +69,9 @@ public class UserService {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
         String password = request.getPassword();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setCreatedBy(0l);
+        user.setUserCategory(Constants.ADMIN_USER);
         user.setIsActive(false);
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
@@ -157,7 +163,7 @@ public class UserService {
      */
 
     public void changeUserPassword(ChangePasswordDto request) {
-
+        coreValidations.changePassword(request);
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
@@ -169,7 +175,7 @@ public class UserService {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid previous password");
         }
         String password = request.getPassword();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setIsActive(true);
         user.setIsLocked("NULL");
         user.setUpdatedBy(0l);
@@ -194,7 +200,7 @@ public class UserService {
         List<PreviousPasswords> prev = previousPasswordRepository.previousPasswords(userId);
         for (PreviousPasswords pass : prev
                 ) {
-            if (bCryptPasswordEncoder.matches(password, pass.getPassword())) {
+            if (passwordEncoder.matches(password, pass.getPassword())) {
                 return Boolean.TRUE;
             }
         }
@@ -278,5 +284,90 @@ public class UserService {
         user.setIsActive(activateUserAccountDto.getIsActive());
         return userRepository.saveAndFlush(user);
     }
+
+
+    /** <summary>
+     * Set Transaction pin
+     * </summary>
+     * <remarks>this method is responsible for setting new transaction pin</remarks>
+     */
+    public void setPin (CreateTransactionPinDto request) {
+        coreValidations.validateTransactionPin(request);
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        mapper.map(request, user);
+        String pin = Encryptions.generateSha256(request.getTransactionPin());
+        user.setTransactionPin(pin);
+        userRepository.save(user);
+
+    }
+
+
+    /** <summary>
+     * Change Transaction pin OTP
+     * </summary>
+     * <remarks>this method is responsible for changing transaction pin OTP</remarks>
+     */
+    public void changePinOTP (CreateTransactionPinDto request) {
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+
+        if (!matchPasswords(user.getId(), request.getPassword())) {
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password");
+        }
+        user.setResetToken(Utility.registrationCode());
+        user.setResetTokenExpirationDate(Utility.tokenExpiration());
+        user = userRepository.save(user);
+        //--------- TODO NOTIFICATION --------------------
+    }
+
+
+    public Boolean matchPasswords(Long id,String password){
+        User prev = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        System.out.println(":::::::::  PREV PASSWORD :::::;" + prev.getPassword());
+            if (passwordEncoder.matches(password,prev.getPassword())) {
+                return Boolean.TRUE;
+            }
+
+        return Boolean.FALSE;
+    }
+
+
+
+    /** <summary>
+     * Change Transaction pin
+     * </summary>
+     * <remarks>this method is responsible for changing transaction pin </remarks>
+     */
+
+    public  void changePin (CreateTransactionPinDto request) {
+        coreValidations.validateTransactionPin(request);
+        User userExist = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        User user = userRepository.findByResetToken(request.getResetToken());
+        if(user == null){
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid OTP supplied");
+        }
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calobj = Calendar.getInstance();
+        String currentDate = df.format(calobj.getTime());
+        String regDate = user.getResetTokenExpirationDate();
+        String result = String.valueOf(currentDate.compareTo(regDate));
+        if(result.equals("1")){
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
+        }
+        String pin = Encryptions.generateSha256(request.getTransactionPin());
+        userExist.setTransactionPin(pin);
+        userRepository.save(userExist);
+
+    }
+
+
+
 
 }

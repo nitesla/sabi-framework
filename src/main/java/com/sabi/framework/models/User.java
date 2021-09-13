@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -17,14 +19,14 @@ import java.util.Date;
 public class User extends CoreEntity{
 
 
-    private int failedPasswordAttemptCount;
+    private Long loginAttempts;
 
-    private String isLocked;
 
     @Column(nullable = false)
     private String password;
 
     private Date lastLoginDate;
+    private Date lockedDate;
 
     @Column(nullable = false)
     private String firstName;
@@ -35,6 +37,12 @@ public class User extends CoreEntity{
     private String middleName;
 
     public Long roleId;
+
+    private LocalDateTime passwordChangedOn;
+
+
+    @Transient
+    private boolean loginStatus;
 
     @Column(nullable = false)
     private String email;

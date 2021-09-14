@@ -18,6 +18,7 @@ import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,9 +26,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
 
 
 @SuppressWarnings("ALL")
@@ -37,7 +39,8 @@ public class UserService {
 
 
 
-
+    @Value("${token.time.to.leave}")
+    long tokenTimeToLeave;
     @Autowired
     private PasswordEncoder passwordEncoder;
     private PreviousPasswordRepository previousPasswordRepository;
@@ -177,7 +180,7 @@ public class UserService {
         String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(password));
         user.setIsActive(true);
-        user.setIsLocked("NULL");
+        user.setLockedDate(null);
         user.setUpdatedBy(0l);
         user = userRepository.save(user);
 
@@ -221,12 +224,26 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
         mapper.map(request, user);
-        user.setIsLocked("NULL");
-        user.setFailedPasswordAttemptCount(0);
+        user.setLockedDate(null);
+        user.setLoginAttempts(Long.valueOf(0));
         userRepository.save(user);
 
     }
 
+
+
+    /** <summary>
+     * Lock account
+     * </summary>
+     * <remarks>this method is responsible for lock a user account</remarks>
+     */
+    public void lockLogin(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        user.setLockedDate(new Date());
+        userRepository.save(user);
+    }
 
 
     /** <summary>
@@ -273,6 +290,7 @@ public class UserService {
 
         request.setUpdatedBy(0l);
         request.setIsActive(true);
+        request.setPasswordChangedOn(LocalDateTime.now());
         userOTPValidation(user,request);
 
     }
@@ -282,6 +300,7 @@ public class UserService {
     public User userOTPValidation(User user, ActivateUserAccountDto activateUserAccountDto) {
         user.setUpdatedBy(activateUserAccountDto.getUpdatedBy());
         user.setIsActive(activateUserAccountDto.getIsActive());
+        user.setPasswordChangedOn(activateUserAccountDto.getPasswordChangedOn());
         return userRepository.saveAndFlush(user);
     }
 
@@ -368,6 +387,25 @@ public class UserService {
     }
 
 
+    public User loginUser(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail());
+        if (null == user) {
+            return null;
+        } else {
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                user.setLoginStatus(true);
+            } else {
+                user.setLoginStatus(false);
+            }
+            return user;
+        }
+    }
 
+
+
+    public long getSessionExpiry() {
+        //TODO Token expiry in seconds: 900 = 15mins
+        return tokenTimeToLeave / 60;
+    }
 
 }

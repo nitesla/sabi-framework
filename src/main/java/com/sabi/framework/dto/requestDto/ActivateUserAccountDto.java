@@ -2,6 +2,8 @@ package com.sabi.framework.dto.requestDto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ActivateUserAccountDto {
 
@@ -10,4 +12,7 @@ public class ActivateUserAccountDto {
 
     private Long updatedBy;
     private Boolean isActive;
+    private LocalDateTime passwordChangedOn;
+
+
 }

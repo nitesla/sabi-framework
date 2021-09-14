@@ -22,7 +22,7 @@ public class Utility {
 
 
 
-
+    public static final String APP_NAME = "SABI-AGENT";
 
 
 

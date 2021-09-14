@@ -1,4 +1,4 @@
-package com.sabi.framework.helpers;
+package com.sabi.framework.config;
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;

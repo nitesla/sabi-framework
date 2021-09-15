@@ -7,16 +7,10 @@ import com.google.gson.GsonBuilder;
 import com.sabi.framework.exceptions.ProcessingException;
 import com.sabi.framework.utils.RestTemplateResponseErrorHandler;
 import com.sun.istack.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
@@ -32,11 +26,12 @@ import java.util.Map;
  * This class is responsible for handling rest calls
  */
 
+@Slf4j
 @SuppressWarnings("ALL")
 @Component
 public class API {
 
-    private static final Logger log = LoggerFactory.getLogger(API.class);
+//    private static final Logger log = LoggerFactory.getLogger(API.class);
     private static ObjectMapper objectMapper = new ObjectMapper();
     private final ObjectMapper mapper;
     private RestTemplate restTemplate = new RestTemplate();
@@ -81,11 +76,10 @@ public class API {
 
 
     public <T> T post(String url, Object requestObject, Class<T> responseClass,
-                      @Nullable Map<String, String> headers, String requestId) {
+                      @Nullable Map<String, String> headers) {
         HttpServerErrorException httpServerErrorException;
         try {
-            log.info(requestId + " Headers " + headers);
-            log.info(requestId + " request payload to client : " + gson.toJson(requestObject));
+            log.info(" Headers " + headers);
             HttpHeaders requestHeaders = new HttpHeaders();
             requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             if (headers != null) {
@@ -94,22 +88,20 @@ public class API {
             HttpEntity<?> requestEntity = new HttpEntity<>(requestObject, requestHeaders);
             ResponseEntity<String> responseEntity = restTemplate
                     .exchange(url, HttpMethod.POST, requestEntity, String.class, requestObject);
-            log.info(requestId + " response payload from client : " + responseEntity.getBody());
-            log.info(requestId + " response HTTP status code from client : " + responseEntity
-                    .getStatusCode()
-                    .toString());
+            log.info("response payload from client :" + responseEntity.getBody());
+            log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
             return gson.fromJson(responseEntity.getBody(), responseClass);
 
         } catch (Exception e) {
-            log.error(requestId + " Request failed", e);
-            log.error(requestId + " response from client (Error): " + e.getMessage());
+            log.error(" Request failed", e);
+            log.error("response from client (Error): " + e.getMessage());
             throw new ProcessingException("response from client (Error): " + e.getMessage());
         }
     }
 
     // this is a post method
-    public <T> T post(String url, Object requestObject, Class<T> responseClass, String requestId) {
-        return post(url, requestObject, responseClass, null, requestId);
+    public <T> T post(String url, Object requestObject, Class<T> responseClass) {
+        return post(url, requestObject, responseClass, null);
     }
 
 

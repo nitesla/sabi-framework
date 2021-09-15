@@ -42,7 +42,8 @@ public class AuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = asHttp(request);
         HttpServletResponse httpResponse = asHttp(response);
 
-        Optional<String> token = Optional.fromNullable(httpRequest.getHeader("X-Auth-Token"));
+//        Optional<String> token = Optional.fromNullable(httpRequest.getHeader("X-Auth-Token"));
+        Optional<String> token = Optional.fromNullable(httpRequest.getHeader("Authorization"));
 
         try {
 

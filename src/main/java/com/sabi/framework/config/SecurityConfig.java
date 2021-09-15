@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests().antMatchers("/",
                 "/public/**", "/favicon.ico", "/pub/**",
                 "/api/v1/user/activateUser", "/api/v1/authenticate/login","/api/v1/authenticate/logout",
-                "/api/v1/user/forgetpassword","/api/v1/agent",
+                "/api/v1/user/forgetpassword","/api/v1/agent","/api/v1/authenticate/externaltoken",
                 "/v2/api-docs","/actuator/health","/actuator/**",
                 "/swagger-ui.html/**",
                 "/webjars/springfox-swagger-ui/**",

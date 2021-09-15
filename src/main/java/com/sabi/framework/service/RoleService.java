@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -106,7 +108,11 @@ public class RoleService {
     }
 
 
+    public List<Role> getAll(Boolean isActive){
+        List<Role> roles = roleRepository.findByIsActive(isActive);
+        return roles;
 
+    }
 
 
 

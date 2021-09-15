@@ -403,6 +403,14 @@ public class UserService {
 
 
 
+    public List<User> getAll(Boolean isActive){
+        List<User> user = userRepository.findByIsActive(isActive);
+        return user;
+
+    }
+
+
+
     public long getSessionExpiry() {
         //TODO Token expiry in seconds: 900 = 15mins
         return tokenTimeToLeave / 60;

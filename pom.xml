@@ -41,10 +41,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -64,11 +60,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.integralblue</groupId>
-			<artifactId>log4jdbc-spring-boot-starter</artifactId>
-			<version>1.0.2</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.wordnik</groupId>

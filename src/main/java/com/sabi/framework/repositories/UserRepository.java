@@ -25,6 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
+
+
     @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))"+
             " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+

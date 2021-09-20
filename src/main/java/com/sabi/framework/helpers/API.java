@@ -51,7 +51,7 @@ public class API {
 
     // this is a get method
     public <T> T get(String requestPath, Class<T> responseClass, Map<String, String> headers,
-                     String requestId) {
+                     Integer requestId) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         headers.forEach(requestHeaders::set);
@@ -60,7 +60,7 @@ public class API {
             log.info(requestId + " Headers " + headers);
             log.info(requestId + " ::: URI ::" + requestPath);
             URI uri = new URI(requestPath);
-            HttpEntity<?> requestEntity = new HttpEntity<>("", requestHeaders);
+            HttpEntity<?> requestEntity = new HttpEntity<>(requestId, requestHeaders);
             ResponseEntity<String> responseEntity = restTemplate
                     .exchange(uri, HttpMethod.GET, requestEntity, String.class);
             log.info(requestId + " response payload from client : " + responseEntity.getBody());
@@ -70,6 +70,29 @@ public class API {
             return gson.fromJson(responseEntity.getBody(), responseClass);
         } catch (Exception e) {
             log.error(requestId + " Request failed", e);
+            throw new ProcessingException(e.getMessage());
+        }
+    }
+
+    public <T> T get(String requestPath, Class<T> responseClass, Map<String, String> headers, Object requestObject) {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        headers.forEach(requestHeaders::set);
+        log.info("Headers " + headers);
+        try {
+            log.info(requestObject + " Headers " + headers);
+            log.info(requestObject + " ::: URI ::" + requestPath);
+            URI uri = new URI(requestPath);
+            HttpEntity<?> requestEntity = new HttpEntity<>(requestObject, requestHeaders);
+            ResponseEntity<String> responseEntity = restTemplate
+                    .exchange(uri, HttpMethod.GET, requestEntity, String.class);
+            log.info(requestObject + " response payload from client : " + responseEntity.getBody());
+            log.info(requestObject + " response HTTP status code from client : " + responseEntity
+                    .getStatusCode()
+                    .toString());
+            return gson.fromJson(responseEntity.getBody(), responseClass);
+        } catch (Exception e) {
+            log.error(requestObject + " Request failed", e);
             throw new ProcessingException(e.getMessage());
         }
     }

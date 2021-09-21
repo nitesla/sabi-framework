@@ -10,6 +10,7 @@ public class Constants {
     public static final String DETAILS = "details";
     public static final String ADMIN_USER = "A";
     public static final String AGENT_USER = "AU";
+    public static final String NOTIFICATION = "NOTIFICATION";
 
 
     //Status codes

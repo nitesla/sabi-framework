@@ -1,6 +1,8 @@
 package com.sabi.framework.service;
 
 import com.google.gson.Gson;
+import com.sabi.agent.core.dto.requestDto.NotificationRequestDto;
+import com.sabi.agent.service.integrations.NotificationService;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
@@ -45,13 +47,16 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private PreviousPasswordRepository previousPasswordRepository;
     private UserRepository userRepository;
+    private NotificationService notificationService;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
 
     public UserService(PreviousPasswordRepository previousPasswordRepository,UserRepository userRepository,
+                       NotificationService notificationService,
                        ModelMapper mapper,CoreValidations coreValidations) {
         this.previousPasswordRepository = previousPasswordRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
     }
@@ -80,6 +85,22 @@ public class UserService {
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
         log.debug("Create new user - {}"+ new Gson().toJson(user));
+
+
+        // --------  sending token to agent -----------
+        try{
+            NotificationRequestDto notification = new NotificationRequestDto();
+            notification.setTitle(Constants.NOTIFICATION);
+            User emailRecipient = userRepository.getOne(user.getId());
+            notification.setEmail(emailRecipient.getEmail());
+            notification.setMessage("Activation Otp " +" "+user.getResetToken());
+            notification.setFingerprint("e0224b3d-74f5-49c5-930f-61d7079c7b3b");
+            notificationService.emailNotificationRequest(notification);
+
+        }catch (Exception e){
+            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
+        }
+
         PreviousPasswords previousPasswords = PreviousPasswords.builder()
                 .userId(user.getId())
                 .password(user.getPassword())
@@ -264,8 +285,18 @@ public class UserService {
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         userRepository.save(user);
 
-        //----------------TODO -------------NOTIFICATION WITH NEW OTP
+        try{
+            NotificationRequestDto notification = new NotificationRequestDto();
+            notification.setTitle(Constants.NOTIFICATION);
+            User emailRecipient = userRepository.getOne(user.getId());
+            notification.setEmail(emailRecipient.getEmail());
+            notification.setMessage("Activation Otp " +" "+user.getResetToken());
+            notification.setFingerprint("e0224b3d-74f5-49c5-930f-61d7079c7b3b");
+            notificationService.emailNotificationRequest(notification);
 
+        }catch (Exception e){
+            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
+        }
     }
 
     /** <summary>
@@ -339,6 +370,18 @@ public class UserService {
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
+
+        try{
+            NotificationRequestDto notification = new NotificationRequestDto();
+            notification.setTitle(Constants.NOTIFICATION);
+            User emailRecipient = userRepository.getOne(user.getId());
+            notification.setEmail(emailRecipient.getEmail());
+            notification.setMessage("Activation Otp " +" "+user.getResetToken());
+            notificationService.emailNotificationRequest(notification);
+
+        }catch (Exception e){
+            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
+        }
         //--------- TODO NOTIFICATION --------------------
     }
 

@@ -67,7 +67,7 @@ public class RolePermissionService {
         coreValidations.validateRolePermission(request);
         RolePermission rolePermission = mapper.map(request, RolePermission.class);
         RolePermission rolePermissionExist = rolePermissionRepository
-                .findByRoleId(request.getRoleId());
+                .findByRoleId(request.getId());
         if(rolePermissionExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION,
                     " RolePermission already exist");

@@ -67,7 +67,7 @@ public class UserService {
     public UserResponse createUser(UserDto request) {
         coreValidations.validateUser(request);
         User user = mapper.map(request,User.class);
-        User userExist = userRepository.findByEmail(request.getEmail());
+        User userExist = userRepository.findByPhone(request.getPhone());
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
@@ -255,7 +255,7 @@ public class UserService {
     public  void forgetPassword (ForgetPasswordDto request) {
         User user = userRepository.findByEmail(request.getEmail());
         if(user == null){
-            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid email");
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid phone number");
         }
         if(user.getIsActive().equals(false)){
             throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
@@ -388,7 +388,7 @@ public class UserService {
 
 
     public User loginUser(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail());
+        User user = userRepository.findByPhone(loginRequest.getPhone());
         if (null == user) {
             return null;
         } else {

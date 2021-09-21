@@ -7,7 +7,6 @@ import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.utils.CustomResponseCode;
-import com.sabi.framework.utils.PasswordUtil;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -82,10 +81,10 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for phone number ");
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
-        if (userDto.getPassword().length() < 8 || userDto.getPassword().length() > 20)// NAME LENGTH*********
+        if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 20)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password length");
-        if (!PasswordUtil.passwordValidator(userDto.getPassword()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
+//        if (!PasswordUtil.passwordValidator(userDto.getPassword()))
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
     }
 
 
@@ -133,10 +132,10 @@ public class CoreValidations {
     public void changePassword(ChangePasswordDto changePasswordDto) {
         if (changePasswordDto.getPassword() == null || changePasswordDto.getPassword().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
-        if (changePasswordDto.getPassword().length() < 8 || changePasswordDto.getPassword().length() > 20)// NAME LENGTH*********
+        if (changePasswordDto.getPassword().length() < 6 || changePasswordDto.getPassword().length() > 20)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password length");
-        if (!PasswordUtil.passwordValidator(changePasswordDto.getPassword()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
+//        if (!PasswordUtil.passwordValidator(changePasswordDto.getPassword()))
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
         if (changePasswordDto.getPreviousPassword() == null || changePasswordDto.getPreviousPassword().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Previous password cannot be empty");
 

@@ -33,7 +33,7 @@ public abstract class CoreEntity implements Serializable {
 
     private Long createdBy;
     private Long updatedBy;
-    private Boolean isActive;
+    private boolean isActive;
 
 
 }

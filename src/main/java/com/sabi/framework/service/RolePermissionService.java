@@ -50,7 +50,7 @@ public class RolePermissionService {
                     " RolePermission already exist");
         }
         rolePermission.setCreatedBy(0L);
-        rolePermission.setIsActive(true);
+        rolePermission.setActive(true);
         rolePermission = rolePermissionRepository.save(rolePermission);
         log.debug("Create new RolePermission - {}"+ new Gson().toJson(rolePermission));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
@@ -111,7 +111,7 @@ public class RolePermissionService {
         RolePermission creditLevel  = rolePermissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
-        creditLevel.setIsActive(request.getIsActive());
+        creditLevel.setActive(request.getIsActive());
         creditLevel.setUpdatedBy(0L);
         rolePermissionRepository.save(creditLevel);
 

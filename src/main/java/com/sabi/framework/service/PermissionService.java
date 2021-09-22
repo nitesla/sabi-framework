@@ -48,7 +48,7 @@ public class PermissionService {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Permission already exist");
         }
         permission.setCreatedBy(0l);
-        permission.setIsActive(true);
+        permission.setActive(true);
         permission = permissionRepository.save(permission);
         log.debug("Create new permission - {}"+ new Gson().toJson(permission));
         return mapper.map(permission, PermissionResponseDto.class);

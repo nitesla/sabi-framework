@@ -11,7 +11,6 @@
         <datasource-mapping>
           <factory-entry name="entityManagerFactory" />
         </datasource-mapping>
-        <naming-strategy-map />
       </configuration>
     </facet>
     <facet type="web" name="Web">
@@ -36,8 +35,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.18" level="project" />
-    <orderEntry type="library" name="Maven: com.sabi.service:sabi-agent-service:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sabi.core:sabi-agent-core:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:2.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:2.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.9.4" level="project" />

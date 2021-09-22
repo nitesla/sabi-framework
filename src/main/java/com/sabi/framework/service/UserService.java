@@ -83,7 +83,7 @@ public class UserService {
         log.debug("Create new user - {}"+ new Gson().toJson(user));
 
 
-        // --------  sending token to agent -----------
+        // --------  sending token  -----------
         try{
             NotificationRequestDto notification = new NotificationRequestDto();
             notification.setTitle(Constants.NOTIFICATION);
@@ -378,7 +378,7 @@ public class UserService {
         }catch (Exception e){
             log.info(String.format(":notification Exception:  %s",  e.getMessage()));
         }
-        //--------- TODO NOTIFICATION --------------------
+
     }
 
 

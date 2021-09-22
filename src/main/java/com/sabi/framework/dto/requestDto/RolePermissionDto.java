@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class RolePermissionDto {
-
+    private Long id;
     private Long roleId;
     private List<Long> permissionIds;
 }

@@ -50,7 +50,7 @@ public class RoleService {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Role already exist");
         }
         role.setCreatedBy(0l);
-        role.setIsActive(true);
+        role.setActive(true);
         role = roleRepository.save(role);
         log.debug("Create new role - {}"+ new Gson().toJson(role));
         return mapper.map(role, RoleResponseDto.class);

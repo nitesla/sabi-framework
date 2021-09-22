@@ -76,7 +76,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setCreatedBy(0l);
         user.setUserCategory(Constants.ADMIN_USER);
-        user.setIsActive(false);
+        user.setActive(false);
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
@@ -168,7 +168,7 @@ public class UserService {
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        user.setIsActive(request.getIsActive());
+        user.setActive(request.getIsActive());
         user.setUpdatedBy(0l);
         userRepository.save(user);
 
@@ -196,7 +196,7 @@ public class UserService {
         }
         String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(password));
-        user.setIsActive(true);
+        user.setActive(true);
         user.setLockedDate(null);
         user.setUpdatedBy(0l);
         user = userRepository.save(user);
@@ -274,7 +274,7 @@ public class UserService {
         if(user == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid phone number");
         }
-        if(user.getIsActive().equals(false)){
+        if(user.isActive() == false){
             throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
         }
         user.setResetToken(Utility.registrationCode());
@@ -326,7 +326,7 @@ public class UserService {
 
     public User userOTPValidation(User user, ActivateUserAccountDto activateUserAccountDto) {
         user.setUpdatedBy(activateUserAccountDto.getUpdatedBy());
-        user.setIsActive(activateUserAccountDto.getIsActive());
+        user.setActive(activateUserAccountDto.getIsActive());
         user.setPasswordChangedOn(activateUserAccountDto.getPasswordChangedOn());
         return userRepository.saveAndFlush(user);
     }

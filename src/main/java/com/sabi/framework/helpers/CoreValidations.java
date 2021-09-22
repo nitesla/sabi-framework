@@ -3,9 +3,12 @@ package com.sabi.framework.helpers;
 
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.exceptions.BadRequestException;
+import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
+import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.repositories.RoleRepository;
+import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CoreValidations {
     private RoleRepository roleRepository;
+    private UserRepository userRepository;
     private PermissionRepository permissionRepository;
 
-    public CoreValidations(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    public CoreValidations(RoleRepository roleRepository,UserRepository userRepository, PermissionRepository permissionRepository) {
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
         this.permissionRepository = permissionRepository;
     }
 
@@ -72,6 +77,10 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
         if (!Utility.validEmail(userDto.getEmail().trim()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Email Address");
+        User user = userRepository.findByEmail(userDto.getEmail());
+        if(user !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
+        }
 
         if (userDto.getPhone() == null || userDto.getPhone().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Phone number cannot be empty");
@@ -79,6 +88,10 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid phone number  length");
         if (!Utility.isNumeric(userDto.getPhone()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for phone number ");
+        User userExist = userRepository.findByPhone(userDto.getPhone());
+        if(userExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "  user already exist");
+        }
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
         if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 20)// NAME LENGTH*********

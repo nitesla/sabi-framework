@@ -72,10 +72,6 @@ public class UserService {
     public UserResponse createUser(UserDto request) {
         coreValidations.validateUser(request);
         User user = mapper.map(request,User.class);
-        User userExist = userRepository.findByPhone(request.getPhone());
-        if(userExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
-        }
         String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(password));
         user.setCreatedBy(0l);

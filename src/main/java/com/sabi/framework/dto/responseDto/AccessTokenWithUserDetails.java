@@ -41,14 +41,20 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("tokenExpiry")
     private long tokenExpiry;
 
-    @JsonProperty("id")
-    private long id;
+    @JsonProperty("userId")
+    private long userId;
+
+    @JsonProperty("agentId")
+    private String agentId;
+
+    @JsonProperty("referralCode")
+    private String referralCode;
 
 
 
 
 
-    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry, String tokenTime) {
+    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry,String agentId,String referralCode) {
         this.accessToken = token;
 
         this.email = user.getEmail();
@@ -58,7 +64,9 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.lastLoginDate = user.getLastLoginDate();
         this.menu = menu;
         this.tokenExpiry = tokenExpiry;
-        this.id=user.getId();
+        this.userId=user.getId();
+        this.agentId=agentId;
+        this.referralCode=referralCode;
 
 
 

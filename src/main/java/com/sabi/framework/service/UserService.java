@@ -428,16 +428,18 @@ public class UserService {
 
     public User loginUser(LoginRequest loginRequest) {
         User user = userRepository.findByPhone(loginRequest.getPhone());
-        if (null == user) {
-            return null;
-        } else {
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                user.setLoginStatus(true);
+            if (null == user) {
+                return null;
             } else {
-                user.setLoginStatus(false);
+
+                    if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                        user.setLoginStatus(true);
+                    } else {
+                        user.setLoginStatus(false);
+                    }
+                return user;
             }
-            return user;
-        }
+
     }
 
 

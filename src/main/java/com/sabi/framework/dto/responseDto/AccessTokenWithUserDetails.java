@@ -50,11 +50,16 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("referralCode")
     private String referralCode;
 
+    @JsonProperty("isEmailVerified")
+    private String isEmailVerified ;
 
 
 
 
-    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry,String agentId,String referralCode) {
+
+
+
+    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry,String agentId,String referralCode,String isEmailVerified) {
         this.accessToken = token;
 
         this.email = user.getEmail();
@@ -67,6 +72,7 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.userId=user.getId();
         this.agentId=agentId;
         this.referralCode=referralCode;
+        this.isEmailVerified=isEmailVerified;
 
 
 

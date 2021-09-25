@@ -52,7 +52,7 @@ public class NotificationService {
         this.mapper = mapper;
     }
 
-    public NotificationRequestDto emailNotificationRequest (NotificationRequestDto notification){
+    public NotificationResponseDto emailNotificationRequest (NotificationRequestDto notification){
 
         RecipientRequest recipient = RecipientRequest.builder()
                             .email(notification.getEmail())
@@ -75,11 +75,11 @@ public class NotificationService {
         response = api.post(multipleNotification, request, NotificationResponseDto.class, map);
         Notification notification1 = mapper.map(response, Notification.class);
         notification1 = notificationRepository.save(notification1);
-        return mapper.map(notification1, NotificationRequestDto.class);
+        return mapper.map(notification1, NotificationResponseDto.class);
 
     }
 
-    public NotificationRequestDto smsNotificationRequest (NotificationRequestDto notification){
+    public NotificationResponseDto smsNotificationRequest (NotificationRequestDto notification){
 
         RecipientRequest recipient = RecipientRequest.builder()
                 .email(notification.getEmail())
@@ -102,7 +102,7 @@ public class NotificationService {
         response = api.post(multipleNotification, request, NotificationResponseDto.class, map);
         Notification notification1 = mapper.map(response, Notification.class);
         notification1 = notificationRepository.save(notification1);
-        return mapper.map(notification1, NotificationRequestDto.class);
+        return mapper.map(notification1, NotificationResponseDto.class);
 
     }
 

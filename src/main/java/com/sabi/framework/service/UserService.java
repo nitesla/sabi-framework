@@ -1,8 +1,6 @@
 package com.sabi.framework.service;
 
 import com.google.gson.Gson;
-import com.sabi.agent.core.dto.requestDto.NotificationRequestDto;
-import com.sabi.agent.service.integrations.NotificationService;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
@@ -12,6 +10,8 @@ import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.User;
+import com.sabi.framework.notification.requestDto.NotificationRequestDto;
+import com.sabi.framework.notification.service.NotificationService;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.Constants;
@@ -168,7 +168,7 @@ public class UserService {
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        user.setActive(request.getIsActive());
+        user.setActive(request.isActive());
         user.setUpdatedBy(0l);
         userRepository.save(user);
 

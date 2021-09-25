@@ -2,7 +2,6 @@ package com.sabi.framework.service;
 
 
 import com.sabi.framework.dto.requestDto.TokenRequest;
-import com.sabi.framework.dto.responseDto.SpaceResponse;
 import com.sabi.framework.dto.responseDto.TokenResponse;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.API;
@@ -85,11 +84,14 @@ public class ExternalTokenService {
 
 
 
-    public SpaceResponse getToken(){
+    public String getToken(){
         ExternalToken extToken = externalTokenRepository.findById(1l)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested id does not exist!"));
-        return mapper.map(extToken,SpaceResponse.class);
+
+        String result = extToken.getToken();
+        return result;
+
     }
 
 }

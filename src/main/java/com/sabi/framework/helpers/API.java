@@ -84,9 +84,12 @@ public class API {
             if (headers != null) {
                 headers.forEach(requestHeaders::set);
             }
+//            String request = new Gson().toJson(requestObject);
             HttpEntity<?> requestEntity = new HttpEntity<>(requestObject, requestHeaders);
-            ResponseEntity<String> responseEntity = restTemplate
-                    .exchange(url, HttpMethod.POST, requestEntity, String.class, requestObject);
+            log.info("request payload to client :" + requestObject);
+
+
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
             log.info("response payload from client :" + responseEntity.getBody());
             log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
             return gson.fromJson(responseEntity.getBody(), responseClass);

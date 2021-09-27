@@ -11,7 +11,7 @@ import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.User;
 import com.sabi.framework.notification.requestDto.NotificationRequestDto;
-import com.sabi.framework.notification.service.NotificationService;
+import com.sabi.framework.notification.requestDto.RecipientRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.Constants;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -82,26 +83,26 @@ public class UserService {
         user = userRepository.save(user);
         log.debug("Create new user - {}"+ new Gson().toJson(user));
 
-
-        // --------  sending token  -----------
-        try{
-            NotificationRequestDto notification = new NotificationRequestDto();
-            notification.setTitle(Constants.NOTIFICATION);
-            User emailRecipient = userRepository.getOne(user.getId());
-            notification.setEmail(emailRecipient.getEmail());
-            notification.setMessage("Activation Otp " +" "+user.getResetToken());
-            notification.setFingerprint("e0224b3d-74f5-49c5-930f-61d7079c7b3b");
-            notificationService.emailNotificationRequest(notification);
-
-        }catch (Exception e){
-            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
-        }
-
         PreviousPasswords previousPasswords = PreviousPasswords.builder()
                 .userId(user.getId())
                 .password(user.getPassword())
                 .build();
         previousPasswordRepository.save(previousPasswords);
+
+        // --------  sending token  -----------
+
+
+        NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
+        User emailRecipient = userRepository.getOne(user.getId());
+        notificationRequestDto.setMessage("Activation Otp " + " " + user.getResetToken());
+        List<RecipientRequest> recipient = new ArrayList<>();
+        recipient.add(RecipientRequest.builder()
+                .email(emailRecipient.getEmail())
+                .build());
+        notificationRequestDto.setRecipient(recipient);
+        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
+        notificationService.emailNotificationRequest(notificationRequestDto);
+
         return mapper.map(user, UserResponse.class);
     }
 
@@ -281,18 +282,17 @@ public class UserService {
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         userRepository.save(user);
 
-        try{
-            NotificationRequestDto notification = new NotificationRequestDto();
-            notification.setTitle(Constants.NOTIFICATION);
-            User emailRecipient = userRepository.getOne(user.getId());
-            notification.setEmail(emailRecipient.getEmail());
-            notification.setMessage("Activation Otp " +" "+user.getResetToken());
-            notification.setFingerprint("e0224b3d-74f5-49c5-930f-61d7079c7b3b");
-            notificationService.emailNotificationRequest(notification);
+        NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
+        User emailRecipient = userRepository.getOne(user.getId());
+        notificationRequestDto.setMessage("Activation Otp " + " " + user.getResetToken());
+        List<RecipientRequest> recipient = new ArrayList<>();
+        recipient.add(RecipientRequest.builder()
+                .email(emailRecipient.getEmail())
+                .build());
+        notificationRequestDto.setRecipient(recipient);
+        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
+        notificationService.emailNotificationRequest(notificationRequestDto);
 
-        }catch (Exception e){
-            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
-        }
     }
 
     /** <summary>
@@ -367,17 +367,18 @@ public class UserService {
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
 
-        try{
-            NotificationRequestDto notification = new NotificationRequestDto();
-            notification.setTitle(Constants.NOTIFICATION);
-            User emailRecipient = userRepository.getOne(user.getId());
-            notification.setEmail(emailRecipient.getEmail());
-            notification.setMessage("Activation Otp " +" "+user.getResetToken());
-            notificationService.emailNotificationRequest(notification);
 
-        }catch (Exception e){
-            log.info(String.format(":notification Exception:  %s",  e.getMessage()));
-        }
+        NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
+        User emailRecipient = userRepository.getOne(user.getId());
+        notificationRequestDto.setMessage("Activation Otp " + " " + user.getResetToken());
+        List<RecipientRequest> recipient = new ArrayList<>();
+        recipient.add(RecipientRequest.builder()
+                .email(emailRecipient.getEmail())
+                .build());
+        notificationRequestDto.setRecipient(recipient);
+        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
+        notificationService.emailNotificationRequest(notificationRequestDto);
+
 
     }
 

@@ -74,7 +74,6 @@
 			<version>2.9.8</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -206,11 +205,11 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.sabi.service</groupId>
-			<artifactId>sabi-agent-service</artifactId>
-			<version>1.0</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.sabi.service</groupId>-->
+			<!--<artifactId>sabi-agent-service</artifactId>-->
+			<!--<version>1.0</version>-->
+		<!--</dependency>-->
 
 
 

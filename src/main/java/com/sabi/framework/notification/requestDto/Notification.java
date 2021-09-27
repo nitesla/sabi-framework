@@ -1,29 +1,25 @@
 package com.sabi.framework.notification.requestDto;
 
 
-import com.sabi.framework.notification.model.RecipientRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * This class collects the request and map it to the entity class
- */
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class NotificationRequest2Dto {
+public class Notification {
 
-
-    private String message;
-    private String title;
     private Boolean email;
     private Boolean inApp;
-    private RecipientRequest recipient;
+    private String message;
+    private List<Notify> recipient;
     private Boolean sms;
+    private String title;
+
 
 }

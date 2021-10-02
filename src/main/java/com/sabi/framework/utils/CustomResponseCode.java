@@ -24,8 +24,9 @@ public class CustomResponseCode {
     public static final String INVALID_EXPIRED_CODE = "12";
     public static final String UNAUTHORIZED = "401";
     public static final String SEE_OTHER = "303";
-    public static final int ENABLE = 1;
-    public static final int DISABLE = 0;
+    public static final int ENABLE_VERIFICATION_STATUS = 1;
+    public static final int PENDING_VERIFICATION_STATUS = 0;
+    public static final int FAILED_VERIFICATION_STATUS = 2;
     public static final int DB_SUCCESS = 1;
     public static final String FOUND = "302";
     public static final String CREATED = "201";

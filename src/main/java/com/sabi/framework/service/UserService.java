@@ -337,12 +337,16 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for setting new transaction pin</remarks>
      */
-    public void setPin (CreateTransactionPinDto request) {
-        coreValidations.validateTransactionPin(request);
+    public void setPin (ChangeTransactionPin request) {
+        coreValidations.changeTransactionPin(request);
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        mapper.map(request, user);
+
+        String auth = Encryptions.generateSha256(request.getOldTransactionPin());
+        if(!auth.matches(user.getTransactionPin())){
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid old pin");
+        }
         String pin = Encryptions.generateSha256(request.getTransactionPin());
         user.setTransactionPin(pin);
         userRepository.save(user);

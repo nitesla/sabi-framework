@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByIsActive(Boolean isActive);
 
+    User findByTransactionPin (String transactionPin);
+
 
 
 

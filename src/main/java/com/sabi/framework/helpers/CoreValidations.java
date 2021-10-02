@@ -101,6 +101,18 @@ public class CoreValidations {
     }
 
 
+
+    public void changeTransactionPin(ChangeTransactionPin changeTransactionPin) {
+        if (changeTransactionPin.getTransactionPin() == null || changeTransactionPin.getTransactionPin().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Transaction pin cannot be empty");
+
+        if (!Utility.isNumeric(changeTransactionPin.getTransactionPin()))
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Transaction pin must be numeric ");
+
+        if (changeTransactionPin.getTransactionPin().length() < 4 || changeTransactionPin.getTransactionPin().length() > 6)// LENGTH*********
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid pin length");
+    }
+
     public void validateTransactionPin(CreateTransactionPinDto transactionPinDto) {
         if (transactionPinDto.getTransactionPin() == null || transactionPinDto.getTransactionPin().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Transaction pin cannot be empty");
@@ -110,8 +122,6 @@ public class CoreValidations {
 
         if (transactionPinDto.getTransactionPin().length() < 4 || transactionPinDto.getTransactionPin().length() > 6)// LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid pin length");
-
-
     }
 
 

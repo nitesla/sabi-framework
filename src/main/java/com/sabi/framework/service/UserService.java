@@ -72,12 +72,15 @@ public class UserService {
 
     public UserResponse createUser(UserDto request) {
         coreValidations.validateUser(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = mapper.map(request,User.class);
         String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(password));
-        user.setCreatedBy(0l);
+        user.setUsername(request.getEmail());
+        user.setCreatedBy(userCurrent.getId());
         user.setUserCategory(Constants.ADMIN_USER);
         user.setActive(false);
+        user.setLoginAttempts(0l);
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
@@ -116,11 +119,12 @@ public class UserService {
 
     public UserResponse updateUser(UserDto request) {
         coreValidations.updateUser(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
         mapper.map(request, user);
-        user.setUpdatedBy(0l);
+        user.setUpdatedBy(userCurrent.getId());
         userRepository.save(user);
         log.debug("user record updated - {}"+ new Gson().toJson(user));
         return mapper.map(user, UserResponse.class);
@@ -166,11 +170,12 @@ public class UserService {
      * <remarks>this method is responsible for enabling and dis enabling a user</remarks>
      */
     public void enableDisEnableUser (EnableDisEnableDto request){
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
         user.setActive(request.isActive());
-        user.setUpdatedBy(0l);
+        user.setUpdatedBy(userCurrent.getId());
         userRepository.save(user);
 
     }
@@ -185,6 +190,7 @@ public class UserService {
 
     public void changeUserPassword(ChangePasswordDto request) {
         coreValidations.changePassword(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
@@ -199,7 +205,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setActive(true);
         user.setLockedDate(null);
-        user.setUpdatedBy(0l);
+        user.setUpdatedBy(userCurrent.getId());
         user = userRepository.save(user);
 
         PreviousPasswords previousPasswords = PreviousPasswords.builder()
@@ -243,7 +249,7 @@ public class UserService {
                         "Requested user id does not exist!"));
         mapper.map(request, user);
         user.setLockedDate(null);
-        user.setLoginAttempts(Long.valueOf(0));
+        user.setLoginAttempts(0l);
         userRepository.save(user);
 
     }
@@ -432,7 +438,7 @@ public class UserService {
 
 
     public User loginUser(LoginRequest loginRequest) {
-        User user = userRepository.findByPhone(loginRequest.getPhone());
+        User user = userRepository.findByUsername(loginRequest.getUsername());
             if (null == user) {
                 return null;
             } else {
@@ -448,7 +454,6 @@ public class UserService {
     }
 
 
-
     public List<User> getAll(Boolean isActive){
         List<User> user = userRepository.findByIsActive(isActive);
         return user;
@@ -456,6 +461,44 @@ public class UserService {
     }
 
 
+
+    public void updateFailedLogin(Long id){
+        User userExist = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " user id does not exist!"));
+        if(userExist != null){
+            userExist.setFailedLoginDate(LocalDateTime.now());
+            Functions EF = new Functions();
+            userExist.setLoginAttempts(Long.valueOf(EF.value()));
+            userRepository.save(userExist);
+
+        }
+    }
+
+
+    public static class Functions{
+        static int i=0;
+        public int value()
+        {
+            i++;
+            return i;
+        }
+    }
+
+
+
+    public void updateLogin(Long id){
+        User userExist = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " user id does not exist!"));
+        if(userExist != null){
+            userExist.setLockedDate(null);
+            userExist.setLoginAttempts(0l);
+            userExist.setLastLogin(LocalDateTime.now());
+            userRepository.save(userExist);
+
+        }
+    }
 
     public long getSessionExpiry() {
         //TODO Token expiry in seconds: 900 = 15mins

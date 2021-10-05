@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sabi.framework.models.User;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,8 +33,8 @@ public class AccessTokenWithUserDetails implements Serializable{
     private String firstName;
 
 
-    @JsonProperty("lastLoginDate")
-    private Date lastLoginDate;
+    @JsonProperty("lastLogin")
+    private LocalDateTime lastLogin;
 
 
 
@@ -66,7 +66,7 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.phone = user.getPhone();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.lastLoginDate = user.getLastLoginDate();
+        this.lastLogin = user.getLastLogin();
         this.menu = menu;
         this.tokenExpiry = tokenExpiry;
         this.userId=user.getId();

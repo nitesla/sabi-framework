@@ -21,11 +21,12 @@ public class User extends CoreEntity{
 
     private Long loginAttempts;
 
+    private LocalDateTime failedLoginDate;
+    private LocalDateTime lastLogin;
 
     @Column(nullable = false)
     private String password;
 
-    private Date lastLoginDate;
     private Date lockedDate;
 
     @Column(nullable = false)
@@ -35,6 +36,7 @@ public class User extends CoreEntity{
     private String lastName;
 
     private String middleName;
+    private String username;
 
     public Long roleId;
 

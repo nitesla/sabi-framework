@@ -8,6 +8,7 @@ import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Role;
+import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +45,13 @@ public class RoleService {
 
     public RoleResponseDto createRole(RoleDto request) {
         coreValidations.validateRole(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Role role = mapper.map(request,Role.class);
         Role roleExist = roleRepository.findByName(request.getName());
         if(roleExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Role already exist");
         }
-        role.setCreatedBy(0l);
+        role.setCreatedBy(userCurrent.getId());
         role.setActive(true);
         role = roleRepository.save(role);
         log.debug("Create new role - {}"+ new Gson().toJson(role));
@@ -67,11 +69,12 @@ public class RoleService {
 
     public RoleResponseDto updateRole(RoleDto request) {
         coreValidations.validateRole(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Role role = roleRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested role id does not exist!"));
         mapper.map(request, role);
-        role.setUpdatedBy(0l);
+        role.setUpdatedBy(userCurrent.getId());
         roleRepository.save(role);
         log.debug("role record updated - {}"+ new Gson().toJson(role));
         return mapper.map(role, RoleResponseDto.class);

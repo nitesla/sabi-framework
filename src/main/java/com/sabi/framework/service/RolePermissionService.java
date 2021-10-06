@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.EnableDisEnableDto;
 import com.sabi.framework.dto.requestDto.RolePermissionDto;
 import com.sabi.framework.dto.responseDto.RolePermissionResponseDto;
-import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.RolePermission;
+import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.RolePermissionRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -43,11 +41,12 @@ public class RolePermissionService {
 
     public RolePermissionResponseDto createRolePermission(RolePermissionDto request) {
         coreValidations.validateRolePermission(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         RolePermission rolePermission = new RolePermission();
         for (long permission : request.getPermissionIds()) {
             rolePermission.setPermissionId(permission);
             rolePermission.setRoleId(request.getRoleId());
-            rolePermission.setCreatedBy(0L);
+            rolePermission.setCreatedBy(userCurrent.getId());
             rolePermission.setActive(true);
             boolean exists = rolePermissionRepository
                     .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
@@ -69,6 +68,7 @@ public class RolePermissionService {
 
     public RolePermissionResponseDto updateRolePermission(RolePermissionDto request) {
         coreValidations.validateRolePermission(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         rolePermissionRepository.findById(request.getId()).orElseThrow(() ->
                 new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested role permission id does not exist!")
@@ -78,7 +78,7 @@ public class RolePermissionService {
             rolePermission.setPermissionId(permission);
             rolePermission.setId(request.getId());
             rolePermission.setRoleId(request.getRoleId());
-            rolePermission.setCreatedBy(0L);
+            rolePermission.setUpdatedBy(userCurrent.getId());
             rolePermission.setActive(true);
             boolean exists = rolePermissionRepository
                     .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
@@ -121,11 +121,12 @@ public class RolePermissionService {
     }
 
     public void enableDisEnableState(EnableDisEnableDto request) {
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         RolePermission creditLevel = rolePermissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
         creditLevel.setActive(request.isActive());
-        creditLevel.setUpdatedBy(0L);
+        creditLevel.setUpdatedBy(userCurrent.getId());
         rolePermissionRepository.save(creditLevel);
 
     }

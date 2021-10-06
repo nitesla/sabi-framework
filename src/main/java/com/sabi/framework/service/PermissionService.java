@@ -8,6 +8,7 @@ import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Permission;
+import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -42,12 +43,13 @@ public class PermissionService {
 
     public PermissionResponseDto createPermission(PermissionDto request) {
         coreValidations.validateFunction(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Permission permission = mapper.map(request,Permission.class);
         Permission permissionExist = permissionRepository.findByName(request.getName());
         if(permissionExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Permission already exist");
         }
-        permission.setCreatedBy(0l);
+        permission.setCreatedBy(userCurrent.getId());
         permission.setActive(true);
         permission = permissionRepository.save(permission);
         log.debug("Create new permission - {}"+ new Gson().toJson(permission));
@@ -65,11 +67,12 @@ public class PermissionService {
 
     public PermissionResponseDto updatePermission(PermissionDto request) {
         coreValidations.validateFunction(request);
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Permission permission = permissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested permission id does not exist!"));
         mapper.map(request, permission);
-        permission.setUpdatedBy(0l);
+        permission.setUpdatedBy(userCurrent.getId());
         permissionRepository.save(permission);
         log.debug("permission record updated - {}"+ new Gson().toJson(permission));
         return mapper.map(permission, PermissionResponseDto.class);

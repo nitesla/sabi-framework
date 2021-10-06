@@ -3,7 +3,6 @@ package com.sabi.framework.repositories;
 
 import com.sabi.framework.models.RolePermission;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +19,5 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
     Page<RolePermission> findRolePermission(@Param("roleId") Long roleId,
                                             @Param("isActive") Boolean isActive,
                                             Pageable Pageable);
+    boolean existsByRoleIdAndPermissionId(Long roleId, Long permissionId);
 }

@@ -90,7 +90,7 @@ public class API {
 
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-            log.info("response payload from client :" + responseEntity.getBody());
+            log.info("response payload from client :" + responseEntity.getBody().toString());
             log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
             return gson.fromJson(responseEntity.getBody(), responseClass);
 

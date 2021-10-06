@@ -34,7 +34,8 @@ public class RolePermissionService {
         this.coreValidations = coreValidations;
     }
 
-    /** <summary>
+    /**
+     * <summary>
      * RolePermission creation
      * </summary>
      * <remarks>this method is responsible for creation of new RolePermission</remarks>
@@ -42,22 +43,25 @@ public class RolePermissionService {
 
     public RolePermissionResponseDto createRolePermission(RolePermissionDto request) {
         coreValidations.validateRolePermission(request);
-        RolePermission rolePermission = mapper.map(request,RolePermission.class);
-        RolePermission rolePermissionExist = rolePermissionRepository
-                .findByRoleId(request.getRoleId());
-        if(rolePermissionExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION,
-                    " RolePermission already exist");
+        RolePermission rolePermission = new RolePermission();
+        for (long permission : request.getPermissionIds()) {
+            rolePermission.setPermissionId(permission);
+            rolePermission.setRoleId(request.getRoleId());
+            rolePermission.setCreatedBy(0L);
+            rolePermission.setActive(true);
+            boolean exists = rolePermissionRepository
+                    .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
+            if (!exists) {
+                rolePermission = rolePermissionRepository.save(rolePermission);
+                log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
+            }
         }
-        rolePermission.setCreatedBy(0L);
-        rolePermission.setActive(true);
-        rolePermission = rolePermissionRepository.save(rolePermission);
-        log.debug("Create new RolePermission - {}"+ new Gson().toJson(rolePermission));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
 
-    /** <summary>
+    /**
+     * <summary>
      * RolePermission update
      * </summary>
      * <remarks>this method is responsible for updating already existing RolePermission</remarks>
@@ -65,50 +69,59 @@ public class RolePermissionService {
 
     public RolePermissionResponseDto updateRolePermission(RolePermissionDto request) {
         coreValidations.validateRolePermission(request);
-        RolePermission rolePermission = mapper.map(request, RolePermission.class);
-        RolePermission rolePermissionExist = rolePermissionRepository
-                .findByRoleId(request.getId());
-        if(rolePermissionExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION,
-                    " RolePermission already exist");
+        rolePermissionRepository.findById(request.getId()).orElseThrow(() ->
+                new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role permission id does not exist!")
+        );
+        RolePermission rolePermission = new RolePermission();
+        for (long permission : request.getPermissionIds()) {
+            rolePermission.setPermissionId(permission);
+            rolePermission.setId(request.getId());
+            rolePermission.setRoleId(request.getRoleId());
+            rolePermission.setCreatedBy(0L);
+            rolePermission.setActive(true);
+            boolean exists = rolePermissionRepository
+                    .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
+            if (!exists) {
+                rolePermission = rolePermissionRepository.save(rolePermission);
+                log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
+            }
         }
-        mapper.map(request, rolePermission);
-        rolePermission.setUpdatedBy(0L);
-        rolePermissionRepository.save(rolePermission);
-        log.debug("RolePermission record updated - {}"+ new Gson().toJson(rolePermission));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
 
-    /** <summary>
+    /**
+     * <summary>
      * Find RolePermission
      * </summary>
      * <remarks>this method is responsible for getting a single record</remarks>
      */
-    public RolePermissionResponseDto findRolePermission(Long id){
+    public RolePermissionResponseDto findRolePermission(Long id) {
         RolePermission rolePermission = rolePermissionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested RolePermission id does not exist!"));
-        log.info(String.valueOf(Arrays.asList(rolePermission.getPermissionIds())));
+//        log.info(String.valueOf(Arrays.asList(rolePermission.getPermissionId())));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
 
-    /** <summary>
+    /**
+     * <summary>
      * Find all functions
      * </summary>
      * <remarks>this method is responsible for getting all records in pagination</remarks>
      */
-    public Page<RolePermission> findAll(Long roleId, Boolean isActive, PageRequest pageRequest ){
+    public Page<RolePermission> findAll(Long roleId, Boolean isActive, PageRequest pageRequest) {
         Page<RolePermission> functions = rolePermissionRepository.findRolePermission(roleId, isActive, pageRequest);
-        if(functions == null){
+        if (functions == null) {
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
         return functions;
     }
 
-    public void enableDisEnableState (EnableDisEnableDto request){
-        RolePermission creditLevel  = rolePermissionRepository.findById(request.getId())
+    public void enableDisEnableState(EnableDisEnableDto request) {
+        RolePermission creditLevel = rolePermissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
         creditLevel.setActive(request.isActive());

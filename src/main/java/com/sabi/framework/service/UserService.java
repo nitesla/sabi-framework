@@ -12,6 +12,7 @@ import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.User;
 import com.sabi.framework.notification.requestDto.NotificationRequestDto;
 import com.sabi.framework.notification.requestDto.RecipientRequest;
+import com.sabi.framework.notification.requestDto.SmsRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.Constants;
@@ -105,6 +106,11 @@ public class UserService {
         notificationRequestDto.setRecipient(recipient);
         System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
         notificationService.emailNotificationRequest(notificationRequestDto);
+
+        SmsRequest smsRequest = SmsRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
 
         return mapper.map(user, UserResponse.class);
     }
@@ -296,7 +302,12 @@ public class UserService {
                 .email(emailRecipient.getEmail())
                 .build());
         notificationRequestDto.setRecipient(recipient);
-        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
+
+        SmsRequest smsRequest = SmsRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+
         notificationService.emailNotificationRequest(notificationRequestDto);
 
     }
@@ -386,7 +397,12 @@ public class UserService {
                 .email(emailRecipient.getEmail())
                 .build());
         notificationRequestDto.setRecipient(recipient);
-        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
+
+        SmsRequest smsRequest = SmsRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+
         notificationService.emailNotificationRequest(notificationRequestDto);
 
 

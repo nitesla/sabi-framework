@@ -27,6 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByTransactionPin (String transactionPin);
 
+    User findByFirstName(String firstName);
+    User findByLastName(String lastName);
+
 
 
 
@@ -43,5 +46,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                 @Param("email")String email,
                                 Pageable pageable);
 
+
+
+//    @Query("SELECT u.firstName,u.lastName,u.createdDate,u.createdBy,u.updatedDate,u.updatedBy,u.email,u.phone FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
+    @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+    Page<User> findAgentUser(@Param("firstName")String firstName,
+                         @Param("lastName")String lastName,
+                         Pageable pageable);
 
 }

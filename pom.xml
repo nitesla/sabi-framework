@@ -205,11 +205,11 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.sabi.service</groupId>
-			<artifactId>sabi-agent-service</artifactId>
-			<version>1.0</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.sabi.service</groupId>-->
+			<!--<artifactId>sabi-agent-service</artifactId>-->
+			<!--<version>1.0</version>-->
+		<!--</dependency>-->
 
 
 

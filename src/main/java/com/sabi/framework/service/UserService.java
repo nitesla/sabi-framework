@@ -1,8 +1,6 @@
 package com.sabi.framework.service;
 
 import com.google.gson.Gson;
-import com.sabi.agent.core.models.agentModel.Agent;
-import com.sabi.agent.service.repositories.agentRepo.AgentRepository;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
@@ -54,17 +52,17 @@ public class UserService {
     private NotificationService notificationService;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
-    private AgentRepository agentRepository;
+
 
     public UserService(PreviousPasswordRepository previousPasswordRepository,UserRepository userRepository,
                        NotificationService notificationService,
-                       ModelMapper mapper,CoreValidations coreValidations,AgentRepository agentRepository) {
+                       ModelMapper mapper,CoreValidations coreValidations) {
         this.previousPasswordRepository = previousPasswordRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
-        this.agentRepository = agentRepository;
+
     }
 
 
@@ -173,47 +171,6 @@ public class UserService {
 
 
 
-    public Page<User> findAgentUser(String firstName,String lastName, PageRequest pageRequest ){
-        Page<User> agentUser = userRepository.findAgentUser(firstName,lastName,pageRequest);
-        if(agentUser == null){
-            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
-        }
-        agentUser.getContent().forEach(users -> {
-            Agent agent = agentRepository.findByUserId(users.getId());
-            users.setAgentId(agent.getId());
-            users.setAgentCategoryId(agent.getAgentCategoryId());
-            users.setScope(agent.getScope());
-            users.setReferralCode(agent.getReferralCode());
-            users.setReferrer(agent.getReferrer());
-            users.setAddress(agent.getAddress());
-            users.setBvn(agent.getBvn());
-            users.setAgentType(agent.getAgentType());
-            users.setCreditLimit(agent.getCreditLimit());
-            users.setPayBackDuration(agent.getPayBackDuration());
-            users.setBalance(agent.getBalance());
-            users.setVerificationDate(agent.getVerificationDate());
-            users.setSupervisorId(agent.getSupervisorId());
-            users.setVerificationStatus(agent.getVerificationStatus());
-            users.setComment(agent.getComment());
-            users.setCardToken(agent.getCardToken());
-            users.setStatus(agent.getStatus());
-            users.setWalletId(agent.getWalletId());
-            users.setPicture(agent.getPicture());
-            users.setHasCustomizedTarget(agent.getHasCustomizedTarget());
-            users.setCreditLevelId(agent.getCreditLevelId());
-            users.setIdTypeId(agent.getIdTypeId());
-            users.setIdCard(agent.getIdCard());
-            users.setStateId(agent.getStateId());
-            users.setBankId(agent.getBankId());
-            users.setCountryId(agent.getCountryId());
-            users.setAccountNonLocked(agent.isAccountNonLocked());
-            users.setRegistrationTokenExpiration(agent.getRegistrationTokenExpiration());
-            users.setRegistrationToken(agent.getRegistrationToken());
-            users.setIsEmailVerified(agent.getIsEmailVerified());
-        });
-        return agentUser;
-
-    }
 
 
 

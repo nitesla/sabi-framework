@@ -162,7 +162,5 @@
     <orderEntry type="library" name="Maven: org.eclipse.birt.runtime:com.ibm.icu:4.4.2.v20110823" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
-    <orderEntry type="library" name="Maven: com.sabi.service:sabi-agent-service:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sabi.core:sabi-agent-core:1.0" level="project" />
   </component>
 </module>

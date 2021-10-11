@@ -111,6 +111,7 @@ public class UserService {
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
+        notificationService.smsNotificationRequest(smsRequest);
 
         return mapper.map(user, UserResponse.class);
     }
@@ -302,13 +303,14 @@ public class UserService {
                 .email(emailRecipient.getEmail())
                 .build());
         notificationRequestDto.setRecipient(recipient);
+        notificationService.emailNotificationRequest(notificationRequestDto);
 
         SmsRequest smsRequest = SmsRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
+        notificationService.smsNotificationRequest(smsRequest);
 
-        notificationService.emailNotificationRequest(notificationRequestDto);
 
     }
 
@@ -397,14 +399,13 @@ public class UserService {
                 .email(emailRecipient.getEmail())
                 .build());
         notificationRequestDto.setRecipient(recipient);
+        notificationService.emailNotificationRequest(notificationRequestDto);
 
         SmsRequest smsRequest = SmsRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
-
-        notificationService.emailNotificationRequest(notificationRequestDto);
-
+        notificationService.smsNotificationRequest(smsRequest);
 
     }
 

@@ -107,4 +107,7 @@ public class User extends CoreEntity{
     @Transient
     private Boolean isEmailVerified ;
 
+    @Transient
+    private String agentCategoryName;
+
 }

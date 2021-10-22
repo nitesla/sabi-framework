@@ -290,7 +290,7 @@ public class UserService {
     public  void forgetPassword (ForgetPasswordDto request) {
         User user = userRepository.findByEmail(request.getEmail());
         if(user == null){
-            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid phone number");
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid email");
         }
         if(user.isActive() == false){
             throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");

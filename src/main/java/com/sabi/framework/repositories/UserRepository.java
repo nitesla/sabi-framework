@@ -30,6 +30,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByFirstName(String firstName);
     User findByLastName(String lastName);
 
+    User findByFirstNameAndLastName(String firstName, String lastName);
+    User findByFirstNameAndLastNameAndMiddleName(String firstName, String lastName, String middleName);
+
 
 
 

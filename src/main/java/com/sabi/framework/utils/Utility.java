@@ -107,6 +107,12 @@ public class Utility {
         return name.matches(pattern);
     }
 
+    public static boolean validateEnableDisable(Boolean status) {
+        String pattern = "^true$|^false$";
+//        return status.matches(pattern);
+        return status.toString(status).matches(pattern);
+    }
+
 
 
 

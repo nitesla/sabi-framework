@@ -47,7 +47,7 @@ public class RolePermissionService {
             rolePermission.setPermissionId(permission);
             rolePermission.setRoleId(request.getRoleId());
             rolePermission.setCreatedBy(userCurrent.getId());
-            rolePermission.setActive(true);
+            rolePermission.setIsActive(true);
             boolean exists = rolePermissionRepository
                     .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
             if (!exists) {
@@ -79,7 +79,7 @@ public class RolePermissionService {
             rolePermission.setId(request.getId());
             rolePermission.setRoleId(request.getRoleId());
             rolePermission.setUpdatedBy(userCurrent.getId());
-            rolePermission.setActive(true);
+            rolePermission.setIsActive(true);
             boolean exists = rolePermissionRepository
                     .existsByRoleIdAndPermissionId(request.getRoleId(), permission);
             if (!exists) {
@@ -125,7 +125,7 @@ public class RolePermissionService {
         RolePermission creditLevel = rolePermissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
-        creditLevel.setActive(request.isActive());
+        creditLevel.setIsActive(request.isActive());
         creditLevel.setUpdatedBy(userCurrent.getId());
         rolePermissionRepository.save(creditLevel);
 

@@ -75,6 +75,22 @@ public class UserService {
 
     public UserResponse createUser(UserDto request) {
         coreValidations.validateUser(request);
+        User userExist = userRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
+        if(userExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
+        }
+        User userMiddleExist = userRepository.findByFirstNameAndLastNameAndMiddleName(request.getFirstName(), request.getLastName(), request.getMiddleName());
+        if(userMiddleExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
+        }
+        User emailExist = userRepository.findByEmail(request.getEmail());
+        if(emailExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
+        }
+        User phoneExist = userRepository.findByPhone(request.getPhone());
+        if(phoneExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Phone already exist");
+        }
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = mapper.map(request,User.class);
         String password = request.getPassword();
@@ -82,7 +98,7 @@ public class UserService {
         user.setUsername(request.getEmail());
         user.setCreatedBy(userCurrent.getId());
         user.setUserCategory(Constants.ADMIN_USER);
-        user.setActive(false);
+        user.setIsActive(false);
         user.setLoginAttempts(0l);
         user.setResetToken(Utility.registrationCode());
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
@@ -128,6 +144,22 @@ public class UserService {
 
     public UserResponse updateUser(UserDto request) {
         coreValidations.updateUser(request);
+        User userExist = userRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
+        if(userExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
+        }
+        User userMiddleExist = userRepository.findByFirstNameAndLastNameAndMiddleName(request.getFirstName(), request.getLastName(), request.getMiddleName());
+        if(userMiddleExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
+        }
+        User emailExist = userRepository.findByEmail(request.getEmail());
+        if(emailExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
+        }
+        User phoneExist = userRepository.findByPhone(request.getPhone());
+        if(phoneExist !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Phone already exist");
+        }
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
@@ -185,7 +217,7 @@ public class UserService {
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        user.setActive(request.isActive());
+        user.setIsActive(request.isActive());
         user.setUpdatedBy(userCurrent.getId());
         userRepository.save(user);
 
@@ -214,7 +246,7 @@ public class UserService {
         }
         String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(password));
-        user.setActive(true);
+        user.setIsActive(true);
         user.setLockedDate(null);
         user.setUpdatedBy(userCurrent.getId());
         user = userRepository.save(user);
@@ -292,7 +324,7 @@ public class UserService {
         if(user == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid email");
         }
-        if(user.isActive() == false){
+        if(user.getIsActive() == false){
             throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
         }
         user.setResetToken(Utility.registrationCode());
@@ -349,7 +381,7 @@ public class UserService {
 
     public User userOTPValidation(User user, ActivateUserAccountDto activateUserAccountDto) {
         user.setUpdatedBy(activateUserAccountDto.getUpdatedBy());
-        user.setActive(activateUserAccountDto.getIsActive());
+        user.setIsActive(activateUserAccountDto.getIsActive());
         user.setPasswordChangedOn(activateUserAccountDto.getPasswordChangedOn());
         return userRepository.saveAndFlush(user);
     }

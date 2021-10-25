@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -33,7 +34,8 @@ public abstract class CoreEntity implements Serializable {
 
     private Long createdBy;
     private Long updatedBy;
-    private boolean isActive;
+    @NotNull
+    private Boolean isActive;
 
 
 }

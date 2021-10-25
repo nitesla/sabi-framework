@@ -38,6 +38,11 @@ public class CoreValidations {
     }
 
     public void validateFunction(PermissionDto permissionDto) {
+        String valName = permissionDto.getName();
+        char valCharName = valName.charAt(0);
+        if (Character.isDigit(valCharName)){
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Name can not start with a number");
+        }
         if (permissionDto.getName() == null || permissionDto.getName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Name cannot be empty");
         if (permissionDto.getName().length() < 2 || permissionDto.getName().length() > 100)// NAME LENGTH*********

@@ -7,6 +7,9 @@ import com.sabi.framework.dto.responseDto.PermissionResponseDto;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
+import com.sabi.framework.helpers.GenericSpecification;
+import com.sabi.framework.helpers.SearchCriteria;
+import com.sabi.framework.helpers.SearchOperation;
 import com.sabi.framework.models.Permission;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
@@ -16,6 +19,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Slf4j
@@ -73,6 +78,13 @@ public class PermissionService {
                         "Requested permission id does not exist!"));
         mapper.map(request, permission);
         permission.setUpdatedBy(userCurrent.getId());
+        GenericSpecification<Permission> genericSpecification = new GenericSpecification<>();
+        genericSpecification.add(new SearchCriteria("name", permission.getName(), SearchOperation.EQUAL));
+        genericSpecification.add(new SearchCriteria("code", permission.getCode(), SearchOperation.EQUAL));
+        List<Permission> banks = permissionRepository.findAll(genericSpecification);
+        if(!banks.isEmpty())
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Permission already exist");
+
         permissionRepository.save(permission);
         log.debug("permission record updated - {}"+ new Gson().toJson(permission));
         return mapper.map(permission, PermissionResponseDto.class);

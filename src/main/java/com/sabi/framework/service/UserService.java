@@ -2,6 +2,7 @@ package com.sabi.framework.service;
 
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.*;
+import com.sabi.framework.dto.responseDto.ActivateUserResponse;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
@@ -79,18 +80,6 @@ public class UserService {
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
-        User userMiddleExist = userRepository.findByFirstNameAndLastNameAndMiddleName(request.getFirstName(), request.getLastName(), request.getMiddleName());
-        if(userMiddleExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
-        }
-        User emailExist = userRepository.findByEmail(request.getEmail());
-        if(emailExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
-        }
-        User phoneExist = userRepository.findByPhone(request.getPhone());
-        if(phoneExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Phone already exist");
-        }
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = mapper.map(request,User.class);
         String password = request.getPassword();
@@ -144,22 +133,6 @@ public class UserService {
 
     public UserResponse updateUser(UserDto request) {
         coreValidations.updateUser(request);
-        User userExist = userRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
-        if(userExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
-        }
-        User userMiddleExist = userRepository.findByFirstNameAndLastNameAndMiddleName(request.getFirstName(), request.getLastName(), request.getMiddleName());
-        if(userMiddleExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
-        }
-        User emailExist = userRepository.findByEmail(request.getEmail());
-        if(emailExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
-        }
-        User phoneExist = userRepository.findByPhone(request.getPhone());
-        if(phoneExist !=null){
-            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Phone already exist");
-        }
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
@@ -356,7 +329,7 @@ public class UserService {
      * <remarks>this method is responsible for activating users</remarks>
      */
 
-    public  void activateUser (ActivateUserAccountDto request) {
+    public ActivateUserResponse activateUser (ActivateUserAccountDto request) {
         User user = userRepository.findByResetToken(request.getResetToken());
         if(user == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid OTP supplied");
@@ -374,6 +347,14 @@ public class UserService {
         request.setIsActive(true);
         request.setPasswordChangedOn(LocalDateTime.now());
         userOTPValidation(user,request);
+
+        ActivateUserResponse response = ActivateUserResponse.builder()
+                .userId(user.getId())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .build();
+
+        return response;
 
     }
 

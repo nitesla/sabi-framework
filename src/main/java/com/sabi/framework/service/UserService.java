@@ -111,7 +111,6 @@ public class UserService {
                 .email(emailRecipient.getEmail())
                 .build());
         notificationRequestDto.setRecipient(recipient);
-        System.out.println(":::::: AGENT NOTIFICATION ::::" + notificationRequestDto);
         notificationService.emailNotificationRequest(notificationRequestDto);
 
         SmsRequest smsRequest = SmsRequest.builder()

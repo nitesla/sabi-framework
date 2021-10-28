@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/v1/agent/resendotp","/api/v1/agent/activateUser","/api/v1/ping/check",
                 "/logistics/api/v1/authenticate/login","/logistics/api/v1/authenticate/logout","/logistics/api/v1/user/activateUser",
                 "/logistics/api/v1/user/forgetpassword","/logistics/api/v1/authenticate/externaltoken",
-                "/logistics/api/v1/partner/signup","/logistics/api/v1/partner/resendotp","/logistics/api/v1/partner/validateotp",
+                "/api/v1/partner/completesignup","/api/v1/partner/signup",
                 "/v2/api-docs","/actuator/health","/actuator/**",
                 "/swagger-ui.html/**",
                 "/webjars/springfox-swagger-ui/**",

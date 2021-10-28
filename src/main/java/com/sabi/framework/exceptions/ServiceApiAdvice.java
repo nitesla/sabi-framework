@@ -3,15 +3,22 @@ package com.sabi.framework.exceptions;
 
 
 import com.sabi.framework.dto.responseDto.Response;
+import com.sabi.framework.helpers.ResponseHelper;
 import com.sabi.framework.loggers.LoggerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("ALL")
 @Slf4j
@@ -22,6 +29,8 @@ public class ServiceApiAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceApiAdvice.class);
 
+    @Autowired
+    private ResponseHelper helper;
 
     @ExceptionHandler(LockedException.class)
     @ResponseStatus(value = HttpStatus.LOCKED)
@@ -151,5 +160,18 @@ public class ServiceApiAdvice {
         return response;
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Response handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return helper.buildError(MissingFieldException.builder()
+                .message("Validation error").fields(errors).build(), HttpStatus.BAD_REQUEST, "Bad Request");
+    }
 
 }

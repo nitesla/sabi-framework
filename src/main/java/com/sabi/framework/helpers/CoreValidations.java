@@ -22,7 +22,7 @@ public class CoreValidations {
     private UserRepository userRepository;
     private PermissionRepository permissionRepository;
 
-    public CoreValidations(RoleRepository roleRepository,UserRepository userRepository, PermissionRepository permissionRepository) {
+    public CoreValidations(RoleRepository roleRepository, UserRepository userRepository, PermissionRepository permissionRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.permissionRepository = permissionRepository;
@@ -78,7 +78,7 @@ public class CoreValidations {
         if (!Utility.validEmail(userDto.getEmail().trim()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Email Address");
         User user = userRepository.findByEmail(userDto.getEmail());
-        if(user !=null){
+        if (user != null) {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Email already exist");
         }
 
@@ -89,7 +89,7 @@ public class CoreValidations {
         if (!Utility.isNumeric(userDto.getPhone()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for phone number ");
         User userExist = userRepository.findByPhone(userDto.getPhone());
-        if(userExist !=null){
+        if (userExist != null) {
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "  user already exist");
         }
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
@@ -99,7 +99,6 @@ public class CoreValidations {
 //        if (!PasswordUtil.passwordValidator(userDto.getPassword()))
 //            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
     }
-
 
 
     public void changeTransactionPin(ChangeTransactionPin changeTransactionPin) {
@@ -149,7 +148,6 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for phone number ");
 
     }
-
 
 
     public void changePassword(ChangePasswordDto changePasswordDto) {

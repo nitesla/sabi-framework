@@ -64,8 +64,6 @@ public class CoreValidations {
 
 
     public void validateUser(UserDto userDto) {
-        if (userDto == null)
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Request cannot be empty");
 
         if (userDto.getFirstName() == null || userDto.getFirstName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");

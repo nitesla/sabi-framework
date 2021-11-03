@@ -67,16 +67,12 @@ public class CoreValidations {
 
         if (userDto.getFirstName() == null || userDto.getFirstName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
-        if (userDto.getFirstName() == null || userDto.getFirstName().trim().isEmpty())
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
         if (!Utility.validateName(userDto.getFirstName()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for First Name ");
         if (userDto.getFirstName().length() < 2 || userDto.getFirstName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid first name  length");
 
         if (userDto.getLastName() == null || userDto.getLastName().isEmpty())
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");
-        if (userDto.getLastName() == null || userDto.getLastName().trim().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");
         if (!Utility.validateName(userDto.getLastName()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Last Name ");
@@ -183,8 +179,6 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
         if (changePasswordDto.getPassword().length() < 6 || changePasswordDto.getPassword().length() > 20)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password length");
-//        if (!PasswordUtil.passwordValidator(changePasswordDto.getPassword()))
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
         if (changePasswordDto.getPreviousPassword() == null || changePasswordDto.getPreviousPassword().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Previous password cannot be empty");
 

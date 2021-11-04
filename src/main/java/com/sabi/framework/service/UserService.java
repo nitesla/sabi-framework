@@ -89,7 +89,7 @@ public class UserService {
         user.setUserCategory(Constants.ADMIN_USER);
         user.setIsActive(false);
         user.setLoginAttempts(0l);
-        user.setResetToken(Utility.registrationCode());
+        user.setResetToken(Utility.registrationCode("HHmmss"));
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
         log.debug("Create new user - {}"+ new Gson().toJson(user));
@@ -299,7 +299,7 @@ public class UserService {
         if(user.getIsActive() == false){
             throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
         }
-        user.setResetToken(Utility.registrationCode());
+        user.setResetToken(Utility.registrationCode("HHmmss"));
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         userRepository.save(user);
 
@@ -402,7 +402,7 @@ public class UserService {
         if (!matchPasswords(user.getId(), request.getPassword())) {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password");
         }
-        user.setResetToken(Utility.registrationCode());
+        user.setResetToken(Utility.registrationCode("HHmmss"));
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
 

@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -170,18 +169,29 @@ public class Utility {
     }
 
 
+//
+//    public static String registrationCode() {
+//        String SALTCHARS = "1234567890";
+//        StringBuilder salt = new StringBuilder();
+//        Random rnd = new Random();
+//        while (salt.length() < 6) { // length of the random string.
+//            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+//            salt.append(SALTCHARS.charAt(index));
+//        }
+//        String saltStr = salt.toString();
+//
+//        return saltStr;
+//    }
 
-    public static String registrationCode() {
-        String SALTCHARS = "1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 6) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
+
+
+    public static String registrationCode(String dateFormat) {
+        String[] strNow = new SimpleDateFormat(dateFormat).format(new Date()).split("-");
+        String str="";
+        for (String string : strNow) {
+            str=str+string;
         }
-        String saltStr = salt.toString();
-
-        return saltStr;
+        return str;
     }
 
 

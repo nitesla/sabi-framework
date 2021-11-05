@@ -79,10 +79,10 @@ public class CoreValidations {
         if (userDto.getLastName().length() < 2 || userDto.getLastName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid last name  length");
 
-        if (!Utility.validateName(userDto.getMiddleName()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
-        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
+//        if (!Utility.validateName(userDto.getMiddleName()))
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
+//        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
@@ -153,10 +153,10 @@ public class CoreValidations {
         if (userDto.getLastName().length() < 2 || userDto.getLastName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid last name  length");
 
-        if (!Utility.validateName(userDto.getMiddleName()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
-        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
+//        if (!Utility.validateName(userDto.getMiddleName()))
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
+//        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");

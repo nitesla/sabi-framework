@@ -430,7 +430,6 @@ public class UserService {
         User prev = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        System.out.println(":::::::::  PREV PASSWORD :::::;" + prev.getPassword());
             if (passwordEncoder.matches(password,prev.getPassword())) {
                 return Boolean.TRUE;
             }

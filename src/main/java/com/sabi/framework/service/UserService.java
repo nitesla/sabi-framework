@@ -82,7 +82,8 @@ public class UserService {
         }
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = mapper.map(request,User.class);
-        String password = request.getPassword();
+//        String password = request.getPassword();
+        String password = Utility.getSaltString();
         user.setPassword(passwordEncoder.encode(password));
         user.setUsername(request.getEmail());
         user.setCreatedBy(userCurrent.getId());

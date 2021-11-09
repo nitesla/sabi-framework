@@ -12,7 +12,7 @@ public class UserDto {
     private String middleName;
     private String email;
     private String phone;
-    private String password;
-    private String fingerPrint;
+//    private String password;
+//    private String fingerPrint;
 
 }

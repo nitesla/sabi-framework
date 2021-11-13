@@ -14,7 +14,7 @@ public class AuthData {
     @JsonProperty("code")
     private String code;
     @JsonProperty("EncryptedSecKey")
-    private EncryptedSecKey encryptedSecKey;
+    private EncryptedSecKey EncryptedSecKey;
     @JsonProperty("message")
     private String message;
 

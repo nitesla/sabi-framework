@@ -103,12 +103,11 @@ public class CoreValidations {
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "  user phone already exist");
         }
-        if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
-        if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 20)// NAME LENGTH*********
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password length");
-//        if (!PasswordUtil.passwordValidator(userDto.getPassword()))
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Password Format");
+//        if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
+//        if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 20)// NAME LENGTH*********
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid password length");
+
     }
 
 

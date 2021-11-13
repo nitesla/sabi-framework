@@ -51,11 +51,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
-//    @Query("SELECT u.firstName,u.lastName,u.createdDate,u.createdBy,u.updatedDate,u.updatedBy,u.email,u.phone FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
+
     @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
     Page<User> findAgentUser(@Param("firstName")String firstName,
                          @Param("lastName")String lastName,
                          Pageable pageable);
 
+
+
+
+    @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
+            " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+
+            " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))"+
+            " AND ((:username IS NULL) OR (:username IS NOT NULL AND u.username = :username))"+
+            " AND ((:roleId IS NULL) OR (:roleId IS NOT NULL AND u.roleId = :roleId))"+
+            " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))"+
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+    Page<User> findByClientId(@Param("firstName")String firstName,
+                              @Param("phone")String phone,
+                              @Param("email")String email,
+                              @Param("username")String username,
+                              @Param("roleId")Long roleId,
+                              @Param("clientId")Long clientId,
+                              @Param("lastName")String lastName,
+                             Pageable pageable);
 }

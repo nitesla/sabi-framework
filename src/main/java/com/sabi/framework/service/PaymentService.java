@@ -3,25 +3,23 @@ package com.sabi.framework.service;
 
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
-import com.sabi.framework.exceptions.ProcessingException;
 import com.sabi.framework.helpers.API;
 import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PaymentDetails;
 import com.sabi.framework.repositories.PaymentDetailRepository;
 import com.sabi.framework.utils.CustomResponseCode;
-import com.sabi.integrations.payment_integration.models.CheckOutDto;
-import com.sabi.integrations.payment_integration.models.request.AuthenticationRequest;
-import com.sabi.integrations.payment_integration.models.request.CheckOutRequest;
-import com.sabi.integrations.payment_integration.models.response.CheckOutResponse;
-import com.sabi.integrations.payment_integration.models.response.PaymentAuthenticationResponse;
-import com.sabi.integrations.payment_integration.models.response.PaymentStatusResponse;
+import com.sabi.framework.integrations.payment_integration.models.CheckOutDto;
+import com.sabi.framework.integrations.payment_integration.models.request.AuthenticationRequest;
+import com.sabi.framework.integrations.payment_integration.models.request.CheckOutRequest;
+import com.sabi.framework.integrations.payment_integration.models.response.CheckOutResponse;
+import com.sabi.framework.integrations.payment_integration.models.response.PaymentAuthenticationResponse;
+import com.sabi.framework.integrations.payment_integration.models.response.PaymentStatusResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.sabi.integrations.payment_integration.models.response;
+package com.sabi.framework.integrations.payment_integration.models.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

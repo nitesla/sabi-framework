@@ -1,4 +1,4 @@
-package com.sabi.integrations.payment_integration.models;
+package com.sabi.framework.integrations.payment_integration.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

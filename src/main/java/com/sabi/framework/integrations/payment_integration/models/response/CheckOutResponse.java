@@ -1,11 +1,10 @@
-package com.sabi.integrations.payment_integration.models.response;
+package com.sabi.framework.integrations.payment_integration.models.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 
 @Data
 @AllArgsConstructor

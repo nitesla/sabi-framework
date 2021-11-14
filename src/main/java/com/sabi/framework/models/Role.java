@@ -14,6 +14,7 @@ public class Role extends CoreEntity{
 
     private String name;
     private String description;
+    private Long clientId;
 
 
 

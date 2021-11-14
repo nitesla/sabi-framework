@@ -241,6 +241,7 @@ public class UserService {
 
     public Boolean getPrevPasswords(Long userId,String password){
         List<PreviousPasswords> prev = previousPasswordRepository.previousPasswords(userId);
+        System.out.println(":::::::::: PREVIOUS PASS::::::::::" + prev);
         for (PreviousPasswords pass : prev
                 ) {
             if (passwordEncoder.matches(password, pass.getPassword())) {

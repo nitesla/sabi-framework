@@ -76,4 +76,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
                               @Param("clientId")Long clientId,
                               @Param("lastName")String lastName,
                              Pageable pageable);
+
+
+
+    List<User> findByIsActiveAAndClientId(Boolean isActive,Long clientId);
 }

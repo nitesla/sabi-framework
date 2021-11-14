@@ -316,22 +316,41 @@ public class UserService {
                     .build());
             notificationRequestDto.setRecipient(recipient);
             notificationService.emailNotificationRequest(notificationRequestDto);
-        }else if(request.getPhone()!= null) {
 
-            User user = userRepository.findByPhone(request.getPhone());
-            if (user == null) {
-                throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid phone number");
-            }
-            if (user.getIsActive() == false) {
-                throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
-            }
-            user.setResetToken(Utility.registrationCode("HHmmss"));
-            user.setResetTokenExpirationDate(Utility.tokenExpiration());
-            userRepository.save(user);
 
             SmsRequest smsRequest = SmsRequest.builder()
                     .message("Activation Otp " + " " + user.getResetToken())
-                    .phoneNumber(user.getPhone())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.smsNotificationRequest(smsRequest);
+
+        }else if(request.getPhone()!= null) {
+
+            User userPhone = userRepository.findByPhone(request.getPhone());
+            if (userPhone == null) {
+                throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Invalid phone number");
+            }
+            if (userPhone.getIsActive() == false) {
+                throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
+            }
+            userPhone.setResetToken(Utility.registrationCode("HHmmss"));
+            userPhone.setResetTokenExpirationDate(Utility.tokenExpiration());
+            userRepository.save(userPhone);
+
+
+            NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
+            User emailRecipient = userRepository.getOne(userPhone.getId());
+            notificationRequestDto.setMessage("Activation Otp " + " " + userPhone.getResetToken());
+            List<RecipientRequest> recipient = new ArrayList<>();
+            recipient.add(RecipientRequest.builder()
+                    .email(emailRecipient.getEmail())
+                    .build());
+            notificationRequestDto.setRecipient(recipient);
+            notificationService.emailNotificationRequest(notificationRequestDto);
+
+            SmsRequest smsRequest = SmsRequest.builder()
+                    .message("Activation Otp " + " " + userPhone.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
                     .build();
             notificationService.smsNotificationRequest(smsRequest);
         }

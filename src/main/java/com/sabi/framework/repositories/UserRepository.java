@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
 
-    User findByEmailAndPhone (String email, String phone);
+    User findByEmailOrPhone (String email, String phone);
 
     User findByResetToken (String resetToken);
 
@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByLastName(String lastName);
 
     User findByFirstNameAndLastName(String firstName, String lastName);
-    User findByFirstNameAndLastNameAndMiddleName(String firstName, String lastName, String middleName);
+
 
 
 

@@ -33,5 +33,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
                          @Param("isActive")Boolean isActive,
                          Pageable pageable);
 
-    List<Role> findByIsActiveAAndClientId(Boolean isActive , Long clientId);
+    List<Role> findByIsActiveAndClientId(Boolean isActive , Long clientId);
 }

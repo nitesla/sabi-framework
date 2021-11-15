@@ -79,5 +79,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
-    List<User> findByIsActiveAAndClientId(Boolean isActive,Long clientId);
+    List<User> findByIsActiveAndClientId(Boolean isActive,Long clientId);
 }

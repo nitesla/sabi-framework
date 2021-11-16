@@ -33,8 +33,8 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Name cannot be empty");
         if (roleDto.getName().length() < 2 || roleDto.getName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid name  length");
-        if (roleDto.getDescription() == null || roleDto.getDescription().isEmpty())
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
+//        if (roleDto.getDescription() == null || roleDto.getDescription().isEmpty())
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Description cannot be empty");
     }
 
     public void validateFunction(PermissionDto permissionDto) {

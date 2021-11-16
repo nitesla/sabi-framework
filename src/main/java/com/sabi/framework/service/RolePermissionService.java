@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class RolePermissionService {
@@ -128,6 +130,12 @@ public class RolePermissionService {
         creditLevel.setIsActive(request.isActive());
         creditLevel.setUpdatedBy(userCurrent.getId());
         rolePermissionRepository.save(creditLevel);
+
+    }
+
+    public List<RolePermission> getAll(Long roleId, Boolean isActive){
+        List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleIdAndIsActive(roleId, isActive);
+        return rolePermissions;
 
     }
 }

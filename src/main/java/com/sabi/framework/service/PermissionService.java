@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -107,6 +109,12 @@ public class PermissionService {
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
         return functions;
+
+    }
+
+    public List<Permission> getAll(Boolean isActive){
+        List<Permission> permissions = permissionRepository.findByIsActive(isActive);
+        return permissions;
 
     }
 

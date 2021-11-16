@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RolePermissionRepository extends JpaRepository<RolePermission, Long> {
 
@@ -20,4 +22,6 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
                                             @Param("isActive") Boolean isActive,
                                             Pageable Pageable);
     boolean existsByRoleIdAndPermissionId(Long roleId, Long permissionId);
+
+    List<RolePermission> findByRoleIdAndIsActive(Long roleId, Boolean isActive);
 }

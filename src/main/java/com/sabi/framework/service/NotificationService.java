@@ -76,7 +76,7 @@ public class NotificationService {
                     .build();
             p.setPhoneNo(phoneNo);
         });
-        notificationRequestDto.setSms(true);
+        notificationRequestDto.setSms(false);
         notificationRequestDto.setTitle(Constants.NOTIFICATION);
         NotificationResponseDto response = api.post(multipleNotification, notificationRequestDto, NotificationResponseDto.class, map);
         return response;

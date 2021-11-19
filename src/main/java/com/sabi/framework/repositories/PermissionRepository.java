@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long>{
     Permission findByName(String name);
@@ -19,4 +21,6 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
     Page<Permission> findFunctions(@Param("name")String name,
                                    @Param("isActive")Boolean isActive,
                                    Pageable pageable);
+
+    List<Permission> findByIsActive(Boolean isActive);
 }

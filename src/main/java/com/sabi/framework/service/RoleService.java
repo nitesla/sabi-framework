@@ -2,6 +2,7 @@ package com.sabi.framework.service;
 
 
 import com.google.gson.Gson;
+import com.sabi.framework.dto.requestDto.EnableDisEnableDto;
 import com.sabi.framework.dto.requestDto.RoleDto;
 import com.sabi.framework.dto.responseDto.RoleResponseDto;
 import com.sabi.framework.exceptions.ConflictException;
@@ -114,6 +115,22 @@ public class RoleService {
     public List<Role> getAll(Boolean isActive){
         List<Role> roles = roleRepository.findByIsActive(isActive);
         return roles;
+
+    }
+
+    /** <summary>
+     * Enable disable
+     * </summary>
+     * <remarks>this method is responsible for enabling and dis enabling a role</remarks>
+     */
+    public void enableDisable (EnableDisEnableDto request){
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
+        Role role  = roleRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role id does not exist!"));
+        role.setIsActive(request.isActive());
+        role.setUpdatedBy(userCurrent.getId());
+        roleRepository.save(role);
 
     }
 

@@ -135,6 +135,17 @@ public class RoleService {
     }
 
 
+    public void enableDisEnable (EnableDisEnableDto request){
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
+        Role role  = roleRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role id does not exist!"));
+        role.setIsActive(request.isActive());
+        role.setUpdatedBy(userCurrent.getId());
+        roleRepository.save(role);
+
+    }
+
 
 
 }

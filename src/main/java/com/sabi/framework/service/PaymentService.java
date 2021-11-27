@@ -3,17 +3,15 @@ package com.sabi.framework.service;
 
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
+import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.API;
-import com.sabi.framework.integrations.payment_integration.models.CheckOutDto;
-import com.sabi.framework.integrations.payment_integration.models.HashObject;
-import com.sabi.framework.integrations.payment_integration.models.HashResponse;
-import com.sabi.framework.integrations.payment_integration.models.request.AuthenticationRequest;
-import com.sabi.framework.integrations.payment_integration.models.request.CheckOutRequest;
-import com.sabi.framework.integrations.payment_integration.models.response.CheckOutResponse;
-import com.sabi.framework.integrations.payment_integration.models.response.PaymentAuthenticationResponse;
-import com.sabi.framework.integrations.payment_integration.models.response.PaymentStatusResponse;
+import com.sabi.framework.integrations.payment_integration.models.*;
+import com.sabi.framework.integrations.payment_integration.models.request.*;
+import com.sabi.framework.integrations.payment_integration.models.response.*;
 import com.sabi.framework.models.PaymentDetails;
+import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PaymentDetailRepository;
+import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.CustomResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -42,8 +40,16 @@ public class PaymentService {
     @Autowired
     private PaymentDetailRepository paymentDetailRepository;
 
+    private final ModelMapper mapper;
+    private final UserRepository userRepository;
 
-    private Map<String, String> getHeaders(){
+    public PaymentService(ModelMapper mapper, UserRepository userRepository) {
+        this.mapper = mapper;
+        this.userRepository = userRepository;
+    }
+
+
+    private Map<String, String> getHeaders() {
         String token = "Bearer " + authenticationService();
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -51,26 +57,23 @@ public class PaymentService {
         return headers;
     }
 
-    private String authenticationService(){
+    private String authenticationService() {
         String url = baseUrl + "/encrypt/keys";
-        String key = secretKey +"."+publicKey;
+        String key = secretKey + "." + publicKey;
         AuthenticationRequest auth = new AuthenticationRequest();
         auth.setKey(key);
-        HashMap<String, String> headers = new HashMap<>();
-//        headers.put("Content-Type", "application/json");
         PaymentAuthenticationResponse response = api.post(url, auth, PaymentAuthenticationResponse.class);
         log.info("Token from seerbit " + response.getData().getEncryptedSecKey().getEncryptedKey());
-         return response.getData().getEncryptedSecKey().getEncryptedKey();
+        return response.getData().getEncryptedSecKey().getEncryptedKey();
     }
 
-    private String getHash(HashObject hashObject){
+    private String getHash(HashObject hashObject) {
         log.info("attempting hash:: ");
-        HashResponse hashResponse = api.post(baseUrl + "/encrypt/hashs", hashObject,HashResponse.class, getHeaders());
+        HashResponse hashResponse = api.post(baseUrl + "/encrypt/hashs", hashObject, HashResponse.class, getHeaders());
         return hashResponse.getData().getHash().getHash();
     }
 
-    public CheckOutResponse checkOut(CheckOutRequest checkOutRequest){
-        ModelMapper mapper = new ModelMapper();
+    public CheckOutResponse checkOut(CheckOutRequest checkOutRequest) {
         CheckOutDto checkOutDto = mapper.map(checkOutRequest, CheckOutDto.class);
         checkOutDto.setPublicKey(publicKey);
         checkOutDto.setPaymentReference((String.valueOf(System.currentTimeMillis())));
@@ -88,30 +91,72 @@ public class PaymentService {
         return api.post(baseUrl + "/payments", checkOutDto, CheckOutResponse.class, getHeaders());
     }
 
-    private void savePaymentDetails(CheckOutDto checkOutRequest){
-        ModelMapper mapper = new ModelMapper();
+    private void savePaymentDetails(CheckOutDto checkOutRequest) {
         PaymentDetails paymentDetail = mapper.map(checkOutRequest, PaymentDetails.class);
         paymentDetail.setStatus("PENDING");
         log.info("Saving payment Detail to DB: " + paymentDetail.toString());
         paymentDetailRepository.save(paymentDetail);
     }
 
-    public PaymentStatusResponse checkStatus(String paymentReference){
+    public PaymentStatusResponse checkStatus(String paymentReference) {
         PaymentDetails paymentDetails = paymentDetailRepository.findByPaymentReference(paymentReference);
-        if(paymentDetails == null) throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment reference does not exist");
+        if (paymentDetails == null)
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment reference does not exist");
 
         PaymentStatusResponse response = api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
-        if(!paymentDetails.getStatus().equals("PENDING") &&
-                response.getData().getPayments().getAmount().compareTo(paymentDetails.getAmount()) != 0) throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Payment Status conflict");
+        if (!paymentDetails.getStatus().equals("PENDING") &&
+                response.getData().getPayments().getAmount().compareTo(paymentDetails.getAmount()) != 0)
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Payment Status conflict");
 
-        if(response.getData().getCode().equals("00") && response.getData().getPayments().getGatewayCode().equals("00")
-        && response.getData().getPayments().getProcessorCode().equals("00")) {
+        if (response.getData().getCode().equals("00") && response.getData().getPayments().getGatewayCode().equals("00")
+                && response.getData().getPayments().getProcessorCode().equals("00")) {
             paymentDetails.setStatus("SUCCESS");
-        }
-        else {
+        } else {
             paymentDetails.setStatus("FAILED");
         }
         paymentDetailRepository.save(paymentDetails);
         return response;
     }
+
+    public CardPaymentResponse payWithCard(CardPaymentRequest paymentRequest) {
+//        log.debug("Payment Request amount " + paymentRequest.getAmount());
+//        CardPaymentDto paymentDto = new CardPaymentDto();
+//        BeanUtils.copyProperties(paymentRequest, paymentDto);
+        mapper.getConfiguration().setAmbiguityIgnored(true);
+        CardPaymentDto paymentDto = mapper.map(paymentRequest, CardPaymentDto.class);
+        log.debug("Amount to be paid with card for is " + paymentDto.getAmount());
+        paymentDto.setPublicKey(publicKey);
+        paymentDto.setPaymentReference(String.valueOf(System.currentTimeMillis()));
+        paymentDto.setPaymentType("CARD");
+        paymentDto.setRetry(false);
+
+        CardPaymentResponse post = api.post(baseUrl + "/payments/initiates", paymentDto, CardPaymentResponse.class, getHeaders());
+//        if(paymentDto.getChannelType().equalsIgnoreCase("varve"))
+//            return
+        return post;
+    }
+
+    public CardPaymentResponse confirmVerveOtp(VerveOtpRequest verveOtpRequest) {
+        return api.post(baseUrl + "/payments/otp", verveOtpRequest, CardPaymentResponse.class, getHeaders());
+    }
+
+    public TokenisationResponse tokenise(TokenisationRequest tokenisationRequest) {
+        TokenisationDto tokenisationDto = mapper.map(tokenisationRequest, TokenisationDto.class);
+        User user = userRepository.findById(tokenisationRequest.getUserId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "user id does not exist!"));
+        tokenisationDto.setPublicKey(publicKey);
+        tokenisationDto.setPaymentReference(String.valueOf(System.currentTimeMillis()));
+        TokenisationResponse post = api.post(baseUrl + "/payments/tokenize", tokenisationRequest, TokenisationResponse.class, getHeaders());
+        log.debug("The status from tokeniszation is " + post.getStatus());
+        if (post.getStatus().equalsIgnoreCase("Success")) {
+            user.setCardToken(post.getData().getCard().getToken());
+            user.setCardBin(post.getData().getCard().getBin());
+            user.setCardLast4(post.getData().getCard().getLast4());
+            log.info("Saving card info for " + user.getFirstName());
+            userRepository.save(user);
+        }
+        return post;
+    }
+
 }

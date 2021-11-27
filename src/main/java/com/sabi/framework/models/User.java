@@ -31,6 +31,8 @@ public class User extends CoreEntity{
     private String username;
     private Long roleId;
     private LocalDateTime passwordChangedOn;
+    private String cardBin;
+    private String cardLast4;
     @Transient
     private boolean loginStatus;
     private String email;

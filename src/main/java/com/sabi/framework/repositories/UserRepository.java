@@ -78,6 +78,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                              Pageable pageable);
 
 
-
+    @Query("SELECT u FROM User u WHERE ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))" +
+            " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))")
     List<User> findByIsActiveAndClientId(Boolean isActive,Long clientId);
+
+    User findByClientId (Long clientId);
 }

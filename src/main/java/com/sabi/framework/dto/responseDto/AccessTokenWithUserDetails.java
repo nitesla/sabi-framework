@@ -7,6 +7,7 @@ import com.sabi.framework.models.User;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -44,8 +45,10 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("userId")
     private long userId;
 
-    @JsonProperty("agentId")
-    private String agentId;
+//    @JsonProperty("agentId")
+//    private String agentId;
+    @JsonProperty("clientId")
+    private String clientId;
 
     @JsonProperty("referralCode")
     private String referralCode;
@@ -54,16 +57,14 @@ public class AccessTokenWithUserDetails implements Serializable{
     private String isEmailVerified ;
 
     @JsonProperty("partnerCategory")
-    private String partnerCategory;
+//    private String partnerCategory;
+    List<PartnersCategoryReturn> partnerCategory;
 
 
 
 
-
-
-
-    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry,
-                                      String agentId,String referralCode,String isEmailVerified,String partnerCategory) {
+    public AccessTokenWithUserDetails(String token, User user, String menu, long tokenExpiry, String clientId,
+                                      String referralCode, String isEmailVerified,List<PartnersCategoryReturn> partnerCategory) {
         this.accessToken = token;
 
         this.email = user.getEmail();
@@ -74,10 +75,11 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.menu = menu;
         this.tokenExpiry = tokenExpiry;
         this.userId=user.getId();
-        this.agentId=agentId;
+        this.clientId=clientId;
         this.referralCode=referralCode;
         this.isEmailVerified=isEmailVerified;
-        this.partnerCategory=partnerCategory;
+        this.partnerCategory = partnerCategory;
+
 
 
 

@@ -30,6 +30,8 @@ public class User extends CoreEntity{
     private String middleName;
     private String username;
     private Long roleId;
+    @Transient
+    private String roleName;
     private LocalDateTime passwordChangedOn;
     private String cardBin;
     private String cardLast4;
@@ -43,6 +45,8 @@ public class User extends CoreEntity{
     private String resetToken;
     private String resetTokenExpirationDate;
     private Long clientId;
+
+
 
 // ------AGENT USER DETAILS-----
     @Transient

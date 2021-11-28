@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -169,19 +170,8 @@ public class Utility {
     }
 
 
-//
-//    public static String registrationCode() {
-//        String SALTCHARS = "1234567890";
-//        StringBuilder salt = new StringBuilder();
-//        Random rnd = new Random();
-//        while (salt.length() < 6) { // length of the random string.
-//            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-//            salt.append(SALTCHARS.charAt(index));
-//        }
-//        String saltStr = salt.toString();
-//
-//        return saltStr;
-//    }
+
+
 
 
 
@@ -215,4 +205,27 @@ public class Utility {
     }
 
 
+
+    public static String passwordExpiration() {
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.add(Calendar.MINUTE, 10);
+        return String.valueOf(new Timestamp(cal.getTime().getTime()));
+    }
+
+
+    public static String passwordGeneration() {
+        String SALTCHARS = "1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 6) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+
+        return saltStr;
+    }
 }

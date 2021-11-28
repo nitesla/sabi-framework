@@ -12,10 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,12 +45,11 @@ public class ExternalTokenService {
     }
 
 
-    // @Scheduled(cron="0 0 0 * * ?")
-    @Scheduled(cron="${cronExpression}")
-    public void getNewToken() {
-        log.info("::Cron Job Started at :   %s", new Date());
-        externalTokenRequest();
-    }
+//    @Scheduled(cron="${cronExpression}")
+//    public void getNewToken() {
+//        log.info("::Cron Job Started at :   %s", new Date());
+//        externalTokenRequest();
+//    }
 
     public void externalTokenRequest ()  {
         TokenRequest request = TokenRequest.builder()

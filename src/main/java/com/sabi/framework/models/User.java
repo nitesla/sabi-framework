@@ -24,6 +24,7 @@ public class User extends CoreEntity{
     private LocalDateTime failedLoginDate;
     private LocalDateTime lastLogin;
     private String password;
+    private String passwordExpiration;
     private Date lockedDate;
     private String firstName;
     private String lastName;

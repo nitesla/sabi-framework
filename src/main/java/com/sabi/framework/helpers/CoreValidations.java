@@ -184,4 +184,12 @@ public class CoreValidations {
 
     }
 
+
+    public void generatePasswordValidation(GeneratePassword request) {
+
+        if (request.getPhone() == null || request.getPhone().isEmpty())
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Phone cannot be empty");
+
+    }
+
 }

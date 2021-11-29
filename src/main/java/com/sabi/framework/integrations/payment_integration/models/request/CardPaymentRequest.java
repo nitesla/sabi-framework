@@ -34,7 +34,7 @@ public class CardPaymentRequest {
     private String productDescription;
     private String clientAppCode;
     private String redirectUrl;
-@NotBlank(message = "Channel type can not be empty")
+    @NotBlank(message = "Channel type can not be empty")
     private String channelType;
     private String deviceType;
     private String sourceIP;

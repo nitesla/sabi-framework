@@ -118,6 +118,22 @@ public class RoleService {
 
     }
 
+    /** <summary>
+     * Enable disable
+     * </summary>
+     * <remarks>this method is responsible for enabling and dis enabling a role</remarks>
+     */
+    public void enableDisable (EnableDisEnableDto request){
+        User userCurrent = TokenService.getCurrentUserFromSecurityContext();
+        Role role  = roleRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested role id does not exist!"));
+        role.setIsActive(request.isActive());
+        role.setUpdatedBy(userCurrent.getId());
+        roleRepository.save(role);
+
+    }
+
 
     public void enableDisEnable (EnableDisEnableDto request){
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();

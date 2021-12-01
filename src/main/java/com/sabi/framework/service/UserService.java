@@ -77,7 +77,7 @@ public class UserService {
 
     public UserResponse createUser(UserDto request) {
         coreValidations.validateUser(request);
-        User userExist = userRepository.findByFirstNameAndLastName(request.getFirstName(), request.getLastName());
+        User userExist = userRepository.findByEmailOrPhone(request.getEmail(),request.getPhone());
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }

@@ -44,6 +44,7 @@ public class User extends CoreEntity{
     private String resetToken;
     private String resetTokenExpirationDate;
     private Long clientId;
+    private Long wareHouseId;
 
 
 

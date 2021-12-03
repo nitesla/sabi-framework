@@ -1,6 +1,7 @@
 package com.sabi.framework.exceptions;
 
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.sabi.framework.dto.responseDto.Response;
 import com.sabi.framework.helpers.ResponseHelper;
 import com.sabi.framework.loggers.LoggerUtil;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -170,6 +172,13 @@ public class ServiceApiAdvice {
         });
         return helper.buildError(MissingFieldException.builder()
                 .message("Validation error").fields(errors).build(), HttpStatus.BAD_REQUEST, "Bad Request");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Response handleDataFormatexception(HttpMessageNotReadableException e){
+        return helper.buildError(e.getMessage(), HttpStatus.BAD_REQUEST, "Invalid data in request. Check JSON Data types and/or Date format");
     }
 
 }

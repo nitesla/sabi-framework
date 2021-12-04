@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AuthData {
-    @JsonProperty("code")
     private String code;
-    @JsonProperty("EncryptedSecKey")
+    @JsonProperty("encryptedSecKey")
     private EncryptedSecKey EncryptedSecKey;
-    @JsonProperty("message")
     private String message;
 
     @Data
@@ -23,7 +21,6 @@ public class AuthData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class EncryptedSecKey {
-        @JsonProperty("encryptedKey")
         private String encryptedKey;
     }
 }

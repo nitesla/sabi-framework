@@ -47,6 +47,8 @@ public class CardPaymentRequest {
     @NotBlank(message = "Expiry year can not be empty")
     private String expiryYear;
     private String pin;
+    private Long userId;
+    private Long orderId;
 //    private Boolean retry;
 //    private String invoiceNumber;
 }

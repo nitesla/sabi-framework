@@ -91,7 +91,7 @@ public class PaymentService {
         return api.post(baseUrl + "/payments", checkOutDto, CheckOutResponse.class, getHeaders());
     }
 
-    private void savePaymentDetails(CheckOutDto checkOutRequest) {
+    private void savePaymentDetails(Object checkOutRequest) {
         PaymentDetails paymentDetail = mapper.map(checkOutRequest, PaymentDetails.class);
         paymentDetail.setStatus("PENDING");
         log.info("Saving payment Detail to DB: " + paymentDetail.toString());
@@ -122,15 +122,23 @@ public class PaymentService {
 //        log.debug("Payment Request amount " + paymentRequest.getAmount());
 //        CardPaymentDto paymentDto = new CardPaymentDto();
 //        BeanUtils.copyProperties(paymentRequest, paymentDto);
+        String paymentReference = String.valueOf(System.currentTimeMillis());
+        userRepository.findById(paymentRequest.getUserId()).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                "user id does not exist!"));
+
         mapper.getConfiguration().setAmbiguityIgnored(true);
+        PaymentDetails map = mapper.map(paymentRequest, PaymentDetails.class);
+        savePaymentDetails(map);
         CardPaymentDto paymentDto = mapper.map(paymentRequest, CardPaymentDto.class);
         log.debug("Amount to be paid with card for is " + paymentDto.getAmount());
         paymentDto.setPublicKey(publicKey);
-        paymentDto.setPaymentReference(String.valueOf(System.currentTimeMillis()));
+        paymentDto.setPaymentReference(paymentReference);
         paymentDto.setPaymentType("CARD");
         paymentDto.setRetry(false);
 
         CardPaymentResponse post = api.post(baseUrl + "/payments/initiates", paymentDto, CardPaymentResponse.class, getHeaders());
+
+        checkStatus(paymentReference);
 //        if(paymentDto.getChannelType().equalsIgnoreCase("varve"))
 //            return
         return post;

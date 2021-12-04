@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 public class PaymentDetails extends CoreEntity{
     private String publicKey;
     private BigDecimal amount;
+    private BigDecimal approvedAmount;
+    private Long orderId;
     private String currency;
     private String country;
     private String paymentReference;

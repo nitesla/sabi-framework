@@ -83,4 +83,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByIsActiveAndClientId(Boolean isActive,Long clientId);
 
     User findByClientId (Long clientId);
+
+    @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
+            " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+
+            " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))"+
+            " AND ((:username IS NULL) OR (:username IS NOT NULL AND u.username = :username))"+
+            " AND ((:wareHouseId IS NULL) OR (:wareHouseId IS NOT NULL AND u.wareHouseId = :wareHouseId))"+
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+    Page<User> findByWarehouseId(@Param("firstName")String firstName,
+                              @Param("phone")String phone,
+                              @Param("email")String email,
+                              @Param("username")String username,
+                              @Param("wareHouseId")Long wareHouseId,
+                              @Param("lastName")String lastName,
+                              Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE ((:wareHouseId IS NULL) OR (:wareHouseId IS NOT NULL AND u.wareHouseId = :wareHouseId))" +
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))")
+    List<User> findByWareHouseIdAndIsActive(Long wareHouseId, Boolean isActive);
 }

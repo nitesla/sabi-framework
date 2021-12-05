@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 public class PaymentStatusResponse {
     private String status;
     private PaymentStatusData data;
+    private String message;
+    private String error;
 
     @Data
     @AllArgsConstructor

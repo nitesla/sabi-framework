@@ -103,19 +103,21 @@ public class PaymentService {
         if (paymentDetails == null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment reference does not exist");
 
-        PaymentStatusResponse response = api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
+         return api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
+    }
+
+    public void updatePaymentStatus(PaymentDetails paymentDetails, PaymentStatusResponse response){
         if (!paymentDetails.getStatus().equals("PENDING") &&
                 response.getData().getPayments().getAmount().compareTo(paymentDetails.getAmount()) != 0)
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Payment Status conflict");
 
-        if (response.getData().getCode().equals("00") && response.getData().getPayments().getGatewayCode().equals("00")
+        if (response.getData() != null && response.getData().getCode().equals("00") && response.getData().getPayments().getGatewayCode().equals("00")
                 && response.getData().getPayments().getProcessorCode().equals("00")) {
             paymentDetails.setStatus("SUCCESS");
         } else {
             paymentDetails.setStatus("FAILED");
         }
         paymentDetailRepository.save(paymentDetails);
-        return response;
     }
 
     public CardPaymentResponse payWithCard(CardPaymentRequest paymentRequest) {
@@ -127,20 +129,21 @@ public class PaymentService {
                 "user id does not exist!"));
 
         mapper.getConfiguration().setAmbiguityIgnored(true);
-        PaymentDetails map = mapper.map(paymentRequest, PaymentDetails.class);
-        savePaymentDetails(map);
+
         CardPaymentDto paymentDto = mapper.map(paymentRequest, CardPaymentDto.class);
         log.debug("Amount to be paid with card for is " + paymentDto.getAmount());
         paymentDto.setPublicKey(publicKey);
         paymentDto.setPaymentReference(paymentReference);
         paymentDto.setPaymentType("CARD");
         paymentDto.setRetry(false);
+        PaymentDetails map = mapper.map(paymentDto, PaymentDetails.class);
+        savePaymentDetails(map);
+
 
         CardPaymentResponse post = api.post(baseUrl + "/payments/initiates", paymentDto, CardPaymentResponse.class, getHeaders());
 
-        checkStatus(paymentReference);
-//        if(paymentDto.getChannelType().equalsIgnoreCase("varve"))
-//            return
+        PaymentStatusResponse paymentStatusResponse = checkStatus(paymentReference);
+        updatePaymentStatus(map, paymentStatusResponse);
         return post;
     }
 

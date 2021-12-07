@@ -14,6 +14,9 @@ import java.util.List;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(String name);
 
+
+    Role findByNameAndClientId(String name,Long clientId);
+
     List<Role> findByIsActive(Boolean isActive);
 
 

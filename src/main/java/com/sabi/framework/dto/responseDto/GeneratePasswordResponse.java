@@ -17,5 +17,6 @@ public class GeneratePasswordResponse {
 
 
     private String username;
+    private String defaultApplePassword;
 
 }

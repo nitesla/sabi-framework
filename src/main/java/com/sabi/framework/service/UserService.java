@@ -47,6 +47,13 @@ public class UserService {
 
     @Value("${token.time.to.leave}")
     long tokenTimeToLeave;
+
+    @Value("${apple.default.password}")
+    String appleDefaultPassword;
+
+    @Value("${apple.default.phone}")
+    String appleDefaultPhone;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
     private PreviousPasswordRepository previousPasswordRepository;
@@ -581,11 +588,18 @@ public class UserService {
             if (userPhone.getIsActive() == false) {
                 throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
             }
+            if(userPhone.getPhone().equals(appleDefaultPhone)){
+                GeneratePasswordResponse generatePasswordResponse = GeneratePasswordResponse.builder()
+                        .username(userPhone.getUsername())
+                        .defaultApplePassword(appleDefaultPassword)
+                        .build();
+                return generatePasswordResponse;
+            }
+
             String generatePassword= Utility.passwordGeneration();
             userPhone.setPassword(passwordEncoder.encode(generatePassword));
             userPhone.setPasswordExpiration(Utility.passwordExpiration());
             userRepository.save(userPhone);
-
 
             NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
             User emailRecipient = userRepository.getOne(userPhone.getId());

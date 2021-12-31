@@ -67,6 +67,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:username IS NULL) OR (:username IS NOT NULL AND u.username = :username))"+
             " AND ((:roleId IS NULL) OR (:roleId IS NOT NULL AND u.roleId = :roleId))"+
             " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))"+
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))"+
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
     Page<User> findByClientId(@Param("firstName")String firstName,
                               @Param("phone")String phone,
@@ -74,6 +75,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                               @Param("username")String username,
                               @Param("roleId")Long roleId,
                               @Param("clientId")Long clientId,
+                              @Param("isActive")Boolean isActive,
                               @Param("lastName")String lastName,
                              Pageable pageable);
 

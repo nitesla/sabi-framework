@@ -6,16 +6,22 @@ import com.sabi.framework.dto.requestDto.RolePermissionDto;
 import com.sabi.framework.dto.responseDto.RolePermissionResponseDto;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
+import com.sabi.framework.models.Permission;
 import com.sabi.framework.models.RolePermission;
 import com.sabi.framework.models.User;
+import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.repositories.RolePermissionRepository;
+import com.sabi.framework.repositories.RoleRepository;
+import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.CustomResponseCode;
+import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -25,13 +31,21 @@ public class RolePermissionService {
     private final RolePermissionRepository rolePermissionRepository;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
+    private final PermissionRepository permissionRepository;
+    private final RoleRepository roleRepository;
+    private final AuditTrailService auditTrailService;
 
 
     public RolePermissionService(RolePermissionRepository RolePermissionRepository,
-                                 ModelMapper mapper, CoreValidations coreValidations) {
+                                 ModelMapper mapper, CoreValidations coreValidations,
+                                 PermissionRepository permissionRepository,RoleRepository roleRepository,
+                                 AuditTrailService auditTrailService) {
         this.rolePermissionRepository = RolePermissionRepository;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
+        this.permissionRepository = permissionRepository;
+        this.roleRepository = roleRepository;
+        this.auditTrailService = auditTrailService;
     }
 
     /**
@@ -41,7 +55,7 @@ public class RolePermissionService {
      * <remarks>this method is responsible for creation of new RolePermission</remarks>
      */
 
-    public RolePermissionResponseDto createRolePermission(RolePermissionDto request) {
+    public RolePermissionResponseDto createRolePermission(RolePermissionDto request,HttpServletRequest request1) {
         coreValidations.validateRolePermission(request);
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         RolePermission rolePermission = new RolePermission();
@@ -57,6 +71,13 @@ public class RolePermissionService {
                 log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
             }
         }
+
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Create new role permission by :" + userCurrent.getUsername(),
+                        AuditTrailFlag.CREATE,
+                        " Create new role permission for:" + rolePermission.getId() ,1, Utility.getClientIp(request1));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
@@ -68,7 +89,7 @@ public class RolePermissionService {
      * <remarks>this method is responsible for updating already existing RolePermission</remarks>
      */
 
-    public RolePermissionResponseDto updateRolePermission(RolePermissionDto request) {
+    public RolePermissionResponseDto updateRolePermission(RolePermissionDto request,HttpServletRequest request1) {
         coreValidations.validateRolePermission(request);
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         rolePermissionRepository.findById(request.getId()).orElseThrow(() ->
@@ -89,6 +110,12 @@ public class RolePermissionService {
                 log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
             }
         }
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Update role permission by username:" + userCurrent.getUsername(),
+                        AuditTrailFlag.UPDATE,
+                        " Update role permission Request for:" + rolePermission.getId(),1, Utility.getClientIp(request1));
         return mapper.map(rolePermission, RolePermissionResponseDto.class);
     }
 
@@ -137,5 +164,18 @@ public class RolePermissionService {
         List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleIdAndIsActive(roleId, isActive);
         return rolePermissions;
 
+    }
+
+
+
+
+    public List<RolePermission> getPermissionsByRole(Long roleId) {
+        List<RolePermission> permissionRole = rolePermissionRepository.getPermissionsByRole(roleId);
+        for (RolePermission permRole : permissionRole
+                ) {
+            Permission permission = permissionRepository.getOne(permRole.getPermissionId());
+            permRole.setPermission(permission.getName());
+        }
+        return permissionRole;
     }
 }

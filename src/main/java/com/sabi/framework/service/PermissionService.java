@@ -10,13 +10,16 @@ import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Permission;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
+import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.CustomResponseCode;
+import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -27,13 +30,16 @@ public class PermissionService {
     private  PermissionRepository permissionRepository;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
+    private final AuditTrailService auditTrailService;
 
 
 
-    public PermissionService(PermissionRepository permissionRepository, ModelMapper mapper, CoreValidations coreValidations) {
+    public PermissionService(PermissionRepository permissionRepository, ModelMapper mapper, CoreValidations coreValidations,
+                             AuditTrailService auditTrailService) {
         this.permissionRepository = permissionRepository;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
+        this.auditTrailService = auditTrailService;
     }
 
 
@@ -43,7 +49,7 @@ public class PermissionService {
      * <remarks>this method is responsible for creation of new permission</remarks>
      */
 
-    public PermissionResponseDto createPermission(PermissionDto request) {
+    public PermissionResponseDto createPermission(PermissionDto request,HttpServletRequest request1) {
         coreValidations.validateFunction(request);
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Permission permission = mapper.map(request,Permission.class);
@@ -55,6 +61,12 @@ public class PermissionService {
         permission.setIsActive(true);
         permission = permissionRepository.save(permission);
         log.debug("Create new permission - {}"+ new Gson().toJson(permission));
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Create new permission by :" + userCurrent.getUsername(),
+                        AuditTrailFlag.CREATE,
+                        " Create new permission for:" + permission.getName(),1, Utility.getClientIp(request1));
         return mapper.map(permission, PermissionResponseDto.class);
     }
 
@@ -67,7 +79,7 @@ public class PermissionService {
      * <remarks>this method is responsible for updating already existing permission</remarks>
      */
 
-    public PermissionResponseDto updatePermission(PermissionDto request) {
+    public PermissionResponseDto updatePermission(PermissionDto request,HttpServletRequest request1) {
         coreValidations.validateFunction(request);
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         Permission permission = permissionRepository.findById(request.getId())
@@ -77,6 +89,12 @@ public class PermissionService {
         permission.setUpdatedBy(userCurrent.getId());
         permissionRepository.save(permission);
         log.debug("permission record updated - {}"+ new Gson().toJson(permission));
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Update permission by username:" + userCurrent.getUsername(),
+                        AuditTrailFlag.UPDATE,
+                        " Update permission Request for:" + permission.getId(),1, Utility.getClientIp(request1));
         return mapper.map(permission, PermissionResponseDto.class);
     }
 

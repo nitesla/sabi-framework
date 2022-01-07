@@ -17,6 +17,7 @@ import com.sabi.framework.notification.requestDto.RecipientRequest;
 import com.sabi.framework.notification.requestDto.SmsRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.UserRepository;
+import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.Constants;
 import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -61,16 +63,18 @@ public class UserService {
     private NotificationService notificationService;
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
+    private final AuditTrailService auditTrailService;
 
 
     public UserService(PreviousPasswordRepository previousPasswordRepository,UserRepository userRepository,
                        NotificationService notificationService,
-                       ModelMapper mapper,CoreValidations coreValidations) {
+                       ModelMapper mapper,CoreValidations coreValidations,AuditTrailService auditTrailService) {
         this.previousPasswordRepository = previousPasswordRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
+        this.auditTrailService = auditTrailService;
 
     }
 
@@ -82,7 +86,7 @@ public class UserService {
      * <remarks>this method is responsible for creation of new user</remarks>
      */
 
-    public UserResponse createUser(UserDto request) {
+    public UserResponse createUser(UserDto request,HttpServletRequest request1) {
         coreValidations.validateUser(request);
         User userExist = userRepository.findByEmailOrPhone(request.getEmail(),request.getPhone());
         if(userExist !=null){
@@ -129,6 +133,11 @@ public class UserService {
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
 
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Create new user by :" + userCurrent.getUsername(),
+                        AuditTrailFlag.CREATE,
+                        " Create new user for:" + user.getFirstName() + " " + user.getUsername(),1, Utility.getClientIp(request1));
         return mapper.map(user, UserResponse.class);
     }
 
@@ -140,7 +149,7 @@ public class UserService {
      * <remarks>this method is responsible for updating already existing user</remarks>
      */
 
-    public UserResponse updateUser(UserDto request) {
+    public UserResponse updateUser(UserDto request,HttpServletRequest request1) {
         coreValidations.updateUser(request);
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = userRepository.findById(request.getId())
@@ -150,6 +159,12 @@ public class UserService {
         user.setUpdatedBy(userCurrent.getId());
         userRepository.save(user);
         log.debug("user record updated - {}"+ new Gson().toJson(user));
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Update user by username:" + userCurrent.getUsername(),
+                        AuditTrailFlag.UPDATE,
+                        " Update user Request for:" + user.getId() + " "+ user.getUsername(),1, Utility.getClientIp(request1));
         return mapper.map(user, UserResponse.class);
     }
 
@@ -194,13 +209,20 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for enabling and dis enabling a user</remarks>
      */
-    public void enableDisEnableUser (EnableDisEnableDto request){
+    public void enableDisEnableUser (EnableDisEnableDto request,HttpServletRequest request1){
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
         user.setIsActive(request.isActive());
         user.setUpdatedBy(userCurrent.getId());
+
+        auditTrailService
+                .logEvent(userCurrent.getUsername(),
+                        "Disable/Enable user by :" + userCurrent.getUsername() ,
+                        AuditTrailFlag.UPDATE,
+                        " Disable/Enable user Request for:" +  user.getId()
+                                + " " +  user.getUsername(),1, Utility.getClientIp(request1));
         userRepository.save(user);
 
     }

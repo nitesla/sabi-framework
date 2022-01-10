@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/logistics/api/v1/authenticate/login","/logistics/api/v1/authenticate/generatepassword","/logistics/api/v1/authenticate/logout","/logistics/api/v1/user/activateUser",
                 "/logistics/api/v1/user/forgetpassword","/logistics/api/v1/authenticate/externaltoken",
                 "/api/v1/partner/completesignup","/api/v1/partner/signup","/api/v1/state/list","/api/v1/state/page","/api/v1/partner/externalsignup",
-                "/api/v1/lga/list","/api/v1/lga/page","/api/v1/country/list","/api/v1/country/page",
+                "/api/v1/lga/list","/api/v1/lga/page","/api/v1/country/list","/api/v1/country/page","/api/v1/partner/details/{supplierId}",
                 "/api/v1/assettypeproperties/list","/api/v1/assettypeproperties/page","/api/v1/partner/passwordactivation",
                 "/api/v1/partnercategory/list",
                 "/supplier/api/v1/authenticate/login","/supplier/api/v1/authenticate/generatepassword",

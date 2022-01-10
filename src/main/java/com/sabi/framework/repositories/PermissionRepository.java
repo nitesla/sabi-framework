@@ -23,4 +23,6 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
                                    Pageable pageable);
 
     List<Permission> findByIsActive(Boolean isActive);
+
+
 }

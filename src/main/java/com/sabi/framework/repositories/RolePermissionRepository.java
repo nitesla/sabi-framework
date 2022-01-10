@@ -24,4 +24,7 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
     boolean existsByRoleIdAndPermissionId(Long roleId, Long permissionId);
 
     List<RolePermission> findByRoleIdAndIsActive(Long roleId, Boolean isActive);
+
+    @Query("SELECT rp FROM RolePermission rp WHERE rp.roleId=?1" )
+    List<RolePermission> getPermissionsByRole(Long roleId);
 }

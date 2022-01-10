@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @EqualsAndHashCode(callSuper=false)
 @Data
@@ -24,6 +25,12 @@ public class RolePermission extends CoreEntity{
 //    @ElementCollection
 //    @CollectionTable(name = "my_list", joinColumns = @JoinColumn(name = "id"))
     private Long permissionId;
+
+
+    @Transient
+    private String permission;
+
+
 
 
 

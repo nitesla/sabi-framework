@@ -11,11 +11,14 @@ import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PreviousPasswords;
+import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.notification.requestDto.NotificationRequestDto;
 import com.sabi.framework.notification.requestDto.RecipientRequest;
 import com.sabi.framework.notification.requestDto.SmsRequest;
+import com.sabi.framework.notification.requestDto.WhatsAppRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
+import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.Constants;
@@ -64,17 +67,22 @@ public class UserService {
     private final ModelMapper mapper;
     private final CoreValidations coreValidations;
     private final AuditTrailService auditTrailService;
+    private final WhatsAppService whatsAppService;
+    private final RoleRepository roleRepository;
 
 
     public UserService(PreviousPasswordRepository previousPasswordRepository,UserRepository userRepository,
                        NotificationService notificationService,
-                       ModelMapper mapper,CoreValidations coreValidations,AuditTrailService auditTrailService) {
+                       ModelMapper mapper,CoreValidations coreValidations,AuditTrailService auditTrailService,
+                       WhatsAppService whatsAppService,RoleRepository roleRepository) {
         this.previousPasswordRepository = previousPasswordRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
         this.mapper = mapper;
         this.coreValidations = coreValidations;
         this.auditTrailService = auditTrailService;
+        this.whatsAppService = whatsAppService;
+        this.roleRepository = roleRepository;
 
     }
 
@@ -133,6 +141,13 @@ public class UserService {
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
 
+
+        WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        whatsAppService.whatsAppNotification(whatsAppRequest);
+
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
                         "Create new user by :" + userCurrent.getUsername(),
@@ -179,7 +194,28 @@ public class UserService {
         User user  = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        return mapper.map(user,UserResponse.class);
+
+        Role role = roleRepository.getOne(user.getRoleId());
+       UserResponse userResponse = UserResponse.builder()
+               .createdBy(user.getCreatedBy())
+               .createdDate(user.getCreatedDate())
+               .email(user.getEmail())
+               .failedLoginDate(user.getFailedLoginDate())
+               .firstName(user.getFirstName())
+               .id(user.getId())
+               .isActive(user.getIsActive())
+               .lastLogin(user.getLastLogin())
+               .lastName(user.getLastName())
+               .middleName(user.getMiddleName())
+               .phone(user.getPhone())
+               .updatedBy(user.getUpdatedBy())
+               .updatedDate(user.getUpdatedDate())
+               .roleId(user.getRoleId())
+               .roleName(role.getName())
+               .build();
+
+
+        return userResponse;
     }
 
 
@@ -356,6 +392,13 @@ public class UserService {
                     .build();
             notificationService.smsNotificationRequest(smsRequest);
 
+
+            WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
+                    .message("Activation Otp " + " " + user.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            whatsAppService.whatsAppNotification(whatsAppRequest);
+
         }else if(request.getPhone()!= null) {
 
             User userPhone = userRepository.findByPhone(request.getPhone());
@@ -385,6 +428,12 @@ public class UserService {
                     .phoneNumber(emailRecipient.getPhone())
                     .build();
             notificationService.smsNotificationRequest(smsRequest);
+
+            WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
+                    .message("Activation Otp " + " " + userPhone.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            whatsAppService.whatsAppNotification(whatsAppRequest);
         }
 
     }
@@ -489,6 +538,12 @@ public class UserService {
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
+
+        WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        whatsAppService.whatsAppNotification(whatsAppRequest);
 
     }
 
@@ -638,6 +693,12 @@ public class UserService {
                     .phoneNumber(emailRecipient.getPhone())
                     .build();
             notificationService.smsNotificationRequest(smsRequest);
+
+        WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
+                .message("One time password " + " " + generatePassword)
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        whatsAppService.whatsAppNotification(whatsAppRequest);
 
         GeneratePasswordResponse response = GeneratePasswordResponse.builder()
                .username(userPhone.getUsername())

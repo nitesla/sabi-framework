@@ -17,7 +17,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
 
 
     @Query("SELECT p FROM Permission p WHERE ((:name IS NULL) OR (:name IS NOT NULL AND p.name = :name)) " +
-            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND p.isActive = :isActive))")
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND p.isActive = :isActive)) order by p.id")
     Page<Permission> findFunctions(@Param("name")String name,
                                    @Param("isActive")Boolean isActive,
                                    Pageable pageable);

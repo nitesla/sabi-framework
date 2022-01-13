@@ -18,7 +18,7 @@ public interface AuditTrailRepository extends JpaRepository<AuditTrail, Long> {
             " AND ((:event IS NULL) OR (:event IS NOT NULL AND a.event = :event))"+
             " AND ((:flag IS NULL) OR (:flag IS NOT NULL AND a.flag = :flag))"+
             "AND ((:startDate IS NULL) OR (:startDate IS NOT NULL AND a.requestTime >= :startDate)) " +
-            "AND ((:endDate IS NULL) OR (:endDate IS NOT NULL AND  a.requestTime <= :endDate))")
+            "AND ((:endDate IS NULL) OR (:endDate IS NOT NULL AND  a.requestTime <= :endDate)) order by a.id DESC ")
     Page<AuditTrail> audits (@Param("username")String username,
                              @Param("event")String event,
                              @Param("flag")String flag,

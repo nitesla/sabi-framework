@@ -41,7 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))"+
             " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))"+
-            " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))")
+            " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email)) order by u.id")
     Page<User> findUsers(@Param("firstName")String firstName,
                                 @Param("lastName")String lastName,
                                 @Param("phone")String phone,
@@ -53,7 +53,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName = :firstName))" +
-            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName)) order by u.id")
     Page<User> findAgentUser(@Param("firstName")String firstName,
                          @Param("lastName")String lastName,
                          Pageable pageable);
@@ -68,7 +68,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:roleId IS NULL) OR (:roleId IS NOT NULL AND u.roleId = :roleId))"+
             " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))"+
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))"+
-            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName)) order by u.id ")
     Page<User> findByClientId(@Param("firstName")String firstName,
                               @Param("phone")String phone,
                               @Param("email")String email,
@@ -81,7 +81,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query("SELECT u FROM User u WHERE ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))" +
-            " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))")
+            " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId)) order by u.id")
     List<User> findByIsActiveAndClientId(Boolean isActive,Long clientId);
 
     User findByClientId (Long clientId);
@@ -91,7 +91,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))"+
             " AND ((:username IS NULL) OR (:username IS NOT NULL AND u.username = :username))"+
             " AND ((:wareHouseId IS NULL) OR (:wareHouseId IS NOT NULL AND u.wareHouseId = :wareHouseId))"+
-            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName))")
+            " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName)) order by u.id")
     Page<User> findByWarehouseId(@Param("firstName")String firstName,
                               @Param("phone")String phone,
                               @Param("email")String email,
@@ -101,6 +101,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                               Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE ((:wareHouseId IS NULL) OR (:wareHouseId IS NOT NULL AND u.wareHouseId = :wareHouseId))" +
-            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))")
+            " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive)) order by u.id")
     List<User> findByWareHouseIdAndIsActive(Long wareHouseId, Boolean isActive);
 }

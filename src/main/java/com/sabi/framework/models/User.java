@@ -47,7 +47,7 @@ public class User extends CoreEntity{
     private String resetTokenExpirationDate;
     private Long clientId;
 
-// --------logistic  userType -----------------
+// --------logistic  userType -----------
 
     @Transient
     private String userType;

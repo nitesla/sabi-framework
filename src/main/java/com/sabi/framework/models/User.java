@@ -48,7 +48,7 @@ public class User extends CoreEntity{
     private Long clientId;
     private Long wareHouseId;
 
-// --------logistic  userType -----------------
+// --------logistic  userType -----------
 
     @Transient
     private String userType;

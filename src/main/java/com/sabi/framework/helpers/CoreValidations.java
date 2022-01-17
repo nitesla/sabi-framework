@@ -5,6 +5,7 @@ import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
+import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
 import com.sabi.framework.repositories.RoleRepository;
@@ -79,10 +80,6 @@ public class CoreValidations {
         if (userDto.getLastName().length() < 2 || userDto.getLastName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid last name  length");
 
-//        if (!Utility.validateName(userDto.getMiddleName()))
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
-//        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
@@ -103,6 +100,13 @@ public class CoreValidations {
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "  user phone already exist");
         }
+        if(userDto.getRoleId()== null)
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role id can not be null ");
+
+        Role role = roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Enter a valid Role"));
+
 //        if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
 //            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");
 //        if (userDto.getPassword().length() < 6 || userDto.getPassword().length() > 20)// NAME LENGTH*********

@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.beans.Transient;
 import java.util.List;
 
 @Slf4j
@@ -177,5 +178,11 @@ public class RolePermissionService {
             permRole.setPermission(permission.getName());
         }
         return permissionRole;
+    }
+
+    @Transient
+    public void deleteRolePermission(Long roleId){
+        RolePermission rolePermission = rolePermissionRepository.findById(roleId).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "RolePermission not found"));
+        rolePermissionRepository.delete(rolePermission);
     }
 }

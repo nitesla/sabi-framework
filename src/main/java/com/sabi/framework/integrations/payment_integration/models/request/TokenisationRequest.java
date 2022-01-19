@@ -19,10 +19,8 @@ import java.math.BigDecimal;
 @Data
 public class TokenisationRequest {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
     @NotNull(message = "amount can not be null")
-   @DecimalMin(value = "0.0", message = "Amount can not be lesser than 0")
+    @DecimalMin(value = "0.0", message = "Amount can not be lesser than 0")
     private BigDecimal amount;
     private String fullName;
     private String mobileNumber;

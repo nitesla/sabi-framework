@@ -11,6 +11,7 @@ import java.util.Map;
 public class CustomResponseCode {
 
     public static final String DEFAULT = "0";
+    public static final String TRANSACTION_PIN_STATUS = "1";
     public static final String FAILED ="101";
     public static final String BAD_REQUEST = "400";
     public static final String CONFLICT_EXCEPTION = "409";

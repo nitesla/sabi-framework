@@ -42,6 +42,7 @@ public class User extends CoreEntity{
     private String phone;
     // TODO validate not less than 4 digits and not more than 6 digits
     private String transactionPin;
+    private String transactionPinStatus;
     private String userCategory;
     private String resetToken;
     private String resetTokenExpirationDate;

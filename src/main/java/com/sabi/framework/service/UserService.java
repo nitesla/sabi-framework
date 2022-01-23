@@ -586,6 +586,7 @@ public class UserService {
         }
         String pin = Encryptions.generateSha256(request.getTransactionPin());
         userExist.setTransactionPin(pin);
+        userExist.setTransactionPinStatus(CustomResponseCode.TRANSACTION_PIN_STATUS);
         userRepository.save(userExist);
 
     }

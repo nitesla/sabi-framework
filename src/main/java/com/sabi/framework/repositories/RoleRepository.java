@@ -20,7 +20,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     List<Role> findByIsActive(Boolean isActive);
 
 
-    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name = :name))" +
+    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name like %:name%))" +
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND r.isActive = :isActive)) order by r.id")
     Page<Role> findRoles(@Param("name")String name,
                          @Param("isActive")Boolean isActive,
@@ -28,7 +28,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
 
 
-    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name = :name))" +
+    @Query("SELECT r FROM Role r WHERE ((:name IS NULL) OR (:name IS NOT NULL AND r.name like %:name%))" +
             " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND r.clientId = :clientId))"+
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND r.isActive = :isActive)) order by r.id")
     Page<Role> findRolesByClientId(@Param("name")String name,

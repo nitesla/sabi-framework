@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public interface AuditTrailRepository extends JpaRepository<AuditTrail, Long> {
 
 
-    @Query("select a from AuditTrail a where ((:username IS NULL) OR (:username IS NOT NULL AND a.username = :username)) " +
+    @Query("select a from AuditTrail a where ((:username IS NULL) OR (:username IS NOT NULL AND a.username like %:username%)) " +
             " AND ((:event IS NULL) OR (:event IS NOT NULL AND a.event = :event))"+
             " AND ((:flag IS NULL) OR (:flag IS NOT NULL AND a.flag = :flag))"+
             "AND ((:startDate IS NULL) OR (:startDate IS NOT NULL AND a.requestTime >= :startDate)) " +

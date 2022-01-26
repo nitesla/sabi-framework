@@ -3,6 +3,7 @@ package com.sabi.framework.service;
 
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.PermissionDto;
+import com.sabi.framework.dto.responseDto.AccessListDto;
 import com.sabi.framework.dto.responseDto.PermissionResponseDto;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -134,6 +136,26 @@ public class PermissionService {
         List<Permission> permissions = permissionRepository.findByIsActive(isActive);
         return permissions;
 
+    }
+
+
+
+
+
+
+    public List<AccessListDto> getPermissionsByUserId(Long userId) {
+        List<AccessListDto> resultLists = new ArrayList<>();
+        List<Object[]> result = permissionRepository.getPermissionsByUserId(userId);
+        try {
+            result.forEach(r -> {
+                AccessListDto userPermission = new AccessListDto();
+                userPermission.setName((String) r[0]);
+                resultLists.add(userPermission);
+            });
+        } catch (Exception e) {
+            log.info("Error in returning object list" +e);
+        }
+        return resultLists;
     }
 
 }

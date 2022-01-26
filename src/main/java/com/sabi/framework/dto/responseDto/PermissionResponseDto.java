@@ -18,4 +18,6 @@ public class PermissionResponseDto {
     private Long createdBy;
     private Long updatedBy;
     private Boolean isActive;
+
+
 }

@@ -11,11 +11,14 @@ import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Permission;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
+import com.sabi.framework.repositories.UserRoleRepository;
 import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class PermissionService {
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     private  PermissionRepository permissionRepository;
     private final ModelMapper mapper;
@@ -143,19 +149,27 @@ public class PermissionService {
 
 
 
-    public List<AccessListDto> getPermissionsByUserId(Long userId) {
+
+
+
+    public String getPermissionsByUserId(Long userId) {
+
         List<AccessListDto> resultLists = new ArrayList<>();
         List<Object[]> result = permissionRepository.getPermissionsByUserId(userId);
-        try {
+
             result.forEach(r -> {
                 AccessListDto userPermission = new AccessListDto();
                 userPermission.setName((String) r[0]);
                 resultLists.add(userPermission);
+
             });
-        } catch (Exception e) {
-            log.info("Error in returning object list" +e);
-        }
-        return resultLists;
+
+         String accessList = StringUtils.join(resultLists, ',');
+
+        String access = accessList.replace("AccessListDto","").replaceAll("[()]","")
+                .replace("name","").replace("=","");
+        return access;
+
     }
 
 }

@@ -14,7 +14,9 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>
@@ -121,7 +123,6 @@
     <orderEntry type="library" name="Maven: com.microsoft.azure:adal4j:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.nimbusds:oauth2-oidc-sdk:4.5" level="project" />
     <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.nimbusds:lang-tag:1.4" level="project" />
     <orderEntry type="library" name="Maven: com.nimbusds:nimbus-jose-jwt:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.51" level="project" />
@@ -179,5 +180,6 @@
     <orderEntry type="library" name="Maven: org.eclipse.birt.runtime:com.ibm.icu:4.4.2.v20110823" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
   </component>
 </module>

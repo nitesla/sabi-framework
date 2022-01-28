@@ -3,7 +3,6 @@ package com.sabi.framework.service;
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.ActivateUserResponse;
-import com.sabi.framework.dto.responseDto.GeneratePasswordResponse;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
@@ -53,11 +52,7 @@ public class UserService {
     @Value("${token.time.to.leave}")
     long tokenTimeToLeave;
 
-    @Value("${apple.default.password}")
-    String appleDefaultPassword;
 
-    @Value("${apple.default.phone}")
-    String appleDefaultPhone;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -657,72 +652,7 @@ public class UserService {
 
 
 
-    public GeneratePasswordResponse generatePassword (GeneratePassword request) {
-        coreValidations.generatePasswordValidation(request);
-            User userPhone = userRepository.findByPhone(request.getPhone());
-            if (userPhone == null) {
-                throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, "Phone number does not exist");
-            }
-            if (userPhone.getIsActive() == false) {
-                throw new BadRequestException(CustomResponseCode.FAILED, "User account has been disabled");
-            }
-            if(userPhone.getPhone().equals(appleDefaultPhone)){
-                GeneratePasswordResponse generatePasswordResponse = GeneratePasswordResponse.builder()
-                        .username(userPhone.getUsername())
-                        .defaultApplePassword(appleDefaultPassword)
-                        .build();
-                return generatePasswordResponse;
-            }
 
-            String generatePassword= Utility.passwordGeneration();
-            userPhone.setPassword(passwordEncoder.encode(generatePassword));
-            userPhone.setPasswordExpiration(Utility.passwordExpiration());
-            userRepository.save(userPhone);
-
-            NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
-            User emailRecipient = userRepository.getOne(userPhone.getId());
-            notificationRequestDto.setMessage("One time password " + " " + generatePassword);
-            List<RecipientRequest> recipient = new ArrayList<>();
-            recipient.add(RecipientRequest.builder()
-                    .email(emailRecipient.getEmail())
-                    .build());
-            notificationRequestDto.setRecipient(recipient);
-            notificationService.emailNotificationRequest(notificationRequestDto);
-
-            SmsRequest smsRequest = SmsRequest.builder()
-                    .message("One time password " + " " + generatePassword)
-                    .phoneNumber(emailRecipient.getPhone())
-                    .build();
-            notificationService.smsNotificationRequest(smsRequest);
-
-        WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
-                .message("One time password " + " " + generatePassword)
-                .phoneNumber(emailRecipient.getPhone())
-                .build();
-        whatsAppService.whatsAppNotification(whatsAppRequest);
-
-        GeneratePasswordResponse response = GeneratePasswordResponse.builder()
-               .username(userPhone.getUsername())
-                .build();
-        return response;
-    }
-
-
-
-
-    public void validateGeneratedPassword (Long id) {
-        User userExist = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                        " user id does not exist!"));
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calobj = Calendar.getInstance();
-        String currentDate = df.format(calobj.getTime());
-        String passDate = userExist.getPasswordExpiration();
-        String result = String.valueOf(currentDate.compareTo(passDate));
-        if(result.equals("1")){
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " Password has expired");
-        }
-    }
 
 
 

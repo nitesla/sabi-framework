@@ -3,6 +3,7 @@ package com.sabi.framework.service;
 
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.PermissionDto;
+import com.sabi.framework.dto.responseDto.AccessListDto;
 import com.sabi.framework.dto.responseDto.PermissionResponseDto;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
@@ -10,22 +11,29 @@ import com.sabi.framework.helpers.CoreValidations;
 import com.sabi.framework.models.Permission;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
+import com.sabi.framework.repositories.UserRoleRepository;
 import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.Utility;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Slf4j
 @Service
 public class PermissionService {
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     private  PermissionRepository permissionRepository;
     private final ModelMapper mapper;
@@ -133,6 +141,34 @@ public class PermissionService {
     public List<Permission> getAll(Boolean isActive){
         List<Permission> permissions = permissionRepository.findByIsActive(isActive);
         return permissions;
+
+    }
+
+
+
+
+
+
+
+
+
+    public String getPermissionsByUserId(Long userId) {
+
+        List<AccessListDto> resultLists = new ArrayList<>();
+        List<Object[]> result = permissionRepository.getPermissionsByUserId(userId);
+
+            result.forEach(r -> {
+                AccessListDto userPermission = new AccessListDto();
+                userPermission.setName((String) r[0]);
+                resultLists.add(userPermission);
+
+            });
+
+         String accessList = StringUtils.join(resultLists, ',');
+
+        String access = accessList.replace("AccessListDto","").replaceAll("[()]","")
+                .replace("name","").replace("=","");
+        return access;
 
     }
 

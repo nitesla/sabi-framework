@@ -3,10 +3,7 @@ package com.sabi.framework.models;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -21,4 +18,7 @@ public class UserRole {
     private Long roleId;
     @ApiModelProperty(hidden = true)
     private LocalDateTime createdDate = LocalDateTime.now();
+
+    @Transient
+    private String accessList;
 }

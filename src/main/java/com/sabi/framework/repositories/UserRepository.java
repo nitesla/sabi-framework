@@ -103,4 +103,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE ((:wareHouseId IS NULL) OR (:wareHouseId IS NOT NULL AND u.wareHouseId = :wareHouseId))" +
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive)) order by u.id")
     List<User> findByWareHouseIdAndIsActive(Long wareHouseId, Boolean isActive);
+
+    @Query(value = "SELECT  * from User where CONCAT(firstName, \" \" ,lastName)  LIKE %:searchTerm% OR CONCAT(lastName, \" \" ,firstName) LIKE %:searchTerm%", nativeQuery = true)
+    Page<User> findByPartName(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

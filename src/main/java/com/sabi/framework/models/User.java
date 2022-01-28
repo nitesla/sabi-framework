@@ -20,7 +20,8 @@ import java.util.Date;
 public class User extends CoreEntity{
 
 
-    private Long loginAttempts;
+//    private Long loginAttempts;
+    private int loginAttempts;
     private LocalDateTime failedLoginDate;
     private LocalDateTime lastLogin;
     private String password;

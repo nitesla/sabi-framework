@@ -61,8 +61,7 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("partnerCategory")
 //    private String partnerCategory;
     List<PartnersCategoryReturn> partnerCategory;
-//    @JsonProperty("permissionList")
-//    List<AccessListDto> permissionList;
+
 
 
 
@@ -84,7 +83,7 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.referralCode=referralCode;
         this.isEmailVerified=isEmailVerified;
         this.partnerCategory = partnerCategory;
-//        this.permissionList = permissionList;
+
 
 
 

@@ -12,6 +12,7 @@ import com.sabi.framework.helpers.Encryptions;
 import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
+import com.sabi.framework.models.UserRole;
 import com.sabi.framework.notification.requestDto.NotificationRequestDto;
 import com.sabi.framework.notification.requestDto.RecipientRequest;
 import com.sabi.framework.notification.requestDto.SmsRequest;
@@ -19,6 +20,7 @@ import com.sabi.framework.notification.requestDto.WhatsAppRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
+import com.sabi.framework.repositories.UserRoleRepository;
 import com.sabi.framework.utils.AuditTrailFlag;
 import com.sabi.framework.utils.Constants;
 import com.sabi.framework.utils.CustomResponseCode;
@@ -64,12 +66,13 @@ public class UserService {
     private final AuditTrailService auditTrailService;
     private final WhatsAppService whatsAppService;
     private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
 
 
     public UserService(PreviousPasswordRepository previousPasswordRepository,UserRepository userRepository,
                        NotificationService notificationService,
                        ModelMapper mapper,CoreValidations coreValidations,AuditTrailService auditTrailService,
-                       WhatsAppService whatsAppService,RoleRepository roleRepository) {
+                       WhatsAppService whatsAppService,RoleRepository roleRepository,UserRoleRepository userRoleRepository) {
         this.previousPasswordRepository = previousPasswordRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
@@ -78,6 +81,7 @@ public class UserService {
         this.auditTrailService = auditTrailService;
         this.whatsAppService = whatsAppService;
         this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
 
     }
 
@@ -104,11 +108,18 @@ public class UserService {
         user.setCreatedBy(userCurrent.getId());
         user.setUserCategory(Constants.ADMIN_USER);
         user.setIsActive(false);
-        user.setLoginAttempts(0l);
+        user.setLoginAttempts(0);
         user.setResetToken(Utility.registrationCode("HHmmss"));
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
         user = userRepository.save(user);
         log.debug("Create new user - {}"+ new Gson().toJson(user));
+
+        UserRole userRole = UserRole.builder()
+                .userId(user.getId())
+                .roleId(user.getRoleId())
+                .createdDate(LocalDateTime.now())
+                .build();
+        userRoleRepository.save(userRole);
 
         PreviousPasswords previousPasswords = PreviousPasswords.builder()
                 .userId(user.getId())
@@ -169,6 +180,11 @@ public class UserService {
         user.setUpdatedBy(userCurrent.getId());
         userRepository.save(user);
         log.debug("user record updated - {}"+ new Gson().toJson(user));
+
+        UserRole userRole = userRoleRepository.findByUserId(user.getId());
+        UserRole roleUser = userRoleRepository.getOne(userRole.getId());
+        roleUser.setRoleId(user.getRoleId());
+        userRoleRepository.save(roleUser);
 
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
@@ -328,7 +344,7 @@ public class UserService {
                         "Requested user id does not exist!"));
         mapper.map(request, user);
         user.setLockedDate(null);
-        user.setLoginAttempts(0l);
+        user.setLoginAttempts(0);
         userRepository.save(user);
 
     }
@@ -618,22 +634,44 @@ public class UserService {
                         " user id does not exist!"));
         if(userExist != null){
             userExist.setFailedLoginDate(LocalDateTime.now());
-            Functions EF = new Functions();
-            userExist.setLoginAttempts(Long.valueOf(EF.value()));
+
+            int count = increment(userExist.getLoginAttempts());
+            userExist.setLoginAttempts(count);
             userRepository.save(userExist);
 
         }
     }
 
 
-    public static class Functions{
-        static int i=0;
-        public int value()
-        {
-            i++;
-            return i;
+
+
+    public static int increment(int number){
+        // Declaring the number
+        // Converting the number to String
+        String string_num = Integer.toString(number);
+
+        // Finding the length of the number
+        int len = string_num.length();
+
+        // Declaring the empty string
+        String add = "";
+
+        // Generating the addition string
+        for (int i = 0; i < len; i++) {
+            add = add.concat("1");
         }
+
+        // COnverting it to Integer
+        int str_num = Integer.parseInt(add);
+
+        // Adding them and displaying the result
+        System.out.println(number + str_num);
+
+        return number + str_num;
     }
+
+
+
 
 
 
@@ -643,17 +681,12 @@ public class UserService {
                         " user id does not exist!"));
         if(userExist != null){
             userExist.setLockedDate(null);
-            userExist.setLoginAttempts(0l);
+            userExist.setLoginAttempts(0);
             userExist.setLastLogin(LocalDateTime.now());
             userRepository.save(userExist);
 
         }
     }
-
-
-
-
-
 
 
 

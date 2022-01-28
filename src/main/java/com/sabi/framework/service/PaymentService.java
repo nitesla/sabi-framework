@@ -153,20 +153,10 @@ public class PaymentService {
 
     public TokenisationResponse tokenise(TokenisationRequest tokenisationRequest) {
         TokenisationDto tokenisationDto = mapper.map(tokenisationRequest, TokenisationDto.class);
-        User user = userRepository.findById(tokenisationRequest.getUserId())
-                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                        "user id does not exist!"));
         tokenisationDto.setPublicKey(publicKey);
         tokenisationDto.setPaymentReference(String.valueOf(System.currentTimeMillis()));
         TokenisationResponse post = api.post(baseUrl + "/payments/tokenize", tokenisationRequest, TokenisationResponse.class, getHeaders());
         log.debug("The status from tokeniszation is " + post.getStatus());
-        if (post.getStatus().equalsIgnoreCase("Success")) {
-            user.setCardToken(post.getData().getCard().getToken());
-            user.setCardBin(post.getData().getCard().getBin());
-            user.setCardLast4(post.getData().getCard().getLast4());
-            log.info("Saving card info for " + user.getFirstName());
-            userRepository.save(user);
-        }
         return post;
     }
 

@@ -51,7 +51,7 @@ public class ExternalTokenService {
 //        externalTokenRequest();
 //    }
 
-    public void externalTokenRequest ()  {
+    public TokenResponse externalTokenRequest ()  {
         TokenRequest request = TokenRequest.builder()
                 .username(username.trim())
                 .password(password.trim())
@@ -60,6 +60,7 @@ public class ExternalTokenService {
         map.put("fingerprint",uniqueId.trim());
         TokenResponse response = api.post(login, request, TokenResponse.class,map);
         saveToken(response);
+        return response;
     }
 
 

@@ -9,7 +9,6 @@ import com.sabi.framework.integrations.payment_integration.models.*;
 import com.sabi.framework.integrations.payment_integration.models.request.*;
 import com.sabi.framework.integrations.payment_integration.models.response.*;
 import com.sabi.framework.models.PaymentDetails;
-import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PaymentDetailRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.CustomResponseCode;
@@ -78,17 +77,12 @@ public class PaymentService {
         checkOutDto.setPublicKey(publicKey);
         checkOutDto.setPaymentReference((String.valueOf(System.currentTimeMillis())));
         checkOutDto.setHashType("sha256");
-//        String stringToHash = "amount="+checkOutDto.getAmount()+"&callbackUrl="+checkOutDto.getCallbackUrl()+
-//                "&country="+checkOutDto.getCountry()+"&currency="+checkOutDto.getCurrency()+
-//                "&email="+checkOutDto.getEmail()+"&paymentReference="+checkOutDto.getPaymentReference()+
-//                "&productDescription="+checkOutDto.getProductDescription()+
-//                "&productId="+checkOutDto.getProductId()+"&publicKey=" + publicKey;
-//
+
         checkOutDto.setHash(getHash(mapper.map(checkOutDto, HashObject.class)));
 
-        savePaymentDetails(checkOutDto);
+         savePaymentDetails(checkOutDto);
 
-        return api.post(baseUrl + "/payments", checkOutDto, CheckOutResponse.class, getHeaders());
+        return  api.post(baseUrl + "/payments", checkOutDto, CheckOutResponse.class, getHeaders());
     }
 
     private void savePaymentDetails(Object checkOutRequest) {
@@ -103,21 +97,27 @@ public class PaymentService {
         if (paymentDetails == null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment reference does not exist");
 
-         return api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
+        PaymentStatusResponse paymentStatusResponse = api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
+        paymentStatusResponse.setPaymentDetails(paymentDetails);
+        return paymentStatusResponse;
     }
 
-    public void updatePaymentStatus(PaymentDetails paymentDetails, PaymentStatusResponse response){
-        if (!paymentDetails.getStatus().equals("PENDING") &&
-                response.getData().getPayments().getAmount().compareTo(paymentDetails.getAmount()) != 0)
+    public void updatePaymentStatus(PaymentStatusResponse response){
+        PaymentDetails details = response.getPaymentDetails();
+        PaymentDetails updatePaymentDetails = paymentDetailRepository.findByIdAndPaymentReference(details.getId(), details.getPaymentReference());
+        if(updatePaymentDetails == null) throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment does not exist");
+
+        if (!updatePaymentDetails.getStatus().equals("PENDING") &&
+                response.getData().getPayments().getAmount().compareTo(updatePaymentDetails.getAmount()) != 0)
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Payment Status conflict");
 
         if (response.getData() != null && response.getData().getCode().equals("00") && response.getData().getPayments().getGatewayCode().equals("00")
                 && response.getData().getPayments().getProcessorCode().equals("00")) {
-            paymentDetails.setStatus("SUCCESS");
+            updatePaymentDetails.setStatus("SUCCESS");
         } else {
-            paymentDetails.setStatus("FAILED");
+            updatePaymentDetails.setStatus("FAILED");
         }
-        paymentDetailRepository.save(paymentDetails);
+        paymentDetailRepository.save(updatePaymentDetails);
     }
 
     public CardPaymentResponse payWithCard(CardPaymentRequest paymentRequest) {
@@ -143,7 +143,7 @@ public class PaymentService {
         CardPaymentResponse post = api.post(baseUrl + "/payments/initiates", paymentDto, CardPaymentResponse.class, getHeaders());
 
         PaymentStatusResponse paymentStatusResponse = checkStatus(paymentReference);
-        updatePaymentStatus(map, paymentStatusResponse);
+        updatePaymentStatus(paymentStatusResponse);
         return post;
     }
 

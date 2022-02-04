@@ -98,7 +98,13 @@ public class PaymentService {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment reference does not exist");
 
         PaymentStatusResponse paymentStatusResponse = api.get(baseUrl + "/payments/query/" + paymentReference, PaymentStatusResponse.class, getHeaders());
-        paymentStatusResponse.setPaymentDetails(paymentDetails);
+        log.info("Payment status message {}" ,paymentStatusResponse.getMessage());
+        if(paymentStatusResponse.getStatus() != null &&
+                paymentStatusResponse.getStatus().equalsIgnoreCase("SUCCESS")) {
+            log.info("Payment status is success");
+            paymentDetails.setApprovedAmount(paymentStatusResponse.getData().getPayments().getAmount());
+            paymentStatusResponse.setPaymentDetails(paymentDetails);
+        }
         return paymentStatusResponse;
     }
 
@@ -107,7 +113,7 @@ public class PaymentService {
         PaymentDetails updatePaymentDetails = paymentDetailRepository.findByIdAndPaymentReference(details.getId(), details.getPaymentReference());
         if(updatePaymentDetails == null) throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Payment does not exist");
 
-        if (!updatePaymentDetails.getStatus().equals("PENDING") &&
+        if (!updatePaymentDetails.getStatus().equals("PENDING") ||
                 response.getData().getPayments().getAmount().compareTo(updatePaymentDetails.getAmount()) != 0)
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, "Payment Status conflict");
 

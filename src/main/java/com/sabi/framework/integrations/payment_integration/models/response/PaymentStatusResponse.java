@@ -2,6 +2,7 @@ package com.sabi.framework.integrations.payment_integration.models.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sabi.framework.models.PaymentDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class PaymentStatusResponse {
     private PaymentStatusData data;
     private String message;
     private String error;
+    private PaymentDetails paymentDetails;
 
     @Data
     @AllArgsConstructor

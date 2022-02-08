@@ -29,7 +29,7 @@ public class CheckOutRequest {
     private String email;
     @NotBlank(message = "Product Id can not be empty")
     private String productId;
-    @NotBlank(message = "Product description can not be empty")
+//    @NotBlank(message = "Product description can not be empty")
     private String productDescription;
     @NotBlank(message = "Call back url can not be empty")
     private String callbackUrl;

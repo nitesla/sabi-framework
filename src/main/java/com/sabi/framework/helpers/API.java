@@ -84,9 +84,11 @@ public class API {
             if (headers != null) {
                 headers.forEach(requestHeaders::set);
             }
-//            String request = new Gson().toJson(requestObject);
-            HttpEntity<?> requestEntity = new HttpEntity<>(requestObject, requestHeaders);
-            log.info("request payload to client :" + requestObject);
+
+                        String request = new Gson().toJson(requestObject);
+            HttpEntity<?> requestEntity = new HttpEntity<>(request, requestHeaders);
+            log.info("request payload to client :" + request);
+
 
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);

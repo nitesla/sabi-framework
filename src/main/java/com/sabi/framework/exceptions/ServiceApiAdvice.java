@@ -1,7 +1,6 @@
 package com.sabi.framework.exceptions;
 
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.sabi.framework.dto.responseDto.Response;
 import com.sabi.framework.helpers.ResponseHelper;
 import com.sabi.framework.loggers.LoggerUtil;

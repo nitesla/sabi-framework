@@ -1,8 +1,6 @@
 package com.sabi.framework.integrations.payment_integration.models.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sabi.framework.models.PaymentDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

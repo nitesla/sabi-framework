@@ -33,4 +33,6 @@ public class CheckOutRequest {
     private String productDescription;
     @NotBlank(message = "Call back url can not be empty")
     private String callbackUrl;
+    @NotNull(message = "Order Id is required")
+    private Long orderId;
 }

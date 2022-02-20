@@ -196,4 +196,15 @@ public class CoreValidations {
 
     }
 
+
+//    public void validateGlobalBank(BankRequest request) {
+//
+//        if (request.getPage() >0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page cannot be empty");
+//        if (request.getPageSize() > 0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page size cannot be empty");
+//
+//    }
+
+
 }

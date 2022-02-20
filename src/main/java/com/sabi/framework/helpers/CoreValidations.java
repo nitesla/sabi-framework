@@ -5,7 +5,6 @@ import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
-import com.sabi.framework.globaladminintegration.request.BankRequest;
 import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
@@ -198,14 +197,14 @@ public class CoreValidations {
     }
 
 
-    public void validateGlobalBank(BankRequest request) {
-
-        if (request.getPage() > 0)
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page cannot be empty");
-        if (request.getPageSize() > 0)
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page size cannot be empty");
-
-    }
+//    public void validateGlobalBank(BankRequest request) {
+//
+//        if (request.getPage() >0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page cannot be empty");
+//        if (request.getPageSize() > 0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page size cannot be empty");
+//
+//    }
 
 
 }

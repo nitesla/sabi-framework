@@ -1,8 +1,10 @@
 package com.sabi.framework.globaladminintegration;
 
 import com.sabi.framework.globaladminintegration.request.BankRequest;
+import com.sabi.framework.globaladminintegration.request.SingleRequest;
 import com.sabi.framework.globaladminintegration.response.ListResponse;
 import com.sabi.framework.globaladminintegration.response.PageResponse;
+import com.sabi.framework.globaladminintegration.response.SingleResponse;
 import com.sabi.framework.helpers.API;
 import com.sabi.framework.helpers.CoreValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class GlobalService {
 
 
     public PageResponse getBankPagination(BankRequest request)  {
-             validations.validateGlobalBank(request);
+//             validations.validateGlobalBank(request);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bankBaseUrl)
                 // Add query parameter
                 .queryParam("name", request.getName())
@@ -66,7 +68,7 @@ public class GlobalService {
 
 
     public PageResponse getCountryPagination(BankRequest request)  {
-        validations.validateGlobalBank(request);
+//        validations.validateGlobalBannk(request);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(countryBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())
@@ -94,10 +96,18 @@ public class GlobalService {
         return response;
     }
 
+    public SingleResponse getSingleCountry(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(countryBaseUrl.trim()+request.getId(), SingleResponse.class, map);
+        return response;
+    }
+
 
 
     public PageResponse getStatePagination(BankRequest request) {
-        validations.validateGlobalBank(request);
+//        validations.validateGlobalBank(request);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(stateBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())
@@ -126,7 +136,7 @@ public class GlobalService {
 
 
     public PageResponse getLgaPagination(BankRequest request) {
-        validations.validateGlobalBank(request);
+//        validations.validateGlobalBank(request);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())

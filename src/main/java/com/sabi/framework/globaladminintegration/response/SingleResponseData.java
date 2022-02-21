@@ -14,6 +14,14 @@ public class SingleResponseData {
 
     private String code;
 
+    private Long countryId;
+
+    private String countryName;
+
+    private long stateId;
+
+    private String stateName;
+
     private String createdDate;
 
     private String updatedDate;

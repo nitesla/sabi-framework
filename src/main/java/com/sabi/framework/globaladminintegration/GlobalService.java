@@ -135,6 +135,16 @@ public class GlobalService {
     }
 
 
+
+    public SingleResponse getSingleState(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(stateBaseUrl.trim()+request.getId(), SingleResponse.class, map);
+        return response;
+    }
+
+
     public PageResponse getLgaPagination(BankRequest request) {
 //        validations.validateGlobalBank(request);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"page")
@@ -160,6 +170,15 @@ public class GlobalService {
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());
         ListResponse response = api.get(builder.toUriString(), ListResponse.class, map);
+        return response;
+    }
+
+
+    public SingleResponse getSingleLga(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(lgaBaseUrl.trim()+request.getId(), SingleResponse.class, map);
         return response;
     }
 }

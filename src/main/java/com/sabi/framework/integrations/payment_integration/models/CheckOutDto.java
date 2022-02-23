@@ -21,4 +21,5 @@ public class CheckOutDto {
     private String callbackUrl;
     private String hash;
     private String hashType;
+    private Long orderId;
 }

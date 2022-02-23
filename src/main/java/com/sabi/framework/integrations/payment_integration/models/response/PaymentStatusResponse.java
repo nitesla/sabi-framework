@@ -1,5 +1,6 @@
 package com.sabi.framework.integrations.payment_integration.models.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sabi.framework.models.PaymentDetails;
@@ -46,8 +47,9 @@ public class PaymentStatusResponse {
         private String email;
         @JsonProperty("mobilenumber")
         private String mobilenumber;
-        @JsonProperty("publicKey")
-        private String publicKey;
+//        @JsonProperty("publicKey")
+//        @JsonIgnore
+//        private String publicKey;
         @JsonProperty("paymentType")
         private String paymentType;
         @JsonProperty("productId")

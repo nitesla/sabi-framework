@@ -39,7 +39,7 @@ public class GlobalService {
 
     public PageResponse getBankPagination(BankRequest request)  {
 //             validations.validateGlobalBank(request);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bankBaseUrl)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bankBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())
                 .queryParam("code", request.getCode())
@@ -54,7 +54,7 @@ public class GlobalService {
 
 
     public ListResponse getBankList(BankRequest request)  {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bankBaseUrl+"/list")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(bankBaseUrl+"list")
                 // Add query parameter
                 .queryParam("name", request.getName())
                 .queryParam("code", request.getCode());
@@ -62,6 +62,15 @@ public class GlobalService {
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());
         ListResponse response = api.get(builder.toUriString(), ListResponse.class, map);
+        return response;
+    }
+
+
+    public SingleResponse getSingleBank(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(bankBaseUrl.trim()+request.getId(), SingleResponse.class, map);
         return response;
     }
 

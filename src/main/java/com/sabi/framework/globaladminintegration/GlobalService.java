@@ -134,14 +134,18 @@ public class GlobalService {
     public ListResponse getStateList(BankRequest request)  {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(stateBaseUrl+"list")
                 // Add query parameter
-                .queryParam("name", request.getName())
-                .queryParam("countryId", request.getCountryId());
+                .queryParam("countryId", request.getCountryId())
+                .queryParam("name", request.getName());
 
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());
         ListResponse response = api.get(builder.toUriString(),ListResponse.class, map);
         return response;
     }
+
+
+
+
 
 
 
@@ -173,8 +177,9 @@ public class GlobalService {
     public ListResponse getLgaList(BankRequest request)  {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"list")
                 // Add query parameter
-                .queryParam("name", request.getName())
-                .queryParam("stateId", request.getStateId());
+                .queryParam("stateId", request.getStateId())
+                .queryParam("name", request.getName());
+
 
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());

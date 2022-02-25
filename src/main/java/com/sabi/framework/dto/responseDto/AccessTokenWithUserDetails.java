@@ -33,6 +33,9 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("firstName")
     private String firstName;
 
+    @JsonProperty("middleName")
+    private String middleName;
+
 
     @JsonProperty("lastLogin")
     private LocalDateTime lastLogin;
@@ -74,6 +77,7 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.phone = user.getPhone();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.middleName= user.getMiddleName();
         this.lastLogin = user.getLastLogin();
         this.menu = menu;
         this.tokenExpiry = tokenExpiry;

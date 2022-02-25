@@ -139,7 +139,7 @@ public class GlobalService {
 
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());
-        ListResponse response = api.get(builder.toUriString(), ListResponse.class, map);
+        ListResponse response = api.get(builder.toUriString(),ListResponse.class, map);
         return response;
     }
 

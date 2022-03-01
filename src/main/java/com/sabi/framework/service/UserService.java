@@ -182,8 +182,10 @@ public class UserService {
         log.debug("user record updated - {}"+ new Gson().toJson(user));
 
         UserRole userRole = userRoleRepository.findByUserId(user.getId());
-        userRole.setUserId(user.getRoleId());
-        userRole.setUserId(user.getId());
+        if(userRole.getRoleId()==null){
+            userRole.setRoleId(user.getRoleId());
+        }
+            userRole.setUserId(user.getId());
         userRoleRepository.save(userRole);
 
         auditTrailService
@@ -396,12 +398,12 @@ public class UserService {
             notificationRequestDto.setRecipient(recipient);
             notificationService.emailNotificationRequest(notificationRequestDto);
 
-
-            SmsRequest smsRequest = SmsRequest.builder()
-                    .message("Activation Otp " + " " + user.getResetToken())
-                    .phoneNumber(emailRecipient.getPhone())
-                    .build();
-            notificationService.smsNotificationRequest(smsRequest);
+//
+//            SmsRequest smsRequest = SmsRequest.builder()
+//                    .message("Activation Otp " + " " + user.getResetToken())
+//                    .phoneNumber(emailRecipient.getPhone())
+//                    .build();
+//            notificationService.smsNotificationRequest(smsRequest);
 
 
             WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
@@ -434,11 +436,11 @@ public class UserService {
             notificationRequestDto.setRecipient(recipient);
             notificationService.emailNotificationRequest(notificationRequestDto);
 
-            SmsRequest smsRequest = SmsRequest.builder()
-                    .message("Activation Otp " + " " + userPhone.getResetToken())
-                    .phoneNumber(emailRecipient.getPhone())
-                    .build();
-            notificationService.smsNotificationRequest(smsRequest);
+//            SmsRequest smsRequest = SmsRequest.builder()
+//                    .message("Activation Otp " + " " + userPhone.getResetToken())
+//                    .phoneNumber(emailRecipient.getPhone())
+//                    .build();
+//            notificationService.smsNotificationRequest(smsRequest);
 
             WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                     .message("Activation Otp " + " " + userPhone.getResetToken())
@@ -544,11 +546,11 @@ public class UserService {
         notificationRequestDto.setRecipient(recipient);
         notificationService.emailNotificationRequest(notificationRequestDto);
 
-        SmsRequest smsRequest = SmsRequest.builder()
-                .message("Activation Otp " + " " + user.getResetToken())
-                .phoneNumber(emailRecipient.getPhone())
-                .build();
-        notificationService.smsNotificationRequest(smsRequest);
+//        SmsRequest smsRequest = SmsRequest.builder()
+//                .message("Activation Otp " + " " + user.getResetToken())
+//                .phoneNumber(emailRecipient.getPhone())
+//                .build();
+//        notificationService.smsNotificationRequest(smsRequest);
 
         WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())

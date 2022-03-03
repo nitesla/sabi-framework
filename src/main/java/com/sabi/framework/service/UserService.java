@@ -130,7 +130,6 @@ public class UserService {
 
         // --------  sending token  -----------
 
-
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
         User emailRecipient = userRepository.getOne(user.getId());
         notificationRequestDto.setMessage("Activation Otp " + " " + user.getResetToken());

@@ -35,6 +35,9 @@ public class GlobalService {
     @Value("${lga.base.url}")
     private String lgaBaseUrl;
 
+    @Value("${ward.base.url}")
+    private String wardBaseUrl;
+
 
 
     public PageResponse getBankPagination(BankRequest request)  {
@@ -195,4 +198,44 @@ public class GlobalService {
         SingleResponse response = api.get(lgaBaseUrl.trim()+request.getId(), SingleResponse.class, map);
         return response;
     }
+
+    public SingleResponse getSingleWard(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(wardBaseUrl.trim()+request.getId(), SingleResponse.class, map);
+        return response;
+    }
+
+
+    public ListResponse getWardList(BankRequest request)  {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(wardBaseUrl+"list")
+                // Add query parameter
+                .queryParam("name", request.getName())
+                .queryParam("lgaId", request.getLgaId());
+
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        ListResponse response = api.get(builder.toUriString(), ListResponse.class, map);
+        return response;
+    }
+
+
+
+    public PageResponse getWardPagination(BankRequest request) {
+//        validations.validateGlobalBank(request);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"page")
+                // Add query parameter
+                .queryParam("name", request.getName())
+                .queryParam("stateId", request.getStateId())
+                .queryParam("page", request.getPage())
+                .queryParam("pageSize", request.getPageSize());
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        PageResponse response = api.get(builder.toUriString(), PageResponse.class, map);
+        return response;
+    }
+
 }

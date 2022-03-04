@@ -19,8 +19,11 @@ public class SingleResponseData {
     private String countryName;
 
     private long stateId;
+    private long lgaId;
 
     private String stateName;
+
+    private String lgaName;
 
     private String createdDate;
 

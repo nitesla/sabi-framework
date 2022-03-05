@@ -25,6 +25,7 @@ public class UserResponse {
     private String email;
     private String phone;
     private String username;
+    private String photo;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private Long createdBy;

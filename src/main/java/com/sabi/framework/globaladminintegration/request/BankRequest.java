@@ -18,6 +18,7 @@ public class BankRequest {
     private String code;
     private Long countryId;
     private Long stateId;
+    private Long lgaId;
     private int page;
     private int pageSize;
 }

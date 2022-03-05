@@ -12,7 +12,9 @@ public class Content {
     private String code;
     private Long countryId;
     private Long stateId;
+    private Long lgaId;
     private String countryName;
+    private String lgaName;
     private String stateName;
     private String createdDate;
     private String updatedDate;

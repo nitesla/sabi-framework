@@ -13,10 +13,7 @@ import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.models.UserRole;
-import com.sabi.framework.notification.requestDto.NotificationRequestDto;
-import com.sabi.framework.notification.requestDto.RecipientRequest;
-import com.sabi.framework.notification.requestDto.SmsRequest;
-import com.sabi.framework.notification.requestDto.WhatsAppRequest;
+import com.sabi.framework.notification.requestDto.*;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
@@ -146,13 +143,17 @@ public class UserService {
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
 
-
         WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
 
+        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                .message("Activation Otp is " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        notificationService.voiceOtp(voiceOtpRequest);
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
                         "Create new user by :" + userCurrent.getUsername(),
@@ -397,12 +398,12 @@ public class UserService {
             notificationRequestDto.setRecipient(recipient);
             notificationService.emailNotificationRequest(notificationRequestDto);
 
-//
-//            SmsRequest smsRequest = SmsRequest.builder()
-//                    .message("Activation Otp " + " " + user.getResetToken())
-//                    .phoneNumber(emailRecipient.getPhone())
-//                    .build();
-//            notificationService.smsNotificationRequest(smsRequest);
+
+            SmsRequest smsRequest = SmsRequest.builder()
+                    .message("Activation Otp " + " " + user.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.smsNotificationRequest(smsRequest);
 
 
             WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
@@ -410,6 +411,12 @@ public class UserService {
                     .phoneNumber(emailRecipient.getPhone())
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
+
+            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                    .message("Activation Otp is " + " " + user.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.voiceOtp(voiceOtpRequest);
 
         }else if(request.getPhone()!= null) {
 
@@ -435,17 +442,23 @@ public class UserService {
             notificationRequestDto.setRecipient(recipient);
             notificationService.emailNotificationRequest(notificationRequestDto);
 
-//            SmsRequest smsRequest = SmsRequest.builder()
-//                    .message("Activation Otp " + " " + userPhone.getResetToken())
-//                    .phoneNumber(emailRecipient.getPhone())
-//                    .build();
-//            notificationService.smsNotificationRequest(smsRequest);
+            SmsRequest smsRequest = SmsRequest.builder()
+                    .message("Activation Otp " + " " + userPhone.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.smsNotificationRequest(smsRequest);
 
             WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                     .message("Activation Otp " + " " + userPhone.getResetToken())
                     .phoneNumber(emailRecipient.getPhone())
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
+
+            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                    .message("Activation Otp is " + " " + userPhone.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.voiceOtp(voiceOtpRequest);
         }
 
     }
@@ -545,17 +558,24 @@ public class UserService {
         notificationRequestDto.setRecipient(recipient);
         notificationService.emailNotificationRequest(notificationRequestDto);
 
-//        SmsRequest smsRequest = SmsRequest.builder()
-//                .message("Activation Otp " + " " + user.getResetToken())
-//                .phoneNumber(emailRecipient.getPhone())
-//                .build();
-//        notificationService.smsNotificationRequest(smsRequest);
+        SmsRequest smsRequest = SmsRequest.builder()
+                .message("Activation Otp " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        notificationService.smsNotificationRequest(smsRequest);
 
         WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
+
+        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                .message("Activation Otp is " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        notificationService.voiceOtp(voiceOtpRequest);
+
 
     }
 

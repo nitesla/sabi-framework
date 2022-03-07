@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class SmsRequest {
     private String message;
     private String phoneNumber;
+    private String pinCode;
 }

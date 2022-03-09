@@ -224,7 +224,7 @@ public class GlobalService {
 
 
     public PageResponse getWardPagination(BankRequest request) {
-//        validations.validateGlobalBank(request);
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())

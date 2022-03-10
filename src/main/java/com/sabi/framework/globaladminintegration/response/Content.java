@@ -16,6 +16,9 @@ public class Content {
     private String countryName;
     private String lgaName;
     private String stateName;
+    private String permissionType;
+    private String appPermission;
+    private String menuName;
     private String createdDate;
     private String updatedDate;
     private Long createdBy;

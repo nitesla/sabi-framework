@@ -49,6 +49,7 @@ public class User extends CoreEntity{
     private String resetTokenExpirationDate;
     private Long clientId;
     private Long wareHouseId;
+    private String photo;
 
 // --------logistic  userType -----------
 

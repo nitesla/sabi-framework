@@ -1,5 +1,6 @@
 package com.sabi.framework.models;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,21 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 @Entity
-public class UserRole {
+public class GlobalAccessToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long roleId;
-//    @ApiModelProperty(hidden = true)
-//    private LocalDateTime createdDate = LocalDateTime.now();
 
-
+    private String accessToken;
 }

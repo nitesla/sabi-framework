@@ -33,6 +33,9 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("firstName")
     private String firstName;
 
+    @JsonProperty("middleName")
+    private String middleName;
+
 
     @JsonProperty("lastLogin")
     private LocalDateTime lastLogin;
@@ -58,6 +61,9 @@ public class AccessTokenWithUserDetails implements Serializable{
     @JsonProperty("isEmailVerified")
     private String isEmailVerified ;
 
+    @JsonProperty("photo")
+    private String photo;
+
     @JsonProperty("partnerCategory")
 //    private String partnerCategory;
     List<PartnersCategoryReturn> partnerCategory;
@@ -74,7 +80,9 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.phone = user.getPhone();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.middleName= user.getMiddleName();
         this.lastLogin = user.getLastLogin();
+        this.photo = user.getPhoto();
         this.menu = menu;
         this.tokenExpiry = tokenExpiry;
         this.userId=user.getId();

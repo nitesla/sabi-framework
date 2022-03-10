@@ -5,6 +5,7 @@ import com.sabi.framework.helpers.API;
 import com.sabi.framework.notification.requestDto.NotificationRequestDto;
 import com.sabi.framework.notification.requestDto.RecipientRequest;
 import com.sabi.framework.notification.requestDto.SmsRequest;
+import com.sabi.framework.notification.requestDto.VoiceOtpRequest;
 import com.sabi.framework.notification.responseDto.NotificationResponseDto;
 import com.sabi.framework.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,9 @@ public class NotificationService {
 
     @Value("${notification.unique.id}")
     private String uniqueId;
+
+    @Value("${voice.otp.url}")
+    private String voiceOtp;
 
 
     @Autowired
@@ -91,6 +95,16 @@ public class NotificationService {
         map.put("fingerprint", uniqueId);
 
         String response = api.post(smsNotification, smsRequest, String.class, map);
+        return response;
+
+    }
+
+
+
+    public String voiceOtp (VoiceOtpRequest voiceOtpRequest){
+        Map<String,String> map = new HashMap();
+        map.put("fingerprint", uniqueId);
+        String response = api.post(voiceOtp, voiceOtpRequest, String.class, map);
         return response;
 
     }

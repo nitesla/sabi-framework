@@ -1,4 +1,5 @@
-package com.sabi.framework.notification.requestDto;
+package com.sabi.framework.globaladminintegration;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class SmsRequest {
-    private String message;
-    private String phoneNumber;
-    private String pinCode;
+public class AccesTokenRequest {
+
+    private String password;
+    private String username;
 }

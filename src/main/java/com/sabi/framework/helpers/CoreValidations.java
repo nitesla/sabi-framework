@@ -144,22 +144,13 @@ public class CoreValidations {
 
         if (userDto.getFirstName() == null || userDto.getFirstName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
-        if (!Utility.validateName(userDto.getFirstName()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for First Name ");
         if (userDto.getFirstName().length() < 2 || userDto.getFirstName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid first name  length");
 
         if (userDto.getLastName() == null || userDto.getLastName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");
-        if (!Utility.validateName(userDto.getLastName()))
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Last Name ");
         if (userDto.getLastName().length() < 2 || userDto.getLastName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid last name  length");
-
-//        if (!Utility.validateName(userDto.getMiddleName()))
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid data type for Middle Name ");
-//        if (userDto.getMiddleName().length() < 2 || userDto.getMiddleName().length() > 100)// NAME LENGTH*********
-//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid Middle name length");
 
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "email cannot be empty");
@@ -195,5 +186,16 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Phone cannot be empty");
 
     }
+
+
+//    public void validateGlobalBank(BankRequest request) {
+//
+//        if (request.getPage() >0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page cannot be empty");
+//        if (request.getPageSize() > 0)
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Page size cannot be empty");
+//
+//    }
+
 
 }

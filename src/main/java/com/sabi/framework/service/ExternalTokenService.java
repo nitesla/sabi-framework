@@ -59,6 +59,7 @@ public class ExternalTokenService {
         Map map=new HashMap();
         map.put("fingerprint",uniqueId.trim());
         TokenResponse response = api.post(login, request, TokenResponse.class,map);
+        log.info(":::::::: TOKEN RESPONS FROM SABI" + response.getToken());
         saveToken(response);
     }
 

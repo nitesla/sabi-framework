@@ -13,10 +13,7 @@ import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.models.UserRole;
-import com.sabi.framework.notification.requestDto.NotificationRequestDto;
-import com.sabi.framework.notification.requestDto.RecipientRequest;
-import com.sabi.framework.notification.requestDto.SmsRequest;
-import com.sabi.framework.notification.requestDto.WhatsAppRequest;
+import com.sabi.framework.notification.requestDto.*;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
@@ -117,7 +114,7 @@ public class UserService {
         UserRole userRole = UserRole.builder()
                 .userId(user.getId())
                 .roleId(user.getRoleId())
-                .createdDate(LocalDateTime.now())
+//                .createdDate(LocalDateTime.now())
                 .build();
         userRoleRepository.save(userRole);
 
@@ -129,7 +126,6 @@ public class UserService {
         previousPasswordRepository.save(previousPasswords);
 
         // --------  sending token  -----------
-
 
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
         User emailRecipient = userRepository.getOne(user.getId());
@@ -147,13 +143,17 @@ public class UserService {
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
 
-
         WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
                 .message("Activation Otp " + " " + user.getResetToken())
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
 
+        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                .message("Activation Otp is " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        notificationService.voiceOtp(voiceOtpRequest);
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
                         "Create new user by :" + userCurrent.getUsername(),
@@ -182,9 +182,11 @@ public class UserService {
         log.debug("user record updated - {}"+ new Gson().toJson(user));
 
         UserRole userRole = userRoleRepository.findByUserId(user.getId());
-        UserRole roleUser = userRoleRepository.getOne(userRole.getId());
-        roleUser.setRoleId(user.getRoleId());
-        userRoleRepository.save(roleUser);
+        if(userRole.getRoleId()==null){
+            userRole.setRoleId(user.getRoleId());
+        }
+            userRole.setUserId(user.getId());
+        userRoleRepository.save(userRole);
 
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
@@ -410,6 +412,12 @@ public class UserService {
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
 
+            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                    .message("Activation Otp is " + " " + user.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.voiceOtp(voiceOtpRequest);
+
         }else if(request.getPhone()!= null) {
 
             User userPhone = userRepository.findByPhone(request.getPhone());
@@ -445,6 +453,12 @@ public class UserService {
                     .phoneNumber(emailRecipient.getPhone())
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
+
+            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                    .message("Activation Otp is " + " " + userPhone.getResetToken())
+                    .phoneNumber(emailRecipient.getPhone())
+                    .build();
+            notificationService.voiceOtp(voiceOtpRequest);
         }
 
     }
@@ -555,6 +569,13 @@ public class UserService {
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
+
+        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+                .message("Activation Otp is " + " " + user.getResetToken())
+                .phoneNumber(emailRecipient.getPhone())
+                .build();
+        notificationService.voiceOtp(voiceOtpRequest);
+
 
     }
 

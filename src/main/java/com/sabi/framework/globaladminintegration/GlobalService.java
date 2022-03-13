@@ -38,6 +38,9 @@ public class GlobalService {
     @Value("${ward.base.url}")
     private String wardBaseUrl;
 
+    @Value("${permission.base.url}")
+    private String permissionBaseUrl;
+
 
 
     public PageResponse getBankPagination(BankRequest request)  {
@@ -148,10 +151,6 @@ public class GlobalService {
 
 
 
-
-
-
-
     public SingleResponse getSingleState(SingleRequest request) {
 
         Map map = new HashMap();
@@ -224,8 +223,8 @@ public class GlobalService {
 
 
     public PageResponse getWardPagination(BankRequest request) {
-//        validations.validateGlobalBank(request);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(lgaBaseUrl+"page")
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(wardBaseUrl+"page")
                 // Add query parameter
                 .queryParam("name", request.getName())
                 .queryParam("stateId", request.getStateId())
@@ -238,4 +237,41 @@ public class GlobalService {
         return response;
     }
 
+
+
+    public SingleResponse getSinglePermission(SingleRequest request) {
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        SingleResponse response = api.get(permissionBaseUrl.trim()+request.getId(), SingleResponse.class, map);
+        return response;
+    }
+
+    public ListResponse getPermissionList(BankRequest request)  {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(permissionBaseUrl+"list")
+                // Add query parameter
+                .queryParam("name", request.getName())
+                .queryParam("appPermission", request.getAppPermission());
+
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        ListResponse response = api.get(builder.toUriString(), ListResponse.class, map);
+        return response;
+    }
+
+    public PageResponse getPermissionPagination(BankRequest request) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(permissionBaseUrl+"page")
+                // Add query parameter
+                .queryParam("name", request.getName())
+                .queryParam("appPermission", request.getAppPermission())
+                .queryParam("page", request.getPage())
+                .queryParam("pageSize", request.getPageSize());
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        PageResponse response = api.get(builder.toUriString(), PageResponse.class, map);
+        return response;
+    }
 }

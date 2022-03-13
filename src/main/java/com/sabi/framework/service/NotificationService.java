@@ -102,10 +102,8 @@ public class NotificationService {
 
 
     public String voiceOtp (VoiceOtpRequest voiceOtpRequest){
-
         Map<String,String> map = new HashMap();
         map.put("fingerprint", uniqueId);
-
         String response = api.post(voiceOtp, voiceOtpRequest, String.class, map);
         return response;
 

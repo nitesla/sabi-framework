@@ -19,6 +19,8 @@ public class BankRequest {
     private Long countryId;
     private Long stateId;
     private Long lgaId;
+    private String permissionType;
+    private String appPermission;
     private int page;
     private int pageSize;
 }

@@ -25,6 +25,10 @@ public class SingleResponseData {
 
     private String lgaName;
 
+    private String permissionType;
+    private String appPermission;
+    private String menuName;
+
     private String createdDate;
 
     private String updatedDate;

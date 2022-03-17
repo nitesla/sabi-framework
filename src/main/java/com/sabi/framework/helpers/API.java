@@ -4,9 +4,7 @@ package com.sabi.framework.helpers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ProcessingException;
-import com.sabi.framework.utils.CustomResponseCode;
 import com.sabi.framework.utils.RestTemplateResponseErrorHandler;
 import com.sun.istack.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -71,8 +69,9 @@ public class API {
             return gson.fromJson(responseEntity.getBody(), responseClass);
         } catch (Exception e) {
             log.error(" Request failed", e);
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Failed from client API "+ requestPath);
+            log.error("Failed url : " + requestPath);
 //            throw new ProcessingException(e.getMessage());
+            return null;
         }
     }
 
@@ -101,9 +100,9 @@ public class API {
             log.error(" Request failed", e);
             log.error("response from client (Error): " + e.getMessage());
             log.error("Failed url : " + url);
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Failed from client API "+ url);
-//            throw new ProcessingException("response from client (Error): " + e.getMessage());
 
+//            throw new ProcessingException("response from client (Error): " + e.getMessage());
+            return null;
         }
     }
 

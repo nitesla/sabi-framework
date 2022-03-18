@@ -373,7 +373,7 @@ public class UserService {
      * <remarks>this method is responsible for a user that forgets his password</remarks>
      */
 
-    public  void forgetPassword (ForgetPasswordDto request) {
+    public void forgetPassword (ForgetPasswordDto request) {
 
         if(request.getEmail() != null) {
 

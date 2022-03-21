@@ -11,9 +11,11 @@ public class Constants {
     public static final String ADMIN_USER = "A";
     public static final String OTHER_USER = "U";
     public static final String NOTIFICATION = "NOTIFICATION";
-    public static final String SUPPLIER = "SUPPLIER";
-    public static final String LOGISTICS = "LOGISTICS";
-    public static final String AGENT = "AGENT";
+    public static final String SUPPLIER = "SP";
+    public static final String LOGISTICS = "LG";
+    public static final String AGENT = "AG";
+    public static final String DATA_COLLECTION = "DC";
+    public static final String GLOBAL_ADMIN = "GA";
 
 
 

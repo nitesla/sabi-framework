@@ -1,34 +1,25 @@
 package com.sabi.framework.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 @EqualsAndHashCode(callSuper=false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class RolePermission extends CoreEntity{
 
 
     private Long roleId;
-
-
-//    @OneToMany(targetEntity = Permission.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "permission_fk", referencedColumnName = "id")
-//    @ElementCollection
-//    @CollectionTable(name = "my_list", joinColumns = @JoinColumn(name = "id"))
     private Long permissionId;
+    private String permissionName;
 
-
-    @Transient
-    private String permission;
+//    @Transient
+//    private String permission;
 
 
 

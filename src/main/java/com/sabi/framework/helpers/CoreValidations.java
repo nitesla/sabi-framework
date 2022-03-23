@@ -6,8 +6,10 @@ import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
 import com.sabi.framework.exceptions.NotFoundException;
 import com.sabi.framework.models.Role;
+import com.sabi.framework.models.RolePermission;
 import com.sabi.framework.models.User;
 import com.sabi.framework.repositories.PermissionRepository;
+import com.sabi.framework.repositories.RolePermissionRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
 import com.sabi.framework.utils.CustomResponseCode;
@@ -22,11 +24,14 @@ public class CoreValidations {
     private RoleRepository roleRepository;
     private UserRepository userRepository;
     private PermissionRepository permissionRepository;
+    private RolePermissionRepository rolePermissionRepository;
 
-    public CoreValidations(RoleRepository roleRepository,UserRepository userRepository, PermissionRepository permissionRepository) {
+    public CoreValidations(RoleRepository roleRepository,UserRepository userRepository, PermissionRepository permissionRepository,
+                           RolePermissionRepository rolePermissionRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.permissionRepository = permissionRepository;
+        this.rolePermissionRepository = rolePermissionRepository;
     }
 
     public void validateRole(RoleDto roleDto) {
@@ -49,18 +54,24 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "code cannot be empty");
     }
 
-    public void validateRolePermission(RolePermissionDto rolePermissionDto) {
-        if ((Long) rolePermissionDto.getRoleId() == null)
+    public void validateRolePermission(RolePermission rolePermissionDto) {
+        if (rolePermissionDto.getRoleId()== null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role Id cannot be empty");
-        if (rolePermissionDto.getPermissionIds() == null)
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role permission(s) cannot be empty");
+        if (rolePermissionDto.getPermissionName()== null)
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Permission name cannot be empty");
+        if (rolePermissionDto.getPermissionId() == null)
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role permissionid cannot be empty");
         roleRepository.findById(rolePermissionDto.getRoleId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         " Enter a valid Role"));
-        rolePermissionDto.getPermissionIds().forEach((p) -> {
-            permissionRepository.findById(p).orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                    " Permission " + p + " Does not exist"));
-        });
+        permissionRepository.findById(rolePermissionDto.getPermissionId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Enter a valid permissionId"));
+        RolePermission rolePermission = rolePermissionRepository.findByRoleIdAndPermissionId(rolePermissionDto.getRoleId(),rolePermissionDto.getPermissionId());
+        if(rolePermission !=null){
+            throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Permission already assigned to the role"+rolePermissionDto.getPermissionId());
+        }
+
     }
 
 

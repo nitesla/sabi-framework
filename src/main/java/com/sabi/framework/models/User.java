@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -50,7 +50,7 @@ public class User extends CoreEntity{
     private String resetTokenExpirationDate;
     private Long clientId;
     private Long wareHouseId;
-    @Column(length = 5000)
+    @Lob
     private String photo;
 
 // --------logistic  userType -----------

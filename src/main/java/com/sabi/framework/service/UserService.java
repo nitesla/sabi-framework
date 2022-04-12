@@ -181,12 +181,12 @@ public class UserService {
         userRepository.save(user);
         log.debug("user record updated - {}"+ new Gson().toJson(user));
 
-        UserRole userRole = UserRole.builder()
-                .userId(user.getId())
-                .roleId(user.getRoleId())
-//                .createdDate(LocalDateTime.now())
-                .build();
-        userRoleRepository.save(userRole);
+//        UserRole userRole = UserRole.builder()
+//                .userId(user.getId())
+//                .roleId(user.getRoleId())
+////                .createdDate(LocalDateTime.now())
+//                .build();
+//        userRoleRepository.save(userRole);
 
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
@@ -225,6 +225,7 @@ public class UserService {
                .updatedDate(user.getUpdatedDate())
                .roleId(user.getRoleId())
                .roleName(role.getName())
+               .photo(user.getPhoto())
                .build();
 
 

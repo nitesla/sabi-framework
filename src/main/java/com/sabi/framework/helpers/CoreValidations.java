@@ -157,6 +157,12 @@ public class CoreValidations {
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "First name cannot be empty");
         if (userDto.getFirstName().length() < 2 || userDto.getFirstName().length() > 100)// NAME LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid first name  length");
+        if(userDto.getRoleId()== null)
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role id cannot be empty");
+
+        Role role = roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Enter a valid Role"));
 
         if (userDto.getLastName() == null || userDto.getLastName().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Last name cannot be empty");

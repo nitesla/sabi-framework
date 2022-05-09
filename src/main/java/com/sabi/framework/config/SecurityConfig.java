@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/v1/agent/resendotp","/api/v1/agent/activateUser","/api/v1/ping/check",
                 "/logistics/api/v1/authenticate/login","/logistics/api/v1/authenticate/generatepassword","/logistics/api/v1/authenticate/logout","/logistics/api/v1/user/activateUser",
                 "/logistics/api/v1/user/forgetpassword","/logistics/api/v1/authenticate/externaltoken","/api/v1/state/list","/api/v1/state/page", "/api/v1/lga/list","/api/v1/lga/page","/api/v1/country/list","/api/v1/country/page",
-                "/api/v1/partner/completesignup","/api/v1/partner/signup","/logistics/api/v1/state/list","/logistics/api/v1/state/page","/api/v1/partner/externalsignup","/logistics/api/v1/authenticate/admin/login",
+                "/api/v1/partner/completesignup","/api/v1/partner/signup","/logistics/api/v1/state/list","/logistics/api/v1/state/page","/api/v1/partner/externalsignup","/api/v1/authenticate/admin/login",
                 "/logistics/api/v1/lga/list","/logistics/api/v1/lga/page","/logistics/api/v1/country/list","/logistics/api/v1/country/page","/api/v1/partner/details/{supplierId}",
                 "/api/v1/assettypeproperties/list","/api/v1/assettypeproperties/page","/api/v1/partner/passwordactivation",
                 "/api/v1/partnercategory/list","/api/v1/triprequest/shipmenttrip",

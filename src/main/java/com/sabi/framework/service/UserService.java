@@ -514,16 +514,16 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for setting new transaction pin</remarks>
      */
-    public void setPin (ChangeTransactionPin request) {
+    public void setPin (SetTransactionPin request) {
         coreValidations.changeTransactionPin(request);
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
 
-        String auth = Encryptions.generateSha256(request.getOldTransactionPin());
-        if(!auth.matches(user.getTransactionPin())){
-            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid old pin");
-        }
+//        String auth = Encryptions.generateSha256(request.getOldTransactionPin());
+//        if(!auth.matches(user.getTransactionPin())){
+//            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid old pin");
+//        }
         String pin = Encryptions.generateSha256(request.getTransactionPin());
         user.setTransactionPin(pin);
         userRepository.save(user);
@@ -600,7 +600,7 @@ public class UserService {
      * <remarks>this method is responsible for changing transaction pin </remarks>
      */
 
-    public  void changePin (CreateTransactionPinDto request) {
+    public void changePin (CreateTransactionPinDto request) {
         coreValidations.validateTransactionPin(request);
         User userExist = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,

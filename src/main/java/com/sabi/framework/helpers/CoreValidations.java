@@ -127,14 +127,14 @@ public class CoreValidations {
 
 
 
-    public void changeTransactionPin(ChangeTransactionPin changeTransactionPin) {
-        if (changeTransactionPin.getTransactionPin() == null || changeTransactionPin.getTransactionPin().isEmpty())
+    public void changeTransactionPin(SetTransactionPin setTransactionPin) {
+        if (setTransactionPin.getTransactionPin() == null || setTransactionPin.getTransactionPin().isEmpty())
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Transaction pin cannot be empty");
 
-        if (!Utility.isNumeric(changeTransactionPin.getTransactionPin()))
+        if (!Utility.isNumeric(setTransactionPin.getTransactionPin()))
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Transaction pin must be numeric ");
 
-        if (changeTransactionPin.getTransactionPin().length() < 4 || changeTransactionPin.getTransactionPin().length() > 6)// LENGTH*********
+        if (setTransactionPin.getTransactionPin().length() < 4 || setTransactionPin.getTransactionPin().length() > 6)// LENGTH*********
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid pin length");
     }
 

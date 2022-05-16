@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/supplier/api/v1/authenticate/logout","/supplier/api/v1/user/activateUser","/api/v1/supplieruser/passwordactivation",
                 "/supplier/api/v1/user/forgetpassword","/supplier/api/v1/authenticate/externaltoken",
                 "/api/v1/supplier/completesignup","/api/v1/supplier/signup","/api/v1/supplier/assetType",
-                "/supplier/api/v1/state/list","/supplier/api/v1/state/page","/api/v1/suppliercategory/list",
+                "/supplier/api/v1/state/list","/supplier/api/v1/state/page","/api/v1/suppliercategory/list","/api/v1/globalAuth",
                 "/supplier/api/v1/lga/list","/supplier/api/v1/lga/page","/supplier/api/v1/country/list","/supplier/api/v1/country/page",
                 "/v2/api-docs","/actuator/health","/actuator/**",
                 "/swagger-ui.html/**",

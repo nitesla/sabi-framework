@@ -129,7 +129,10 @@ public class API {
         } catch (Exception e) {
             log.error(" Request failed", e);
             log.error("response from client (Error): " + e.getMessage());
-            throw new ProcessingException("response from client (Error): " + e.getMessage());
+            log.error("Failed url : " + url);
+//            throw new ProcessingException("response from client (Error): " + e.getMessage());
+
+            return null;
         }
     }
 

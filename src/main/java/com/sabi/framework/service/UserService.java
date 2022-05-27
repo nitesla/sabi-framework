@@ -720,4 +720,8 @@ public class UserService {
         return tokenTimeToLeave / 60;
     }
 
+    public Page<User> findPartName(String partName, int page, int pageSize){
+        return userRepository.findByPartName(partName, PageRequest.of(page, pageSize));
+    }
+
 }

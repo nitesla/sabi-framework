@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -166,4 +169,7 @@ public class PaymentService {
         return post;
     }
 
+    public Page<PaymentDetails> paymentHistory(Long orderId, int page, int pageSize){
+        return paymentDetailRepository.paymentHistory(orderId, PageRequest.of(page, pageSize));
+    }
 }

@@ -480,7 +480,8 @@ public class UserService {
         String currentDate = df.format(calobj.getTime());
         String regDate = user.getResetTokenExpirationDate();
         String result = String.valueOf(currentDate.compareTo(regDate));
-        if(result.equals("1")){
+//        if(result.equals("1")){
+            if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
 
@@ -614,7 +615,7 @@ public class UserService {
         String currentDate = df.format(calobj.getTime());
         String regDate = user.getResetTokenExpirationDate();
         String result = String.valueOf(currentDate.compareTo(regDate));
-        if(result.equals("1")){
+        if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
         String pin = Encryptions.generateSha256(request.getTransactionPin());
@@ -717,6 +718,10 @@ public class UserService {
     public long getSessionExpiry() {
         //TODO Token expiry in seconds: 900 = 15mins
         return tokenTimeToLeave / 60;
+    }
+
+    public Page<User> findPartName(String partName, int page, int pageSize){
+        return userRepository.findByPartName(partName, PageRequest.of(page, pageSize));
     }
 
 }

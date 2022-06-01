@@ -615,7 +615,7 @@ public class UserService {
         String currentDate = df.format(calobj.getTime());
         String regDate = user.getResetTokenExpirationDate();
         String result = String.valueOf(currentDate.compareTo(regDate));
-        if(result.equals("1")){
+        if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
         String pin = Encryptions.generateSha256(request.getTransactionPin());

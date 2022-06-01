@@ -18,8 +18,11 @@ public class Role extends CoreEntity{
     private String description;
     private Long clientId;
 
+    public Role() {
+    }
 
-
-
-
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

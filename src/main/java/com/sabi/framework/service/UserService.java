@@ -484,6 +484,7 @@ public class UserService {
             if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
+            //if(!result.start("-1")
 
         request.setUpdatedBy(0l);
         request.setIsActive(true);

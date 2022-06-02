@@ -64,7 +64,7 @@ public class NotificationService {
 
 
 
-    public NotificationResponseDto emailNotificationRequest (NotificationRequestDto notificationRequestDto){
+    public void emailNotificationRequest (NotificationRequestDto notificationRequestDto){
 
 
         Map<String,String> map = new HashMap();
@@ -83,29 +83,26 @@ public class NotificationService {
         notificationRequestDto.setSms(false);
         notificationRequestDto.setTitle(Constants.NOTIFICATION);
         NotificationResponseDto response = api.post(multipleNotification, notificationRequestDto, NotificationResponseDto.class, map);
-        return response;
+
 
     }
 
 
 
-    public String smsNotificationRequest (SmsRequest smsRequest){
-
+    public void smsNotificationRequest (SmsRequest smsRequest){
         Map<String,String> map = new HashMap();
         map.put("fingerprint", uniqueId);
+         api.post(smsNotification, smsRequest, String.class, map);
 
-        String response = api.post(smsNotification, smsRequest, String.class, map);
-        return response;
 
     }
 
 
 
-    public String voiceOtp (VoiceOtpRequest voiceOtpRequest){
+    public void voiceOtp (VoiceOtpRequest voiceOtpRequest){
         Map<String,String> map = new HashMap();
         map.put("fingerprint", uniqueId);
-        String response = api.post(voiceOtp, voiceOtpRequest, String.class, map);
-        return response;
+        api.post(voiceOtp, voiceOtpRequest, String.class, map);
 
     }
 

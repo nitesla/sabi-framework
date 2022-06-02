@@ -33,14 +33,14 @@ public class WhatsAppService {
     private API api;
 
 
-    public WhatsAppResponse whatsAppNotification(WhatsAppRequest whatsAppRequest){
+    public void whatsAppNotification(WhatsAppRequest whatsAppRequest){
 
         Map<String,String> map = new HashMap();
         map.put("auth-key", whatsAuthKey.trim());
         map.put("fingerprint", uniqueId.trim());
 
         WhatsAppResponse response = api.post(whatsAppNotification.trim(), whatsAppRequest, WhatsAppResponse.class, map);
-        return response;
+
 
     }
 }

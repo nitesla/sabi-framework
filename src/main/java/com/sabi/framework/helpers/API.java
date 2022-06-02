@@ -39,6 +39,8 @@ public class API {
 
 
 
+
+
     @Autowired
     public API(RestTemplateBuilder restTemplateBuilder,
                       RestTemplateResponseErrorHandler gatewayProviderResponseErrorHandler) {
@@ -91,6 +93,7 @@ public class API {
             log.info("request payload to client :" + request);
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
             log.info("response payload from client :" + responseEntity.getBody().toString());
             log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
 
@@ -158,6 +161,7 @@ public class API {
             restTemplate.setRequestFactory(requestFactory);
             ResponseEntity<String> responseEntity = restTemplate
                     .exchange(url, HttpMethod.PATCH, requestEntity, String.class, requestObject);
+
             log.info(requestId + " response payload from client : " + responseEntity.getBody());
             log.info(requestId + " response HTTP status code from client : " + responseEntity
                     .getStatusCode()
@@ -172,3 +176,6 @@ public class API {
     }
 
 }
+
+
+

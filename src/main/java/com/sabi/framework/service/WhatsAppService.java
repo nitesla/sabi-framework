@@ -3,7 +3,6 @@ package com.sabi.framework.service;
 
 import com.sabi.framework.helpers.API;
 import com.sabi.framework.notification.requestDto.WhatsAppRequest;
-import com.sabi.framework.notification.responseDto.WhatsAppResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +38,7 @@ public class WhatsAppService {
         map.put("auth-key", whatsAuthKey.trim());
         map.put("fingerprint", uniqueId.trim());
 
-        WhatsAppResponse response = api.post(whatsAppNotification.trim(), whatsAppRequest, WhatsAppResponse.class, map);
+        api.postNotification(whatsAppNotification.trim(), whatsAppRequest, map);
 
 
     }

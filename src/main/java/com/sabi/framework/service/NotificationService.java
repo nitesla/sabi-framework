@@ -92,7 +92,7 @@ public class NotificationService {
     public void smsNotificationRequest (SmsRequest smsRequest){
         Map<String,String> map = new HashMap();
         map.put("fingerprint", uniqueId);
-         api.post(smsNotification, smsRequest, String.class, map);
+         api.postNotification(smsNotification, smsRequest,  map);
 
 
     }
@@ -102,7 +102,7 @@ public class NotificationService {
     public void voiceOtp (VoiceOtpRequest voiceOtpRequest){
         Map<String,String> map = new HashMap();
         map.put("fingerprint", uniqueId);
-        api.post(voiceOtp, voiceOtpRequest, String.class, map);
+        api.postNotification(voiceOtp, voiceOtpRequest, map);
 
     }
 

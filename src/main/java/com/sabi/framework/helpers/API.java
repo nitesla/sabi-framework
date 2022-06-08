@@ -39,6 +39,8 @@ public class API {
 
 
 
+
+
     @Autowired
     public API(RestTemplateBuilder restTemplateBuilder,
                       RestTemplateResponseErrorHandler gatewayProviderResponseErrorHandler) {
@@ -91,6 +93,7 @@ public class API {
             log.info("request payload to client :" + request);
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
             log.info("response payload from client :" + responseEntity.getBody().toString());
             log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
 
@@ -158,6 +161,7 @@ public class API {
             restTemplate.setRequestFactory(requestFactory);
             ResponseEntity<String> responseEntity = restTemplate
                     .exchange(url, HttpMethod.PATCH, requestEntity, String.class, requestObject);
+
             log.info(requestId + " response payload from client : " + responseEntity.getBody());
             log.info(requestId + " response HTTP status code from client : " + responseEntity
                     .getStatusCode()
@@ -171,4 +175,37 @@ public class API {
         }
     }
 
+
+
+
+    public void postNotification(String url, Object requestObject,
+                      @Nullable Map<String, String> headers) {
+        HttpServerErrorException httpServerErrorException;
+        try {
+            log.info(" Headers " + headers);
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+            if (headers != null) {
+                headers.forEach(requestHeaders::set);
+            }
+            String request = new Gson().toJson(requestObject);
+            HttpEntity<?> requestEntity = new HttpEntity<>(request, requestHeaders);
+            log.info("request payload to client :" + request);
+
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+            log.info("response payload from client :" + responseEntity.getBody().toString());
+            log.info("response HTTP status code from client : " + responseEntity.getStatusCode().toString());
+
+        } catch (Exception e) {
+            log.error(" Request failed", e);
+            log.error("response from client (Error): " + e.getMessage());
+            log.error("Failed url : " + url);
+
+        }
+    }
+
 }
+
+
+

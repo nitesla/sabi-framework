@@ -17,6 +17,8 @@ public class Constants {
     public static final String DATA_COLLECTION = "DC";
     public static final String GLOBAL_ADMIN = "GA";
 
+    public static final String AGENT_ROLE = "AGENT_ROLE";
+
 
 
 }

@@ -13,7 +13,10 @@ import com.sabi.framework.models.PreviousPasswords;
 import com.sabi.framework.models.Role;
 import com.sabi.framework.models.User;
 import com.sabi.framework.models.UserRole;
-import com.sabi.framework.notification.requestDto.*;
+import com.sabi.framework.notification.requestDto.NotificationRequestDto;
+import com.sabi.framework.notification.requestDto.RecipientRequest;
+import com.sabi.framework.notification.requestDto.SmsRequest;
+import com.sabi.framework.notification.requestDto.WhatsAppRequest;
 import com.sabi.framework.repositories.PreviousPasswordRepository;
 import com.sabi.framework.repositories.RoleRepository;
 import com.sabi.framework.repositories.UserRepository;
@@ -149,11 +152,11 @@ public class UserService {
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
 
-        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
-                .message("Activation Otp is " + " " + user.getResetToken())
-                .phoneNumber(emailRecipient.getPhone())
-                .build();
-        notificationService.voiceOtp(voiceOtpRequest);
+//        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+//                .message("Activation Otp is " + " " + user.getResetToken())
+//                .phoneNumber(emailRecipient.getPhone())
+//                .build();
+//        notificationService.voiceOtp(voiceOtpRequest);
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
                         "Create new user by :" + userCurrent.getUsername(),
@@ -413,11 +416,11 @@ public class UserService {
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
 
-            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
-                    .message("Activation Otp is " + " " + user.getResetToken())
-                    .phoneNumber(emailRecipient.getPhone())
-                    .build();
-            notificationService.voiceOtp(voiceOtpRequest);
+//            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+//                    .message("Activation Otp is " + " " + user.getResetToken())
+//                    .phoneNumber(emailRecipient.getPhone())
+//                    .build();
+//            notificationService.voiceOtp(voiceOtpRequest);
 
         }else if(request.getPhone()!= null) {
 
@@ -455,11 +458,11 @@ public class UserService {
                     .build();
             whatsAppService.whatsAppNotification(whatsAppRequest);
 
-            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
-                    .message("Activation Otp is " + " " + userPhone.getResetToken())
-                    .phoneNumber(emailRecipient.getPhone())
-                    .build();
-            notificationService.voiceOtp(voiceOtpRequest);
+//            VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+//                    .message("Activation Otp is " + " " + userPhone.getResetToken())
+//                    .phoneNumber(emailRecipient.getPhone())
+//                    .build();
+//            notificationService.voiceOtp(voiceOtpRequest);
         }
 
     }
@@ -572,11 +575,11 @@ public class UserService {
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
 
-        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
-                .message("Activation Otp is " + " " + user.getResetToken())
-                .phoneNumber(emailRecipient.getPhone())
-                .build();
-        notificationService.voiceOtp(voiceOtpRequest);
+//        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
+//                .message("Activation Otp is " + " " + user.getResetToken())
+//                .phoneNumber(emailRecipient.getPhone())
+//                .build();
+//        notificationService.voiceOtp(voiceOtpRequest);
 
 
     }
@@ -615,7 +618,7 @@ public class UserService {
         String currentDate = df.format(calobj.getTime());
         String regDate = user.getResetTokenExpirationDate();
         String result = String.valueOf(currentDate.compareTo(regDate));
-        if(result.equals("1")){
+        if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
         String pin = Encryptions.generateSha256(request.getTransactionPin());

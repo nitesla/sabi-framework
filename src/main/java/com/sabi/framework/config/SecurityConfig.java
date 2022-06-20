@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/v1/user/activateUser", "/api/v1/authenticate/login", "/api/v1/authenticate/generatepassword","/api/v1/authenticate/logout","/api/v1/agent/passwordactivation",
                 "/api/v1/user/forgetpassword","/api/v1/agent/signup","/api/v1/authenticate/externaltoken","/api/v1/agent/validateotp",
                 "/api/v1/agent/resendotp","/api/v1/agent/activateUser","/api/v1/ping/check","/api/v1/globalAuth",
-                "/logistics/api/v1/authenticate/login","/logistics/api/v1/authenticate/generatepassword","/logistics/api/v1/authenticate/logout","/logistics/api/v1/user/activateUser",
+                "/logistics/api/v1/authenticate/login","/logistics/api/v1/authenticate/generatepassword","/logistics/api/v1/authenticate/logout","/logistics/api/v1/user/activateUser","/api/v1/user/findbyemail",
                 "/logistics/api/v1/user/forgetpassword","/logistics/api/v1/authenticate/externaltoken","/api/v1/state/list","/api/v1/state/page", "/api/v1/lga/list","/api/v1/lga/page","/api/v1/country/list","/api/v1/country/page",
                 "/api/v1/partner/completesignup","/api/v1/partner/signup","/logistics/api/v1/state/list","/logistics/api/v1/state/page","/api/v1/partner/externalsignup","/api/v1/authenticate/admin/login",
                 "/logistics/api/v1/lga/list","/logistics/api/v1/lga/page","/logistics/api/v1/country/list","/logistics/api/v1/country/page","/api/v1/partner/details/{supplierId}",

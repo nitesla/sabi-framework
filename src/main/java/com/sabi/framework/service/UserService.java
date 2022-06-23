@@ -237,6 +237,8 @@ public class UserService {
 
 
 
+
+
     /** <summary>
      * Find all users
      * </summary>
@@ -530,6 +532,34 @@ public class UserService {
 //        }
         String pin = Encryptions.generateSha256(request.getTransactionPin());
         user.setTransactionPin(pin);
+        user.setTransactionPinStatus(CustomResponseCode.TRANSACTION_PIN_STATUS);
+        userRepository.save(user);
+
+    }
+
+
+
+
+
+
+    public void changeTransactionPin (ChangePinRequest request) {
+//        coreValidations.changeTransactionPin(request);
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+
+        String auth = Encryptions.generateSha256(request.getCurrentPin());
+        if(!auth.matches(user.getTransactionPin())){
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid details");
+        }
+        if (this.passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            log.info("valid password entered");
+        } else {
+            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Invalid details");
+        }
+        String pin = Encryptions.generateSha256(request.getNewPin());
+        user.setTransactionPin(pin);
+        user.setTransactionPinStatus(CustomResponseCode.TRANSACTION_PIN_STATUS);
         userRepository.save(user);
 
     }
@@ -540,7 +570,7 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for changing transaction pin OTP</remarks>
      */
-    public void changePinOTP (CreateTransactionPinDto request) {
+    public void resetPinOTP (CreateTransactionPinDto request) {
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
@@ -604,7 +634,7 @@ public class UserService {
      * <remarks>this method is responsible for changing transaction pin </remarks>
      */
 
-    public void changePin (CreateTransactionPinDto request) {
+    public void resetPin (CreateTransactionPinDto request) {
         coreValidations.validateTransactionPin(request);
         User userExist = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,

@@ -68,6 +68,8 @@ public class RolePermissionService {
 //                log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
 //            }
 //        }
+
+
     public void assignPermission(RolePermissionDto request) {
 
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();

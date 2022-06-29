@@ -5,10 +5,12 @@ import com.sabi.framework.models.RolePermission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -28,4 +30,10 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
 
     @Query("SELECT rp FROM RolePermission rp WHERE rp.roleId=?1 order by rp.id" )
     List<RolePermission> getPermissionsByRole(Long roleId);
+
+
+    @Modifying
+    @Transactional
+    @Query("delete from RolePermission p where p.id in ?1")
+    void deleteByIdIn(List<Long> ids);
 }

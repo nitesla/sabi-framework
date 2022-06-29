@@ -193,4 +193,10 @@ public class RolePermissionService {
                         "Requested RolePermission id does not exist!"));
         rolePermissionRepository.delete(rolePermission);
     }
+
+
+
+    public void deleteAllBYIds(List<Long> Longs) {
+        rolePermissionRepository.deleteByIdIn(Longs);
+    }
 }

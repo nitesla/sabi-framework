@@ -242,12 +242,12 @@ public class Utility {
     }
 
 
-    public static String expirationForSupplyRequest() {
-        Timestamp timestamp = new Timestamp(new Date().getTime());
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timestamp.getTime());
-        cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.MINUTE, 15);
-        return String.valueOf(new Timestamp(cal.getTime().getTime()));
-    }
+//    public static String expirationForSupplyRequest() {
+//        Timestamp timestamp = new Timestamp(new Date().getTime());
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTimeInMillis(timestamp.getTime());
+//        cal.setTimeInMillis(timestamp.getTime());
+//        cal.add(Calendar.MINUTE, 15);
+//        return String.valueOf(new Timestamp(cal.getTime().getTime()));
+//    }
 }

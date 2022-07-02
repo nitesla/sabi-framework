@@ -269,7 +269,8 @@ public class UserService {
         User user  = userRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
-        user.setIsActive(request.isActive());
+//        user.setIsActive(request.isActive());
+        user.setIsActive(request.getIsActive());
         user.setUpdatedBy(userCurrent.getId());
 
         auditTrailService

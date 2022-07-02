@@ -68,6 +68,8 @@ public class RolePermissionService {
 //                log.debug("Create new RolePermission - {}" + new Gson().toJson(rolePermission));
 //            }
 //        }
+
+
     public void assignPermission(RolePermissionDto request) {
 
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
@@ -161,12 +163,13 @@ public class RolePermissionService {
 
     public void enableDisEnableState(EnableDisEnableDto request) {
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
-        RolePermission creditLevel = rolePermissionRepository.findById(request.getId())
+        RolePermission rolePermission = rolePermissionRepository.findById(request.getId())
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
-        creditLevel.setIsActive(request.isActive());
-        creditLevel.setUpdatedBy(userCurrent.getId());
-        rolePermissionRepository.save(creditLevel);
+//        creditLevel.setIsActive(request.isActive());
+        rolePermission.setIsActive(request.getIsActive());
+        rolePermission.setUpdatedBy(userCurrent.getId());
+        rolePermissionRepository.save(rolePermission);
 
     }
 
@@ -190,5 +193,11 @@ public class RolePermissionService {
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested RolePermission id does not exist!"));
         rolePermissionRepository.delete(rolePermission);
+    }
+
+
+
+    public void deleteAllBYIds(List<Long> Longs) {
+        rolePermissionRepository.deleteByIdIn(Longs);
     }
 }

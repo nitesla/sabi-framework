@@ -27,6 +27,9 @@ public class AccessTokenWithUserDetails implements Serializable{
     private String menu;
 
 
+    @JsonProperty("roleId")
+    private long roleId;
+
     @JsonProperty("lastName")
     private String lastName;
 
@@ -80,6 +83,7 @@ public class AccessTokenWithUserDetails implements Serializable{
         this.phone = user.getPhone();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.roleId = user.getRoleId();
         this.middleName= user.getMiddleName();
         this.lastLogin = user.getLastLogin();
         this.photo = user.getPhoto();

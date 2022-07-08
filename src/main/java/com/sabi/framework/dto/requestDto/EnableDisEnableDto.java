@@ -9,5 +9,5 @@ import lombok.Data;
 public class EnableDisEnableDto {
 
      private Long id;
-     private Boolean isActive;
+     private boolean isActive;
 }

@@ -167,7 +167,7 @@ public class RolePermissionService {
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested creditLevel id does not exist!"));
 //        creditLevel.setIsActive(request.isActive());
-        rolePermission.setIsActive(request.getIsActive());
+        rolePermission.setIsActive(request.isActive());
         rolePermission.setUpdatedBy(userCurrent.getId());
         rolePermissionRepository.save(rolePermission);
 

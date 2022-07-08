@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@SuppressWarnings("ALL")
 @Slf4j
 @Service
 public class RolePermissionService {
@@ -71,11 +73,10 @@ public class RolePermissionService {
 
 
     public void assignPermission(RolePermissionDto request) {
-
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         List<RolePermission> rolePerm = new ArrayList<>();
-        RolePermission rolePermission = new RolePermission();
         request.getPermissionIds().forEach(p -> {
+            RolePermission rolePermission = new RolePermission();
             rolePermission.setPermissionId(p.getPermissionId());
             rolePermission.setPermissionName(p.getPermissionName());
             rolePermission.setRoleId(request.getRoleId());
@@ -86,12 +87,31 @@ public class RolePermissionService {
             if(exist != null){
                 throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " Permission id already assigned to the role ::::"+p.getPermissionId());
             }
+
             rolePermissionRepository.save(rolePermission);
             rolePerm.add(rolePermission);
 
         });
-//        return mapper.map(rolePermission, RolePermissionResponseDto.class);
+
     }
+
+//    List<PartnerCategories> categories = new ArrayList<>();
+//        request.getCategories().forEach(p -> {
+//        PartnerCategories tran = PartnerCategories.builder()
+//                .categoryId(p.getCategoryId())
+//                .build();
+//        tran.setPartnerId(partner.getId());
+//        tran.setCreatedBy(partner.getUserId());
+//        tran.setIsActive(true);
+//        log.info(" category details " + tran);
+//        partnerCategoriesRepository.save(tran);
+//        categories.add(tran);
+//
+//    });
+
+
+
+
 
 
     /**

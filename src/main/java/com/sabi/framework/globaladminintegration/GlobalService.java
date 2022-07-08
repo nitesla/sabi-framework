@@ -4,6 +4,7 @@ import com.sabi.framework.globaladminintegration.request.BankRequest;
 import com.sabi.framework.globaladminintegration.request.SingleRequest;
 import com.sabi.framework.globaladminintegration.response.ListResponse;
 import com.sabi.framework.globaladminintegration.response.PageResponse;
+import com.sabi.framework.globaladminintegration.response.PermissionResponseDto;
 import com.sabi.framework.globaladminintegration.response.SingleResponse;
 import com.sabi.framework.helpers.API;
 import com.sabi.framework.helpers.CoreValidations;
@@ -40,6 +41,9 @@ public class GlobalService {
 
     @Value("${permission.base.url}")
     private String permissionBaseUrl;
+
+    @Value("${permission.name.url}")
+    private String permissionNameUrl;
 
 
 
@@ -272,6 +276,19 @@ public class GlobalService {
         Map map = new HashMap();
         map.put("Authorization", accessTokenService.getGlobalToken());
         PageResponse response = api.get(builder.toUriString(), PageResponse.class, map);
+        return response;
+    }
+
+
+    public PermissionResponseDto getPermissionByName(String name) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(permissionNameUrl)
+                // Add query parameter
+                .queryParam("name", name);
+
+        Map map = new HashMap();
+        map.put("Authorization", accessTokenService.getGlobalToken());
+        PermissionResponseDto response = api.get(builder.toUriString(), PermissionResponseDto.class, map);
         return response;
     }
 }

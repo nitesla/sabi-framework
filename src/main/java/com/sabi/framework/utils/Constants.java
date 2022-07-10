@@ -18,6 +18,7 @@ public class Constants {
     public static final String GLOBAL_ADMIN = "GA";
 
     public static final String AGENT_ROLE = "AGENT_ROLE";
+    public static final String PARTNER_ADMIN_ROLE = "PARTNER_ADMIN_ROLE";
 
 
 

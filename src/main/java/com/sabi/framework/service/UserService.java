@@ -270,7 +270,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested user id does not exist!"));
 //        user.setIsActive(request.isActive());
-        user.setIsActive(request.isActive());
+        user.setIsActive(request.getIsActive());
         user.setUpdatedBy(userCurrent.getId());
 
         auditTrailService

@@ -175,7 +175,7 @@ public class RoleService {
                 .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
                         "Requested role id does not exist!"));
 //        role.setIsActive(request.isActive());
-        role.setIsActive(request.isActive());
+        role.setIsActive(request.getIsActive());
         role.setUpdatedBy(userCurrent.getId());
 
         auditTrailService

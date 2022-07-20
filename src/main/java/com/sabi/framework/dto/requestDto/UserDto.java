@@ -14,6 +14,7 @@ public class UserDto {
     private String phone;
     private Long roleId;
     private String photo;
+    private String activationUrl;
 //    private String password;
 
 

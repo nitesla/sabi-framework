@@ -38,4 +38,9 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
                          Pageable pageable);
 
     List<Role> findByIsActiveAndClientId(Boolean isActive , Long clientId);
+
+
+    Integer countAllByIsActive(boolean isActive);
+    List<Role> findAll();
+    Integer countAllByName(String name);
 }

@@ -3,6 +3,7 @@ package com.sabi.framework.service;
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.ActivateUserResponse;
+import com.sabi.framework.dto.responseDto.UserActivationResponse;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
 import com.sabi.framework.exceptions.ConflictException;
@@ -130,9 +131,14 @@ public class UserService {
 
         // --------  sending token  -----------
 
+        String msg = "Hello " + " " + user.getFirstName() + " " + user.getLastName() + "<br/>"
+                + "Activation OTP :" + " "+ user.getResetToken() + "<br/>"
+                + " Kindly click the link below to complete your registration " + "<br/>"
+                + "<a href=\"" + request.getActivationUrl() +  "\">Activate your account</a>";
+
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto();
         User emailRecipient = userRepository.getOne(user.getId());
-        notificationRequestDto.setMessage("Activation Otp " + " " + user.getResetToken());
+        notificationRequestDto.setMessage(msg);
         List<RecipientRequest> recipient = new ArrayList<>();
         recipient.add(RecipientRequest.builder()
                 .email(emailRecipient.getEmail())
@@ -141,22 +147,18 @@ public class UserService {
         notificationService.emailNotificationRequest(notificationRequestDto);
 
         SmsRequest smsRequest = SmsRequest.builder()
-                .message("Activation Otp " + " " + user.getResetToken())
+                .message(msg)
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         notificationService.smsNotificationRequest(smsRequest);
 
         WhatsAppRequest whatsAppRequest = WhatsAppRequest.builder()
-                .message("Activation Otp " + " " + user.getResetToken())
+                .message(msg)
                 .phoneNumber(emailRecipient.getPhone())
                 .build();
         whatsAppService.whatsAppNotification(whatsAppRequest);
 
-//        VoiceOtpRequest voiceOtpRequest = VoiceOtpRequest.builder()
-//                .message("Activation Otp is " + " " + user.getResetToken())
-//                .phoneNumber(emailRecipient.getPhone())
-//                .build();
-//        notificationService.voiceOtp(voiceOtpRequest);
+
         auditTrailService
                 .logEvent(userCurrent.getUsername(),
                         "Create new user by :" + userCurrent.getUsername(),
@@ -490,7 +492,6 @@ public class UserService {
             if(!result.startsWith("-")){
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, " OTP invalid/expired");
         }
-
         request.setUpdatedBy(0l);
         request.setIsActive(true);
         request.setPasswordChangedOn(LocalDateTime.now());
@@ -506,6 +507,36 @@ public class UserService {
 
     }
 
+
+    public UserActivationResponse userPasswordActivation(PasswordActivationRequest request) {
+
+        User user = userRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        "Requested user id does not exist!"));
+        mapper.map(request, user);
+
+        String password = request.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
+        user.setPasswordChangedOn(LocalDateTime.now());
+        user = userRepository.save(user);
+
+        PreviousPasswords previousPasswords = PreviousPasswords.builder()
+                .userId(user.getId())
+                .password(user.getPassword())
+                .createdDate(LocalDateTime.now())
+                .build();
+        previousPasswordRepository.save(previousPasswords);
+
+
+        UserActivationResponse response = UserActivationResponse.builder()
+                .userId(user.getId())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .build();
+
+        return response;
+    }
 
 
     public User userOTPValidation(User user, ActivateUserAccountDto activateUserAccountDto) {

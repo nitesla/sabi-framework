@@ -106,4 +106,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT  * from User where CONCAT(firstName, \" \" ,lastName)  LIKE %:searchTerm% OR CONCAT(lastName, \" \" ,firstName) LIKE %:searchTerm%", nativeQuery = true)
     Page<User> findByPartName(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    Integer countAllByIsActive(boolean isActive);
+
+    List<User> findAll();
+
+
+    Integer countAllByUserCategory(String name);
 }

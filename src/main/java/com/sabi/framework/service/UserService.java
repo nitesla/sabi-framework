@@ -3,6 +3,7 @@ package com.sabi.framework.service;
 import com.google.gson.Gson;
 import com.sabi.framework.dto.requestDto.*;
 import com.sabi.framework.dto.responseDto.ActivateUserResponse;
+import com.sabi.framework.dto.responseDto.RoleUserStat;
 import com.sabi.framework.dto.responseDto.UserActivationResponse;
 import com.sabi.framework.dto.responseDto.UserResponse;
 import com.sabi.framework.exceptions.BadRequestException;
@@ -100,6 +101,9 @@ public class UserService {
         if(userExist !=null){
             throw new ConflictException(CustomResponseCode.CONFLICT_EXCEPTION, " User already exist");
         }
+        Role role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
+                        " Enter a valid Role"));
         User userCurrent = TokenService.getCurrentUserFromSecurityContext();
         User user = mapper.map(request,User.class);
 //        String password = request.getPassword();
@@ -109,6 +113,7 @@ public class UserService {
         user.setCreatedBy(userCurrent.getId());
         user.setUserCategory(Constants.ADMIN_USER);
         user.setIsActive(false);
+        user.setRole(role.getName());
         user.setLoginAttempts(0);
         user.setResetToken(Utility.registrationCode("HHmmss"));
         user.setResetTokenExpirationDate(Utility.tokenExpiration());
@@ -246,8 +251,8 @@ public class UserService {
      * </summary>
      * <remarks>this method is responsible for getting all records in pagination</remarks>
      */
-    public Page<User> findAll(String firstName,String lastName,String phone,Boolean isActive,String email, PageRequest pageRequest ){
-        Page<User> users = userRepository.findUsers(firstName,lastName,phone,isActive,email,pageRequest);
+    public Page<User> findAll(String firstName,String lastName,String phone,String role,Long roleId,Boolean isActive,LocalDateTime startDate, LocalDateTime endDate,String email, PageRequest pageRequest ){
+        Page<User> users = userRepository.findUsers(firstName,lastName,phone,role,roleId,isActive,startDate,endDate,email,pageRequest);
         if(users == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
@@ -255,6 +260,15 @@ public class UserService {
 
     }
 
+
+    public Page<User> findByClientId(String firstName,String phone,String email,String role,String username,Long roleId,Long clientId,Boolean isActive,LocalDateTime startDate, LocalDateTime endDate,String lastName, PageRequest pageRequest ){
+        Page<User> users = userRepository.findByClientId(firstName,phone,email,role,username,roleId,clientId,isActive,startDate,endDate,lastName,pageRequest);
+        if(users == null){
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
+        }
+        return users;
+
+    }
 
 
 
@@ -776,6 +790,32 @@ public class UserService {
         }
     }
 
+
+
+
+
+
+
+    public RoleUserStat fetchByRoleIdUserCount(Long roleId,Boolean isActive) {
+        RoleUserStat registeredUserStat = new RoleUserStat();
+        Integer countByRoleId = userRepository.countAllByRoleIdAndIsActive(roleId,true);
+        if (countByRoleId == null) {
+            countByRoleId = new Integer(0);
+        }
+        registeredUserStat.setActiveRoleUsers(countByRoleId);
+        return registeredUserStat;
+    }
+
+
+    public RoleUserStat fetchByRoleUserCount(String role,Boolean isActive) {
+        RoleUserStat registeredUserStat = new RoleUserStat();
+        Integer countByRole = userRepository.countAllByRoleAndIsActive(role,true);
+        if (countByRole == null) {
+            countByRole = new Integer(0);
+        }
+        registeredUserStat.setActiveRoleUsers(countByRole);
+        return registeredUserStat;
+    }
 
 
 

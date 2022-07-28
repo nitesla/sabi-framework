@@ -33,6 +33,7 @@ public class User extends CoreEntity{
     private String middleName;
     private String username;
     private Long roleId;
+    private String role;
     @Transient
     private String roleName;
     private LocalDateTime passwordChangedOn;

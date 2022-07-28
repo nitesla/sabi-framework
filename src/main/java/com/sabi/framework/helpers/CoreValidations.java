@@ -114,9 +114,7 @@ public class CoreValidations {
         if(userDto.getRoleId()== null)
             throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Role id can not be null ");
 
-        Role role = roleRepository.findById(userDto.getRoleId())
-                .orElseThrow(() -> new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION,
-                        " Enter a valid Role"));
+
 
 //        if (userDto.getPassword() == null || userDto.getPassword().isEmpty())
 //            throw new BadRequestException(CustomResponseCode.BAD_REQUEST, "Password cannot be empty");

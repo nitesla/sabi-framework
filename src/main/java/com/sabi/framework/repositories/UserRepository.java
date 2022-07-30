@@ -126,4 +126,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int countAllByRoleIdAndIsActive(Long roleId,Boolean isActive);
 
     int countAllByRoleAndIsActive(String role,Boolean isActive);
+
+    Integer countAllByIsActive(boolean isActive);
+
+    List<User> findAll();
+
+
+    Integer countAllByUserCategory(String name);
+
+
 }

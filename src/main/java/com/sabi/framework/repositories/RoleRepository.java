@@ -14,6 +14,8 @@ import java.util.List;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(String name);
 
+    Role findRoleById(Long id);
+
     @Query("SELECT r FROM Role r WHERE r.isActive =?1")
     Role findIsActive(Boolean isActive);
     Role findByNameAndClientId(String name,Long clientId);

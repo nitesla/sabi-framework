@@ -158,6 +158,16 @@ public class RoleService {
     }
 
 
+    public Page<Role> findRolesByClientId(String name,Long clientId,Boolean isActive, PageRequest pageRequest ){
+        Page<Role> roles = roleRepository.findRolesByClientId(name,clientId,isActive,pageRequest);
+        if(roles == null){
+            throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
+        }
+        return roles;
+
+    }
+
+
     public List<Role> getAll(Boolean isActive){
         List<Role> roles = roleRepository.findByIsActive(isActive);
         return roles;

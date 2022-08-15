@@ -256,6 +256,12 @@ public class UserService {
         if(users == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
+        users.forEach(user -> {
+            if (!user.getRoleId().equals(null) || !user.getRoleId().equals("")){
+            Role savedRole =  roleRepository.findRoleById(user.getRoleId());
+                user.setRoleName(savedRole.getName());
+            }
+        });
         return users;
 
     }
@@ -266,6 +272,12 @@ public class UserService {
         if(users == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }
+        users.forEach(user -> {
+            if (!user.getRoleId().equals(null) || !user.getRoleId().equals("")){
+                Role savedRole =  roleRepository.findRoleById(user.getRoleId());
+                user.setRoleName(savedRole.getName());
+            }
+        });
         return users;
 
     }
@@ -724,6 +736,12 @@ public class UserService {
 
     public List<User> getAll(Boolean isActive){
         List<User> user = userRepository.findByIsActive(isActive);
+        user.forEach(savedUser ->{
+            if (savedUser.getRoleId() != null){
+                Role savedRole =  roleRepository.findRoleById(savedUser.getRoleId());
+                savedUser.setRoleName(savedRole.getName());
+            }
+        });
         return user;
 
     }

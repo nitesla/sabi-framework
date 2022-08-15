@@ -51,7 +51,7 @@ public class ExternalTokenService {
 //        externalTokenRequest();
 //    }
 
-    public void externalTokenRequest ()  {
+    public TokenResponse externalTokenRequest ()  {
         TokenRequest request = TokenRequest.builder()
                 .username(username.trim())
                 .password(password.trim())
@@ -61,6 +61,7 @@ public class ExternalTokenService {
         TokenResponse response = api.post(login, request, TokenResponse.class,map);
         log.info(":::::::: TOKEN RESPONS FROM SABI" + response.getToken());
         saveToken(response);
+        return response;
     }
 
 

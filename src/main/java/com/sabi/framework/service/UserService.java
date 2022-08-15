@@ -261,8 +261,8 @@ public class UserService {
     }
 
 
-    public Page<User> findByClientId(String firstName,String phone,String email,String role,String username,Long roleId,Long clientId,Boolean isActive,LocalDateTime startDate, LocalDateTime endDate,String lastName, PageRequest pageRequest ){
-        Page<User> users = userRepository.findByClientId(firstName,phone,email,role,username,roleId,clientId,isActive,startDate,endDate,lastName,pageRequest);
+    public Page<User> findByClientId(String firstName,String phone,String email,String username,Long roleId,Long clientId,Boolean isActive,String lastName, PageRequest pageRequest ){
+        Page<User> users = userRepository.findByClientId(firstName,phone,email,username,roleId,clientId,isActive,lastName,pageRequest);
         if(users == null){
             throw new NotFoundException(CustomResponseCode.NOT_FOUND_EXCEPTION, " No record found !");
         }

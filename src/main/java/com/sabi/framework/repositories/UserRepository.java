@@ -73,24 +73,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE ((:firstName IS NULL) OR (:firstName IS NOT NULL AND u.firstName like %:firstName%))" +
             " AND ((:phone IS NULL) OR (:phone IS NOT NULL AND u.phone = :phone))"+
             " AND ((:email IS NULL) OR (:email IS NOT NULL AND u.email = :email))"+
-            " AND ((:role IS NULL) OR (:role IS NOT NULL AND u.role = :role))"+
             " AND ((:username IS NULL) OR (:username IS NOT NULL AND u.username like %:username%))"+
             " AND ((:roleId IS NULL) OR (:roleId IS NOT NULL AND u.roleId = :roleId))"+
             " AND ((:clientId IS NULL) OR (:clientId IS NOT NULL AND u.clientId = :clientId))"+
             " AND ((:isActive IS NULL) OR (:isActive IS NOT NULL AND u.isActive = :isActive))"+
-            "AND ((:startDate IS NULL) OR (:startDate IS NOT NULL AND u.createdDate >= :startDate)) " +
-            "AND ((:endDate IS NULL) OR (:endDate IS NOT NULL AND u.createdDate >= :endDate)) " +
             " AND ((:lastName IS NULL) OR (:lastName IS NOT NULL AND u.lastName = :lastName)) order by u.id ")
     Page<User> findByClientId(@Param("firstName")String firstName,
                               @Param("phone")String phone,
                               @Param("email")String email,
-                              @Param("role")String role,
                               @Param("username")String username,
                               @Param("roleId")Long roleId,
                               @Param("clientId")Long clientId,
                               @Param("isActive")Boolean isActive,
-                              @Param("startDate") LocalDateTime startDate,
-                              @Param("endDate") LocalDateTime endDate,
                               @Param("lastName")String lastName,
                              Pageable pageable);
 
